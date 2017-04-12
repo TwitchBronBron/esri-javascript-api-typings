@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "ES5",
+        "module": "none",
+        "noImplicitAny": true,
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "sourceMap": true,
+        "lib": [
+            "dom",
+            "es5",
+            "es2015.promise"
+        ]
+    },
+    "files": [
+        "dist/3.20/index.d.ts"
+    ]
+}

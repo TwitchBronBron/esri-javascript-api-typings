@@ -99,7 +99,7 @@ declare namespace esri {
     /** Class attribute to set for the layer's node. */
     className?: string;
     /** Lists which levels to draw. */
-    displayLevels?: number[];
+    displayLevels?: number;
     /** An array of objects that define areas where a tiled map service should not display tiles. */
     exclusionAreas?: any[];
     /** Id to assign to the layer. */
@@ -110,7 +110,7 @@ declare namespace esri {
     opacity?: number;
     /** Refresh interval of the layer in minutes. */
     refreshInterval?: number;
-    /** The purpose of resampling is to enlarge the image and fill in at the levels where there are no tiles available. */
+    /** When true, tile resampling is enabled. */
     resampling?: boolean;
     /** Number of levels beyond the last level where tiles are available. */
     resamplingTolerance?: number;
@@ -168,8 +168,6 @@ declare namespace esri {
     opacity?: number;
     /** Specify subDomains where tiles are served to speed up tile retrieval (using subDomains gets around the browser limit of the max number of concurrent requests to a domain). */
     subDomains?: string[];
-    /** The URL template used to retrieve the tiles. */
-    templateUrl?: string;
     /** Define the tile info for the layer including lods, rows, cols, origin and spatial reference. */
     tileInfo?: esri.layers.TileInfo;
     /** Define additional tile server domains for the layer. */
@@ -203,18 +201,6 @@ declare namespace esri {
     /** Whether the widget is visible by default. */
     visible?: boolean;
   }
-  export interface BlendRendererOptions {
-    /** This determines how colors are blended together. */
-    blendMode?: string;
-    /** An array of objects to blend containing the field name and color to use. */
-    fields: any[];
-    /** The field to normalize. */
-    normalizationField?: string;
-    /** An array of objects which determines opacity. */
-    opacityStops: any[];
-    /** The symbol in which the Blendesri.renderers.Renderer is applied. */
-    symbol: esri.symbols.Symbol;
-  }
   export interface BookmarksOptions {
     /** An array of esri.dijit.BookmarkItem objects or a json object with the esri.dijit.BookmarkItem format to initially display in the bookmark widget. */
     bookmarks?: esri.dijit.BookmarkItem[];
@@ -237,68 +223,6 @@ declare namespace esri {
     /** An array of strings which correspond to fields to include in the CSVLayer. */
     outFields?: string[];
   }
-  export interface ChooseBestFacilitiesOptions {
-    /** The URL to the analysis service, for example "http://analysis.arcgis.com/arcgis/rest/services/tasks/GPServer". */
-    analysisGpServer?: string;
-    /** The number of facilities to choose when allocating demand locations. */
-    candidateCount?: number;
-    /** Specify how much demand every facility in the candidateFacilitiesesri.layers.Layer is capable of supplying. */
-    candidateFacilitiesCapacity?: string;
-    /** String value indicating the field name on the candidateFacilitiesesri.layers.Layer  representing how much demand each facility in the candidatesFacilitiesesri.layers.Layer is capable of supplying. */
-    candidateFacilitiesCapacityField?: string;
-    /** A point layer specifying one or more locations that act as facilities by providing some kind of service. */
-    candidateFacilitiesLayer?: esri.layers.Featureesri.layers.Layer;
-    /** The amount of demand available at every demand locations. */
-    demand?: number;
-    /** String value indicating the field name on the demandLocationesri.layers.Layer  representing the amount of demand available at each demand location. */
-    demandField?: string;
-    /** A point layer specifying the locations that have demand for facilities. */
-    demandLocationLayer?: esri.layers.Featureesri.layers.Layer;
-    /** Array of point layers to be used for choosing the demandLocationLayer. */
-    demandLocationLayers: esri.layers.Featureesri.layers.Layer[];
-    /** When true, Travel Modes (Driving Time) is enabled for the inputesri.layers.Layer with the point geometries (esriGeometryPoint). */
-    enableTravelModes?: boolean;
-    /** Array of point layers used for setting the required facilities layer and candidate facilities layer. */
-    featureLayers: esri.layers.Featureesri.layers.Layer[];
-    /** Sets the selected folder of the select folder dropdown. */
-    folderId?: string;
-    /** Sets the selected folder of the select folder dropdown. */
-    folderName?: string;
-    /** Reference to the map. */
-    map?: esri.Map;
-    /** The maximum travel time or distance allowed between a demand location and its allocated facility. */
-    maxTravelRange?: number;
-    /** String value indicating the field name on the demandLocationesri.layers.Layer specifying the maximum travel time or distance allowed between a demand location and its allocated facility. */
-    maxTravelRangeField?: string;
-    /** The name of the output layer to be displayed in the result layer  nameinputbox. */
-    outputLayerName?: string;
-    /** The percentage of the total demand that you want the chosen and required facilities to capture. */
-    percentDemandCoverage?: number;
-    /** The URL to the ArcGIS organization or Portal site where the GP server is hosted. */
-    portalUrl?: string;
-    /** Specify how much demand every facility in the requiredFacilitiesesri.layers.Layer is capable of supplying. */
-    requiredFacilitiesCapacity?: number;
-    /** A field on the requiredFacilitiesesri.layers.Layer representing how much demand each facility in this layer is capable of supplying. */
-    requiredFacilitiesCapacityField?: string;
-    /** A point layer specifying one or more locations that act as facilities by providing some kind of service. */
-    requiredFacilitiesLayer?: esri.layers.Featureesri.layers.Layer;
-    /** Indicates whether to return the result of analysis as a client-side feature collection. */
-    returnFeatureCollection?: boolean;
-    /** Indicates whether the "choose extent checkbox" is displayed. */
-    showChooseExtent?: boolean;
-    /** Indicates whether to show the credit options. */
-    showCredits ?: boolean;
-    /** Indicates whether the help links are displayed. */
-    showHelp?: boolean;
-    /** Indicates whether to add an option to the UI that allows users to choose ready-to-use analysis layers from the Living Atlas Analysis Layers. */
-    showReadyToUseLayers?: boolean;
-    /** Indicates whether to display a dropdown menu listing valid input analysis layers. */
-    showSelectAnalysisLayer?: boolean;
-    /** Indicates whether the select folder dropdown will be displayed. */
-    showSelectFolder?: boolean;
-    /** The default widget title with a custom title. */
-    title?: string;
-  }
   export interface CircleOptions1 {
     /** Applicable when the spatial reference of the center point is either set to Web Mercator or geographic/geodesic as true would apply. */
     geodesic?: boolean;
@@ -311,7 +235,7 @@ declare namespace esri {
   }
   export interface CircleOptions2 {
     /** The center point of the circle. */
-    center: esri.geometry.Point | number[];
+    center: any;
     /** Applicable when the spatial reference of the center point is either set to Web Mercator or geographic/geodesic as true would apply. */
     geodesic?: boolean;
     /** A circle can be thought of similar to a polygon. */
@@ -324,15 +248,19 @@ declare namespace esri {
   export interface ClassedColorSliderOptions {
     /** Data map containing renderer information. */
     breakInfos: any;
-    /** Indicates the classification method used to divide the range of values into bins. */
+    /** Classification method. */
     classificationMethod?: string;
-    /** Required: Handles identified by their index values within the stops array. */
+    /** Handles identified by their index values within the stops array. */
     handles: number[];
-    /** Represents the histogram data object. */
+    /** Represents histogram data object. */
     histogram?: any;
     /** Width of the histogram in pixels. */
     histogramWidth?: number;
-    /** Indicates how data values are normalized. */
+    /** Absolute maximum value of the slider. */
+    maxValue?: number;
+    /** Absolute minimum value of the slider. */
+    minValue?: number;
+    /** Normalization type. */
     normalizationType?: string;
     /** Handle identified by its index value within the stops array. */
     primaryHandle?: number;
@@ -346,51 +274,61 @@ declare namespace esri {
     showLabels?: boolean;
     /** Displays ticks on slider when true. */
     showTicks?: boolean;
-    /** Represents the statistics data object. */
+    /** Represents statistics data object. */
     statistics?: any;
   }
   export interface ClassedSizeSliderOptions {
-    /** The data map containing renderer information. */
+    /** Data map containing renderer information. */
     breakInfos: any;
-    /** Optional: Indicates the classification method used to divide the range of values into bins. */
+    /** Classification method. */
     classificationMethod?: string;
-    /** Required: Handles identified by their index values within the stops array. */
+    /** Handles identified by their index values within the stops array. */
     handles: number[];
-    /** Represents the histogram data object. */
+    /** Represents histogram data object. */
     histogram?: any;
     /** Width of histogram in pixels. */
     histogramWidth?: number;
-    /** Indicates how data values are normalized. */
+    /** Absolute maximum value of the slider. */
+    maxValue?: number;
+    /** Absolute minimum value of the slider. */
+    minValue?: number;
+    /** Normalization type. */
     normalizationType?: string;
-    /** The handle identified by its index value within the stops array. */
+    /** Handle identified by its index value within the stops array. */
     primaryHandle?: number;
     /** Width of slider ramp in pixels. */
     rampWidth?: number;
     /** Displays slider handles when true. */
     showHandles?: boolean;
-    /** Indicates whether to display the histogram. */
+    /** Displays the histogram when true. */
     showHistogram?: boolean;
     /** Displays labels when true. */
     showLabels?: boolean;
     /** Displays slider ticks when true. */
     showTicks?: boolean;
-    /** Optional: Represents the statistics data object. */
+    /** Represents statistics data object. */
     statistics?: any;
+    /** Indicates whether to use a circle or line-based ClassedSizeSlider. */
+    symbol?: any;
   }
   export interface ColorInfoSliderOptions {
-    /** The data map containing renderer information. */
+    /** Classification method. */
+    classificationMethod?: string;
+    /** Data map containing renderer information. */
     colorInfo: any;
     /** Handles identified by their index values within the stops array. */
     handles: number[];
-    /** Optional: Represents the histogram data object. */
+    /** Represents histogram data object. */
     histogram?: any;
     /** Width of histogram in pixels. */
     histogramWidth?: number;
-    /** The absolute maximum value of the slider. */
+    /** Absolute maximum value of slider. */
     maxValue?: number;
-    /** The absolute minimum value of the slider. */
+    /** Absolute minimum value of slider. */
     minValue?: number;
-    /** The handle identified by its index value within the stops array. */
+    /** Normalization Type. */
+    normalizationType?: string;
+    /** Handle identified by its index value within the stops array. */
     primaryHandle?: number;
     /** Width of widget ramp in pixels. */
     rampWidth?: number;
@@ -400,15 +338,13 @@ declare namespace esri {
     showHistogram?: boolean;
     /** Displays labels when set to true. */
     showLabels?: boolean;
-    /** Indicates whether to display percentage labels. */
-    showRatioLabels?: boolean | string;
-    /** Displays tick marks when set to true. */
+    /** Displays ticks when set to true. */
     showTicks?: boolean;
     /** Displays transparent background when set to true. */
     showTransparentBackground?: boolean;
-    /** Represents a statistics data object. */
+    /** Represents statistics data object. */
     statistics?: any;
-    /** Additional options to customize slider. */
+    /** Object containing additional options. */
     zoomOptions?: any;
   }
   export interface ColorPickerOptions {
@@ -540,20 +476,12 @@ declare namespace esri {
     locationProvider: esri.tasks.locationproviders.LocationProviderBase;
   }
   export interface DataBrowserOptions {
-    /** Whether or not to display the hierarchy dropdown for countries with multiple hierarchies (e.g. */
-    allowHierarchies?: boolean;
     /** Show/hide country drop down. */
     countryBox?: boolean;
     /** Two-digit country code selected in the country drop down. */
     countryID?: string;
-    /** The hierarchy to load for a country (e.g. */
-    hierarchyID?: string;
-    /** Text string to display on the back button on the second and third pages of the Data Browser. */
-    pageBackButton?: string;
     /** Selected variables array. */
     selection?: string[];
-    /** Whether to display the "Shopping Cart" of selected variables. */
-    shoppingCart?: boolean;
     /** Title to show in the top left hand corner. */
     title?: string;
   }
@@ -565,7 +493,7 @@ declare namespace esri {
   }
   export interface DirectionsOptions {
     /** Defines the values that label each stop. */
-    alphabet?: string | string[] | boolean;
+    alphabet?: any;
     /** When true, solve will start when the last destination is complete and enter key is hit. */
     autoSolve?: boolean;
     /** Display the 'Add Destination' button. */
@@ -581,9 +509,13 @@ declare namespace esri {
     /** Focus the cursor in the stop input when a new stop is added. */
     focusOnNewStop?: boolean;
     /** The symbol that is used to denote the start location on the map. */
-    fromSymbol?: PictureMarkeresri.symbols.Symbol;
+    fromSymbol?: esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol;
     /** The symbol that displays when the from location is dragged to a new location. */
-    fromSymbolDrag?: PictureMarkeresri.symbols.Symbol;
+    fromSymbolDrag?: esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol;
+    /** Define optional geocoder options view the esri.dijit.Geocoder help for details on the object properties. */
+    geocoderOptions?: any;
+    /** List of esri.dijit.Geocoder widgets used for each stop. */
+    geocoders?: esri.dijit.Geocoder[];
     /** If available, this geometry service is used to provide latitude/longitude values for stops whose reverse geocoding did not return an address (Added at v3.11). */
     geometryTaskUrl?: string;
     /** Reference to the map object. */
@@ -607,15 +539,13 @@ declare namespace esri {
     /** Specify the input parameters for the route task. */
     routeParams?: esri.tasks.RouteParameters;
     /** Define the symbol used to draw the route on the map. */
-    routeSymbol?: SimpleLineesri.symbols.Symbol;
+    routeSymbol?: esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol;
     /** Specify the service that will be used to calculate directions. */
     routeTaskUrl?: string;
-    /** Used to define optional search options. */
-    searchOptions?: any;
     /** Define the info template for the popup that appears when the popup for a route segment is displayed. */
     segmentInfoTemplate?: esri.InfoTemplate;
     /** Specify the symbol used to render the individual route segments that display on the map when a direction step is clicked. */
-    segmentSymbol?: SimpleLineesri.symbols.Symbol;
+    segmentSymbol?: esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol;
     /** Defines whether the Directions widget will show the map-click-active toggle button. */
     showActivateButton?: boolean;
     /** If true, the Clear button is shown. */
@@ -643,13 +573,13 @@ declare namespace esri {
     /** List of graphics used to display the point marker. */
     stopGraphics?: esri.Graphic[];
     /** An array of points that define the stop locations. */
-    stops?: esri.geometry.Point[] | number[][] | string[] | any[];
+    stops?: any;
     /** Define the info template for the popup that appears when a stop is clicked. */
     stopsInfoTemplate?: esri.InfoTemplate;
     /** The symbol that displays on the map for the locations between the origin and final destination locations. */
-    stopSymbol?: PictureMarkeresri.symbols.Symbol;
+    stopSymbol?: esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol;
     /** The symbol that displays when an intermediate location is dragged to a new location. */
-    stopSymbolDrag?: PictureMarkeresri.symbols.Symbol;
+    stopSymbolDrag?: esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol;
     /** List of graphics used to display the text over the point marker. */
     textGraphics?: esri.Graphic[];
     /** The text color for the text that appears for each destination. */
@@ -661,9 +591,9 @@ declare namespace esri {
     /** Specify a theme for the widget. */
     theme?: string;
     /** The symbol that is used to denote the final destination location on the map. */
-    toSymbol?: PictureMarkeresri.symbols.Symbol;
+    toSymbol?: esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol;
     /** The symbol that displays when an final destination location is dragged to a new location. */
-    toSymbolDrag?: PictureMarkeresri.symbols.Symbol;
+    toSymbolDrag?: esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol;
     /** When true, real-time traffic is used to plan the route. */
     traffic?: boolean;
     /** The traffic layer used for real-time traffic. */
@@ -707,7 +637,7 @@ declare namespace esri {
     /** An array of objects, where each object defines a field to be mapped and its color. */
     fields: any[];
     /** The line symbol to use on the outline of the feature. */
-    outline?: Lineesri.symbols.Symbol;
+    outline?: esri.symbols.Lineesri.symbols.Symbol;
   }
   export interface DrawOptions {
     /** Determines how much time to wait before adding a new point when using a freehand tool. */
@@ -729,31 +659,21 @@ declare namespace esri {
     /** Specifies whether users can add new vertices. */
     allowAddVertices?: boolean;
     /** Specifies whether users can delete vertices. */
-    allowDeleteVertices?: boolean;
+    allowDeletevertices?: boolean;
     /** Line symbol used to draw the guild lines, displayed when moving vertices. */
-    ghostLineSymbol?: Lineesri.symbols.Symbol;
+    ghostLineSymbol?: esri.symbols.Lineesri.symbols.Symbol;
     /** Marker symbol used to display the insertable vertices. */
-    ghostVertexSymbol?: Markeresri.symbols.Symbol;
+    ghostVertexSymbol?: esri.symbols.Markeresri.symbols.Symbol;
     /** If users want to place the text symbol editor to a user defined HTML element. */
-    textSymbolEditorHolder?: Node | string;
+    textSymbolEditorHolder?: any;
     /** When true, if the geometry is re-sized the aspect ration will be preserved. */
     uniformScaling?: boolean;
     /** Marker symbol used to draw the vertices. */
-    vertexSymbol?: Markeresri.symbols.Symbol;
+    vertexSymbol?: esri.symbols.Markeresri.symbols.Symbol;
   }
   export interface EditorOptions {
     /** Create a new settings object that defines the capabilities of the widget. */
     settings?: any;
-  }
-  export interface ElevationProfileOptions {
-    /** This object contains properties used to render the chart. */
-    chartOptions?: any;
-    /** Reference to the map. */
-    map: esri.Map;
-    /** The URL to the elevation profile service. */
-    profileTaskUrl: string;
-    /** The measurement unit of the scalebar units. */
-    scalebarUnits?: string;
   }
   export interface EnrichLayerOptions {
     /** The URL to the GPServer used to execute an analysis job. */
@@ -859,41 +779,23 @@ declare namespace esri {
     /** Initial visibility of the layer. */
     visible?: boolean;
   }
-  export interface FeatureLayerStatisticsOptions {
-    /** The feature layer that will be the source for calculating statistics. */
-    layer: esri.layers.Featureesri.layers.Layer;
-  }
   export interface FeatureTableOptions {
+    /** A dGrid property. */
+    allowSelectAll?: boolean;
+    /** A dGrid property. */
+    cellNavigation?: boolean;
     /** Object defining the date options specifically for formatting date and time editors. */
     dateOptions?: any;
-    /** Sets the editing state for the FeatureTable. */
-    editable?: boolean;
     /** The featureesri.layers.Layer that the table is associated with. */
     featureLayer: esri.layers.Featureesri.layers.Layer;
-    /** An array of objects representing field information. */
-    fieldInfos?: any[];
-    /** Reference to the 'Options' drop-down menu. */
-    gridMenu?: any;
-    /** Object that can be used to set properties used by the underlying dgrid. */
-    gridOptions?: any;
     /** Columns to hide by default using the dGrid ColumnHider extension. */
     hiddenFields?: string[];
     /** A reference to the Map. */
     map?: esri.Map;
-    /** Adds additional functional menu items for the 'Options' drop-down menu. */
-    menuFunctions?: any[];
-    /** Attribute fields to include in the FeatureTable. */
-    outFields?: string[];
-    /** Displays the data type of the field right under the field label. */
-    showDataTypes?: boolean;
-    /** Displays or hides the FeatureTable header. */
-    showGridHeader?: boolean;
-    /** Displays or hides 'Options' drop-down menu of the FeatureTable. */
-    showGridMenu?: boolean;
-    /** Enables an interaction between the map and the feature table. */
-    syncSelection?: boolean;
-    /** Enables pan/zoom to selected features on the map when the table in 'sync selection' mode. */
-    zoomToSelection?: boolean;
+    /** A dGrid property. */
+    noDataMessage?: string;
+    /** A dGrid property. */
+    selectionMode?: string;
   }
   export interface FindHotSpotsOptions {
     /** An array of feature layer candidates to be selected as the aggregation polygon layer. */
@@ -1016,15 +918,15 @@ declare namespace esri {
     polylineSymbol?: esri.symbols.Symbol;
   }
   export interface GeocoderOptions {
-    /** By default, the Geocoder widget uses the Esri World esri.tasks.Locator to find search locations. */
-    arcgisGeocoder?: boolean | any;
+    /** By default, the esri.dijit.Geocoder widget uses the Esri World esri.tasks.Locator to find search locations. */
+    arcgisGeocoder?: any;
     /** When false, the geocoder will not display the auto-complete results menu. */
     autoComplete?: boolean;
     /** When false, the geolocator will not navigate to the result after selection or search. */
     autoNavigate?: boolean;
     /** When false, the geocoder menu will not be displayed when more than one geocoder is set. */
     geocoderMenu?: boolean;
-    /** Defines the geocoders that will be used by the Geocoder widget. */
+    /** Defines the geocoders that will be used by the esri.dijit.Geocoder widget. */
     geocoders?: any[];
     /** Specify a graphicsesri.layers.Layer to use when  highlightesri.symbols.Symbol is true. */
     graphicsLayer?: esri.layers.Graphicsesri.layers.Layer;
@@ -1059,7 +961,7 @@ declare namespace esri {
     /** Class attribute to set for the layer's node. */
     className?: string;
     /** List of attribute fields to be added as custom data attributes to graphics node. */
-    dataAttributes?: string | string[];
+    dataAttributes?: any;
     /** When true, graphics are displayed during panning. */
     displayOnPan?: boolean;
     /** Id to assign to the layer. */
@@ -1139,44 +1041,6 @@ declare namespace esri {
     /** Specify the geodatabase version to display. */
     gdbVersion?: string;
   }
-  export interface ImageServiceMeasureOptions {
-    /** esri.symbols.Symbol to be used when drawing a polygon or extent. */
-    fillSymbol?: SimpleFillesri.symbols.Symbol;
-    /** Image service layer with which the toolbar is associated. */
-    layer: ArcGISImageServiceesri.layers.Layer;
-    /** esri.symbols.Symbol to be used when drawing a line. */
-    lineSymbol?: SimpleLineesri.symbols.Symbol;
-    /** esri.Map instance with which the toolbar is associate. */
-    map: esri.Map;
-    /** esri.symbols.Symbol to be used when drawing a point. */
-    markerSymbol?: SimpleMarkeresri.symbols.Symbol;
-  }
-  export interface ImageServiceMeasureToolOptions {
-    /** The angular unit in which directions of line segments will be calculated. */
-    angularUnit?: string;
-    /** The area unit in which areas of polygons will be calculated. */
-    areaUnit?: string;
-    /** esri.symbols.Symbol to be used when drawing a polygon or extent. */
-    fillSymbol?: SimpleFillesri.symbols.Symbol;
-    /** Image service layer the toolbar is associated with. */
-    layer: ArcGISImageServiceesri.layers.Layer;
-    /** The linear unit in which height, length, or perimeters will be calculated. */
-    linearUnit?: string;
-    /** esri.symbols.Symbol to be used when drawing a line. */
-    lineSymbol?: SimpleLineesri.symbols.Symbol;
-    /** esri.Map instance the toolbar is associated with. */
-    map: esri.Map;
-    /** esri.symbols.Symbol to be used when drawing a point. */
-    markerSymbol?: SimpleMarkeresri.symbols.Symbol;
-  }
-  export interface ImageSpatialReferenceOptions {
-    /** The full Image Coordinate System object, which includes transformations and map spatial reference information specific to each image. */
-    ics?: any;
-    /** The OBJECTID of the image in a mosaic dataset. */
-    icsid?: number;
-    /** The url of the image service. */
-    url: string;
-  }
   export interface KMLLayerOptions {
     /** Class attribute to set for the layer's node. */
     className?: string;
@@ -1190,24 +1054,6 @@ declare namespace esri {
     id?: string;
     /** Display mode for the label layer. */
     mode?: string;
-  }
-  export interface LayerListOptions {
-    /** An array of operational layers. */
-    layers: any[];
-    /** Reference to the map. */
-    map: esri.Map;
-    /** Indicates whether to remove underscores from the layer title. */
-    removeUnderscores?: boolean;
-    /** Indicates whether to display a legend for the layer items. */
-    showLegend?: boolean;
-    /** Indicates whether to display the opacity slider. */
-    showOpacitySlider?: boolean;
-    /** Indicates whether to show sublayers in the list of layers. */
-    showSubLayers?: boolean;
-    /** The CSS class selector used to uniquely style the widget. */
-    theme?: string;
-    /** Indicates whether to show the LayerList widget. */
-    visible?: boolean;
   }
   export interface LayerOptions {
     /** Class attribute to set for the layer's node. */
@@ -1293,7 +1139,7 @@ declare namespace esri {
     /** Specify a basemap for the map. */
     basemap?: string;
     /** The location where the map should be centered. */
-    center?: number[] | esri.geometry.Point;
+    center?: any;
     /** When true, graphics are displayed during panning. */
     displayGraphicsOnPan?: boolean;
     /** If provided, the extent and projection of the map is set to the properties of Extent. */
@@ -1359,13 +1205,13 @@ declare namespace esri {
     /** The default length unit for the measure distance tool. */
     defaultLengthUnit?: esri.Units;
     /** Allows the user to immediately measure previously-created geometry on dijit creation. */
-    geometry?: esri.geometry.Point | esri.geometry.Polyline | esri.geometry.Polygon;
+    geometry?: any;
     /** Line symbol used to draw the lines for the measure line and measure distance tools. */
-    lineSymbol?: SimpleLineesri.symbols.Symbol;
+    lineSymbol?: esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol;
     /** Reference to the map. */
     map: esri.Map;
     /** Marker symbol used to draw the points for the measure line tool. */
-    pointSymbol?: Markeresri.symbols.Symbol;
+    pointSymbol?: esri.symbols.Markeresri.symbols.Symbol;
   }
   export interface MergeLayersOptions {
     /** The URL to the GPServer used to execute an analysis job. */
@@ -1450,55 +1296,23 @@ declare namespace esri {
     popupWindowFeatures?: string;
     /** The ArcGIS for Portal URL. */
     portalUrl?: string;
-    /** Indicates whether to display social logins such as Google/Facebook. */
-    showSocialLogins?: boolean;
-  }
-  export interface ObliqueViewerOptions {
-    /** Azimuth angle value for which to display oblique images. */
-    azimuthAngle?: number;
-    /** Image service field that denotes the sensor azimuth value for a record. */
-    azimuthField?: string;
-    /** Tolerance value applied when filtering azimuth images. */
-    azimuthTolerance?: number;
-    /** Image service field that denotes the sensor elevation value for a record. */
-    elevationField?: string;
-    /** Elevation value between 0 and 90 that differentiates an image as oblique or nadir. */
-    elevationThreshold?: number;
-    /** Image service layer to be used as source for oblique images. */
-    imageServiceLayer: ArcGISImageServiceesri.layers.Layer;
-    /** esri.Map object associated with the widget. */
-    map: esri.Map;
-    /** When true, the widget doesn't refresh itself with new oblique records when the map's extent changes. */
-    noQueryOnExtentChange?: boolean;
-    /** Raster info fields to be queried and displayed in the raster list. */
-    rasterInfoFields?: any[];
-    /** DOM Node or id, where the list element is to be placed. */
-    rasterListDiv?: string | Node;
-    /** When true, list is populated on data refresh. */
-    rasterListRefresh?: boolean;
-    /** DOM Node or id, where the oblique rotation gauge element is to be placed. */
-    rotationDiv?: string | Node;
-    /** When true, thumbnail images for records are displayed in the list. */
-    showThumbnail?: boolean;
-    /** Sorting function that takes query results and sorts them. */
-    sorter?: Function;
   }
   export interface OpacitySliderOptions {
     /** Handles identified by their index values within the stops array. */
     handles: number[];
-    /** Represents the histogram data object. */
+    /** Represents histogram data object. */
     histogram?: any;
     /** Width of histogram in pixels. */
     histogramWidth?: number;
-    /** The absolute maximum value of the slider. */
+    /** Absolute maximum value of the slider. */
     maxValue?: number;
-    /** The absolute minimum value of the slider. */
+    /** Absolute minimum value of the slider. */
     minValue?: number;
-    /** The data map containing renderer information. */
+    /** Data map containing renderer information. */
     opacityInfo: any;
-    /** The handle identified by its index value within the stops array. */
+    /** Handle identified by its index value within the stops array. */
     primaryHandle?: number;
-    /** Represents the width of the SVG ramp in pixels. */
+    /** Width of slider ramp in pixels. */
     rampWidth?: number;
     /** Displays slider handles when true. */
     showHandles?: boolean;
@@ -1510,9 +1324,9 @@ declare namespace esri {
     showTicks?: boolean;
     /** Displays the transparent background when true. */
     showTransparentBackground?: boolean;
-    /** Represents a statistics data object. */
+    /** Represents statistics data object. */
     statistics?: any;
-    /** Additional options to customize slider. */
+    /** Additional options for slider customization. */
     zoomOptions?: any;
   }
   export interface OpenStreetMapLayerOptions {
@@ -1611,13 +1425,13 @@ declare namespace esri {
     /** When true, the feature is highlighted, set to false to disable highlighting. */
     highlight?: boolean;
     /** Define the symbol used to highlight line features. */
-    lineSymbol?: Lineesri.symbols.Symbol;
+    lineSymbol?: esri.symbols.Lineesri.symbols.Symbol;
     /** Specify the margin (in pixels) to leave to the left of the popup window when it is maximized. */
     marginLeft?: number;
     /** Specify the margin (in pixels) to leave at the top of the popup window when it is maximized. */
     marginTop?: number;
     /** Define the marker symbol used to highlight point features. */
-    markerSymbol?: Markeresri.symbols.Symbol;
+    markerSymbol?: esri.symbols.Markeresri.symbols.Symbol;
     /** Specify the x-offset (in pixels) used when positioning the popup. */
     offsetX?: number;
     /** Specify the y-offset (in pixels) used when positioning the popup. */
@@ -1637,13 +1451,13 @@ declare namespace esri {
     /** Indicates whether a feature should remain highlighted after the user closes the popup window. */
     keepHighlightOnHide?: boolean;
     /** Define the symbol used to highlight line features. */
-    lineSymbol?: Lineesri.symbols.Symbol;
+    lineSymbol?: esri.symbols.Lineesri.symbols.Symbol;
     /** Specify the margin (in pixels) to leave to the left of the popup window when it is maximized. */
     marginLeft?: number;
     /** Specify the margin (in pixels) to leave at the top of the popup window when it is maximized. */
     marginTop?: number;
     /** Define the marker symbol used to highlight point features. */
-    markerSymbol?: Markeresri.symbols.Symbol;
+    markerSymbol?: esri.symbols.Markeresri.symbols.Symbol;
     /** Specify the x-offset (in pixels) used when positioning the popup. */
     offsetX?: number;
     /** Specify the y-offset (in pixels) used when positioning the popup. */
@@ -1730,14 +1544,14 @@ declare namespace esri {
     minimum: number;
     /** Bottom label for the slider. */
     minLabel?: string;
-    /** Accuracy of the data (related to rounding). */
+    /** **CHECK THIS: Is it num of dec places? - Accuracy of the data (related to rounding). */
     precision?: number;
     /** Primary handle identified by its index value within the related infos array (color, size, break). */
     primaryHandle?: number;
     /** Toggle for showing the black handle bars. */
     showHandles?: boolean;
     /** Flexible toggle for showing labels (e.g. */
-    showLabels?: boolean | string[];
+    showLabels?: any;
     /** Toggle for showing the horizontal line indicators from the center of the handle. */
     showTicks?: boolean;
     /** Stores positions represented as numbers that fall between minimum and maximum. */
@@ -1765,14 +1579,12 @@ declare namespace esri {
   }
   export interface SearchOptions {
     /** The currently selected source. */
-    activeSourceIndex?: number | string;
+    activeSourceIndex?: any;
     /** Indicates whether to automatically add all the feature layers from the map. */
     addLayersFromMap?: boolean;
-    /** This is the default value used as a hint for input text when searching on multiple sources. */
-    allPlaceholder?: string;
     /** Indicates whether to automatically navigate to the selected result. */
     autoNavigate?: boolean;
-    /** Indicates whether to automatically select the first geocoded result (not the first suggestion). */
+    /** Indicates whether to automatically select the first result. */
     autoSelect?: boolean;
     /** Indicates whether to enable an option to collapse/expand the search into a button. */
     enableButtonMode?: boolean;
@@ -1782,8 +1594,6 @@ declare namespace esri {
     enableInfoWindow?: boolean;
     /** Indicates whether to enable showing a label for the geometry.The default value is false. */
     enableLabel?: boolean;
-    /** Indicates whether to display the option to search "All" sources. */
-    enableSearchingAll?: boolean;
     /** Indicates whether to enable the menu for selecting different sources. */
     enableSourcesMenu?: boolean;
     /** Indicates whether or not to enable suggest on the widget. */
@@ -1800,7 +1610,7 @@ declare namespace esri {
     infoTemplate?: esri.InfoTemplate;
     /** The text symbol for the label graphic. */
     labelSymbol?: Textesri.symbols.Symbol;
-    /** The default distance specified in meters used to reverse geocode, (if not specified by source). */
+    /** The default distance specified in meters used to reverse geocode, (if not specified by source).The default value is 1500. */
     locationToAddressDistance?: number;
     /** Reference to the map. */
     map?: esri.Map;
@@ -1826,19 +1636,23 @@ declare namespace esri {
     zoomScale?: number;
   }
   export interface SizeInfoSliderOptions {
+    /** Classification method. */
+    classificationMethod?: string;
     /** Handles identified by their index values within the stops array. */
     handles: number[];
-    /** Represents the histogram data object. */
+    /** Represents histogram data object. */
     histogram?: any;
     /** Width of the histogram in pixels. */
     histogramWidth?: number;
-    /** The absolute maximum value of the slider. */
+    /** Absolute maximum value of the slider. */
     maxValue?: number;
-    /** The absolute minimum value of the slider. */
+    /** Absolute minimum value of the slider. */
     minValue?: number;
-    /** The handle identified by its index value within the stops array. */
+    /** Normalization type. */
+    normalizationType?: string;
+    /** Handle identified by its index value within the stops array. */
     primaryHandle?: number;
-    /** Represents the width of the SVG ramp in pixels. */
+    /** Width of slider ramp in pixels. */
     rampWidth?: number;
     /** Displays slider handles when true. */
     showHandles?: boolean;
@@ -1848,12 +1662,10 @@ declare namespace esri {
     showLabels?: boolean;
     /** Displays slider ticks when true. */
     showTicks?: boolean;
-    /** Defines the size of the symbol where feature size is proportional to data value. */
+    /** Data map containing renderer information. */
     sizeInfo: any;
-    /** Represents the statistics data object. */
+    /** Represents statistics data object. */
     statistics?: any;
-    /** The SimpleLineesri.symbols.Symbol or SimpleMarkeresri.symbols.Symbol used with the widget. */
-    symbol: esri.symbols.Symbol;
     /** Additional options to customize slider. */
     zoomOptions?: any;
   }
@@ -1867,7 +1679,7 @@ declare namespace esri {
     /** When alwaysSnap is set to false use this option to define the key users press to enable snapping. */
     snapKey?: any;
     /** Define a symbol for the snapping location. */
-    snapPointSymbol?: SimpleMarkeresri.symbols.Symbol;
+    snapPointSymbol?: Simpleesri.symbols.Markeresri.symbols.Symbol;
     /** Specify the radius of the snapping circle in pixels. */
     tolerance?: number;
   }
@@ -2000,12 +1812,10 @@ declare namespace esri {
     sumWithinLayer: esri.layers.Featureesri.layers.Layer;
   }
   export interface SymbolStylerOptions {
-    /** Added at v. */
-    portal?: string | any;
     /** Self response of Portal used as symbol provider. */
-    portalSelf?: any;
+    portalSelf: string;
     /** URL to Portal used as symbol provider. */
-    portalUrl?: string;
+    portalUrl: string;
   }
   export interface TemplatePickerOptions {
     /** Number of visible columns. */
@@ -2028,18 +1838,6 @@ declare namespace esri {
     style?: string;
     /** When true, the template picker displays map service legend swatches for feature layers created in selection mode that have an associated map service added to the map as a dynamic map service layer. */
     useLegend?: boolean;
-  }
-  export interface TimeClassBreaksAgerOptions {
-    /** The alpha opacity for the break. */
-    alpha: number;
-    /** The color for the break. */
-    color: esri.Color;
-    /** The maximum age for the break info. */
-    maxAge: number;
-    /** The minimum age for the break info. */
-    minAge: number;
-    /** The size for the break. */
-    size: number;
   }
   export interface TimeSliderOptions {
     /** When true, subtracts one second to the time extent's end time to exclude data at the exact end time instant. */
@@ -2094,54 +1892,6 @@ declare namespace esri {
     singleArrowSymbol?: esri.symbols.Symbol;
     /** A predefined style. */
     style?: string;
-  }
-  export interface VectorTileLayerOptions {
-    /** Lists which levels of the layer to draw. */
-    displayLevels?: number[];
-    /** Maximum visible scale for the layer. */
-    maxScale?: number;
-    /** Minimum visible scale for the layer. */
-    minScale?: number;
-    /** Initial opacity or transparency of layer. */
-    opacity?: number;
-    /** Visibility of the layer. */
-    visible?: boolean;
-  }
-  export interface VisibleScaleRangeSliderOptions {
-    /** esri.layers.Layer used to determine the suggested scale range and set the minScale, maxScale values. */
-    layer?: esri.layers.Layer;
-    /** Reference to the map. */
-    map: esri.Map;
-    /** Region of preview scale thumbnails. */
-    region?: string;
-  }
-  export interface WFSLayerOptions {
-    /** Full WFS body request sent to WFS server via POST method. */
-    getFeatureRequest?: string;
-    /** URL used when executing getFeature request. */
-    getFeatureUrl?: string;
-    /** The template that defines the content to display in the map info window when the user clicks on a feature. */
-    infoTemplate?: esri.InfoTemplate;
-    /** For "ondemand" mode only. */
-    inverseFilter?: boolean;
-    /** When true, the XY coordinates should be swapped (this is required for some WFS vendors, versions, and WKIDS). */
-    inverseResponse?: boolean;
-    /** Specifies the maximum number of features to return in one response. */
-    maxFeatures?: number;
-    /** The query mode for the WFS layer. */
-    mode?: string;
-    /** For "ondemand" mode only. */
-    nsGeometryFieldName?: string;
-    /** The full layer name including the namespace as a prefix. */
-    nsLayerName?: string;
-    /** When true, more details will be printed to console when the first connection to a WFS server is established. */
-    showDetails?: boolean;
-    /** URL to the WFS server. */
-    url: string;
-    /** OGC WFS version number. */
-    version?: string;
-    /** The well-known ID of the spatial reference used by the WFSLayer. */
-    wkid?: string;
   }
   export interface WMSLayerOptions {
     /** Specify the map image format, valid options are png,jpg,bmp,gif,svg. */
@@ -2221,7 +1971,17 @@ declare namespace esri {
      * Creates a new esri.Color object.
      * @param color A named string, hex string, array of rgb or rgba values, an object with r, g, b, and a properties, or another esri.Color object.
      */
-    constructor(color?: string | number[] | any);
+    constructor(color?: string);
+    /**
+     * Creates a new esri.Color object.
+     * @param color A named string, hex string, array of rgb or rgba values, an object with r, g, b, and a properties, or another esri.Color object.
+     */
+    constructor(color?: number[]);
+    /**
+     * Creates a new esri.Color object.
+     * @param color A named string, hex string, array of rgb or rgba values, an object with r, g, b, and a properties, or another esri.Color object.
+     */
+    constructor(color?: any);
     /**
      * Blend colors start and end with weight from 0 to 1, 0.5 being a 50/50 blend.
      * @param start The start color.
@@ -2258,7 +2018,17 @@ declare namespace esri {
      * Takes a named string, hex string, array of rgb or rgba values, an object with r, g, b, and a properties, or another esri.Color object and sets this color instance to that value.
      * @param color The new color value.
      */
-    setColor(color: string | number[] | any): esri.Color;
+    setColor(color: string): esri.Color;
+    /**
+     * Takes a named string, hex string, array of rgb or rgba values, an object with r, g, b, and a properties, or another esri.Color object and sets this color instance to that value.
+     * @param color The new color value.
+     */
+    setColor(color: number[]): esri.Color;
+    /**
+     * Takes a named string, hex string, array of rgb or rgba values, an object with r, g, b, and a properties, or another esri.Color object and sets this color instance to that value.
+     * @param color The new color value.
+     */
+    setColor(color: any): esri.Color;
     /**
      * Returns a css color string in rgb(a) representation.
      * @param includeAlpha If true, the alpha value will be included in the result.
@@ -2308,7 +2078,7 @@ declare namespace esri {
     /** Dialog box widget used to challenge the user for their credentials when the application attempts to access a secure resource. */
     dialog: any;
     /**
-     * When accessing secure resources via OAuth2 from ArcGIS.com or one of its sub-domains the IdentityManager redirects the user to the ArcGIS.com or Portal for ArcGIS sign-in page.
+     * When accessing secure resources via Oauth2 from ArcGIS.com or one of its sub-domains the IdentityManager redirects the user to the ArcGIS.com or Portal for ArcGIS sign-in page.
      * @param handlerFunction When called, the function passed to setOAuthRedirectionHandler receives an object containing the redirection properties.
      */
     setOAuthRedirectionHandler(handlerFunction: Function): void;
@@ -2416,42 +2186,18 @@ declare namespace esri {
     /** Return properties of this object in JSON. */
     toJson(): any;
     /** Fired when a credential is created. */
-    on(type: "credential-create", listener: (event: { credential: esri.Credential; target: esri.IdentityManagerBase }) => void): esri.Handle;
+    on(type: "credential-create", listener: (event: { target: esri.IdentityManagerBase }) => void): esri.Handle;
     /** Fired when all credentials are destroyed. */
     on(type: "credentials-destroy", listener: (event: { target: esri.IdentityManagerBase }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
   export = esri.IdentityManagerBase;
-
-  /** Defines the Image Coordinate System (ICS) for ImageServices. */
-  class Imageesri.SpatialReference extends esri.SpatialReference {
-    /** The full Image Coordinate System, which includes transformations and map spatial reference information specific to each image. */
-    ics: any;
-    /** The OBJECTID of the image in a mosaic dataset. */
-    icsid: number;
-    /**
-     * Creates an instance of ImageSpatialReference.
-     * @param params Options that may be passed into the constructor.
-     */
-    constructor(params: esri.ImageSpatialReferenceOptions);
-    /**
-     * Tests whether the input image coordinate system equals the image coordinate system of the instance calling this method.
-     * @param inSR The Imageesri.SpatialReference to test the equality against this instance.
-     */
-    equals(inSR: ImageSpatialReference): boolean;
-    /**
-     * Converts the Imageesri.SpatialReference instance to a JSON object.
-     * @param preserveUrl Indicates whether to preserve the URL in the output JSON object.
-     */
-    toJson(preserveUrl?: boolean): boolean;
-  }
-  export = Imageesri.SpatialReference;
   /** An esri.InfoTemplate contains a title and content template string used to transform Graphic.attributes into an HTML representation. */
   class esri.InfoTemplate {
     /** The template for defining how to format the content used in an InfoWindow. */
-    content: string | Function;
+    content: any;
     /** The template for defining how to format the title used in an InfoWindow. */
-    title: string | Function;
+    title: any;
     /** Creates a new empty esri.InfoTemplate object. */
     constructor();
     /**
@@ -2459,7 +2205,7 @@ declare namespace esri {
      * @param title The template for defining how to format the title used in an InfoWindow.
      * @param content The template for defining how to format the content used in an InfoWindow.
      */
-    constructor(title: string | Function, content: string | Function);
+    constructor(title: string, content: string);
     /**
      * Creates a new esri.InfoTemplate object using a JSON object.
      * @param json JSON object representing the InfoTemplate.
@@ -2469,12 +2215,22 @@ declare namespace esri {
      * Sets the content template.
      * @param template The template for the content.
      */
-    setContent(template: string | Function): esri.InfoTemplate;
+    setContent(template: string): esri.InfoTemplate;
+    /**
+     * Sets the content template.
+     * @param template The template for the content.
+     */
+    setContent(template: Function): esri.InfoTemplate;
     /**
      * Sets the title template.
      * @param template The template for the title.
      */
-    setTitle(template: string | Function): esri.InfoTemplate;
+    setTitle(template: string): esri.InfoTemplate;
+    /**
+     * Sets the title template.
+     * @param template The template for the title.
+     */
+    setTitle(template: Function): esri.InfoTemplate;
     /** Converts object to its ArcGIS Server JSON representation. */
     toJson(): any;
   }
@@ -2495,7 +2251,13 @@ declare namespace esri {
      * @param value A string with HTML tags or a DOM node.
      * @param parentNode The parent node where the value will be placed.
      */
-    place(value: string | HTMLElement, parentNode: Node): void;
+    place(value: string, parentNode: Node): void;
+    /**
+     * Helper method.
+     * @param value A string with HTML tags or a DOM node.
+     * @param parentNode The parent node where the value will be placed.
+     */
+    place(value: HTMLElement, parentNode: Node): void;
     /**
      * Resize the info window to the specified width and height (in pixels).
      * @param width The new width of the esri.dijit.InfoWindow in pixels.
@@ -2506,7 +2268,12 @@ declare namespace esri {
      * Define the info window content.
      * @param content The content argument can be any of the following.
      */
-    setContent(content: string | any): void;
+    setContent(content: string): void;
+    /**
+     * Define the info window content.
+     * @param content The content argument can be any of the following.
+     */
+    setContent(content: any): void;
     /**
      * This method is called by the map when the object is set as its info window.
      * @param map The map object.
@@ -2516,7 +2283,12 @@ declare namespace esri {
      * Set the input value as the title for the info window.
      * @param title  In most cases the title will be a string value but the same options are available as for the setContent method.
      */
-    setTitle(title: string | any): void;
+    setTitle(title: string): void;
+    /**
+     * Set the input value as the title for the info window.
+     * @param title  In most cases the title will be a string value but the same options are available as for the setContent method.
+     */
+    setTitle(title: any): void;
     /**
      * Display the info window at the specified location.
      * @param location Location is an instance of esri.geometry.Point.
@@ -2571,7 +2343,7 @@ declare namespace esri {
   }
   export = esri.ServerInfo;
 
-  /** The esri.SnappingManager is used to add snapping capability to the Editor, Measurement Widget,  Draw toolbar and esri.toolbars.Edit toolbar. */
+  /** The esri.SnappingManager is used to add snapping capability to the Editor, Measurement Widget,  Draw toolbar and Edit toolbar. */
   class esri.SnappingManager {
     /**
      * Create a new esri.SnappingManager object.
@@ -2649,7 +2421,7 @@ declare namespace esri {
     offset(offsetValue: number, offsetUnits: string): Timeesri.geometry.Extent;
   }
   export = Timeesri.geometry.Extent;
-  /** This class contains properties referencing default basemaps used in the JS API that allow you to add map services as default basemaps in web applications. */
+  /** Contains properties referencing default basemaps used in the JS API. */
   export var basemaps: {
     /** The Light Gray Canvas basemap is designed to be used as a neutral background map for overlaying and emphasizing other map layers. */
     gray: any;
@@ -2681,22 +2453,42 @@ declare namespace esri {
      * Returns the DOM node from HTMLElement or dijit/_WidgetBase.
      * @param target The HTMLElement or dijit/_WidgetBase to retrieve.
      */
-    getNode(target: HTMLElement | any): Node;
+    getNode(target: HTMLElement): Node;
+    /**
+     * Returns the DOM node from HTMLElement or dijit/_WidgetBase.
+     * @param target The HTMLElement or dijit/_WidgetBase to retrieve.
+     */
+    getNode(target: any): Node;
     /**
      * Hides the HTMLElement or dijit/_WidgetBase.
      * @param target The HTMLElement or dijit/_WidgetBase.
      */
-    hide(target: HTMLElement | any): void;
+    hide(target: HTMLElement): void;
+    /**
+     * Hides the HTMLElement or dijit/_WidgetBase.
+     * @param target The HTMLElement or dijit/_WidgetBase.
+     */
+    hide(target: any): void;
     /**
      * Shows the HTMLElement or dijit/_WidgetBase.
      * @param target The HTMLElement or dijit/_WidgetBase.
      */
-    show(target: HTMLElement | any): void;
+    show(target: HTMLElement): void;
+    /**
+     * Shows the HTMLElement or dijit/_WidgetBase.
+     * @param target The HTMLElement or dijit/_WidgetBase.
+     */
+    show(target: any): void;
     /**
      * If the target (HTMLElement or dijit/_WidgetBase) is currently visible, the target is hidden.
      * @param target The HTMLElement or dijit/_WidgetBase.
      */
-    toggle(target: HTMLElement | any): void;
+    toggle(target: HTMLElement): void;
+    /**
+     * If the target (HTMLElement or dijit/_WidgetBase) is currently visible, the target is hidden.
+     * @param target The HTMLElement or dijit/_WidgetBase.
+     */
+    toggle(target: any): void;
   };
 
   /** A esri.Graphic can contain geometry, a symbol, attributes, or an infoTemplate. */
@@ -2725,7 +2517,7 @@ declare namespace esri {
      */
     constructor(json: Object);
     /**
-     * Adds a new attribute or changes the value of an existing attribute on the graphic's DOM node.
+     * Adds a new attribute or changes the value of an existing attribute on the graphic's node.
      * @param name The name of the attribute.
      * @param value The value of the attribute.
      */
@@ -2815,7 +2607,12 @@ declare namespace esri {
      * Strips HTML tags from a String or Object.
      * @param value Object or String to be stripped of HTML tags.
      */
-    stripTags(value: any | string): any | string;
+    stripTags(value: any): any;
+    /**
+     * Strips HTML tags from a String or Object.
+     * @param value Object or String to be stripped of HTML tags.
+     */
+    stripTags(value: string): any;
     /**
      * A wrapper around dojo.string.substitute that can also handle wildcard substitution.
      * @param data The data object used in the substitution.
@@ -2902,7 +2699,7 @@ declare namespace esri {
      * @param divId Container id for the referencing map.
      * @param options Optional parameters.
      */
-    constructor(divId: Node | string, options?: esri.MapOptions);
+    constructor(divId: string, options?: esri.MapOptions);
     /**
      * Adds an Esri esri.layers.Layer to the map.
      * @param layer esri.layers.Layer to be added to the map.
@@ -2968,7 +2765,7 @@ declare namespace esri {
     /** Permits users to shift double click on a map to zoom in a level and center the map. */
     enableShiftDoubleClickZoom(): void;
     /**
-     * Enable snapping on the map when working with the Editor, Measurement widget or the Draw and esri.toolbars.Edit toolbars.
+     * Enable snapping on the map when working with the Editor, Measurement widget or the Draw and Edit toolbars.
      * @param snapOptions See the object specifications table below for the structure of the  snapOptions  object.
      */
     enableSnapping(snapOptions?: any): esri.SnappingManager;
@@ -3130,7 +2927,7 @@ declare namespace esri {
     /** Fires when a map layer resumes drawing. */
     on(type: "layer-resume", listener: (event: { layer: esri.layers.Layer; target: esri.Map }) => void): esri.Handle;
     /** Fires after all layers are added to the map using the map.addLayers method. */
-    on(type: "layers-add-result", listener: (event: { layers: any[]; target: esri.Map }) => void): esri.Handle;
+    on(type: "layers-add-result", listener: (event: { layers: esri.layers.Layer[]; target: esri.Map }) => void): esri.Handle;
     /** Fires after all the layers have been removed. */
     on(type: "layers-removed", listener: (event: { target: esri.Map }) => void): esri.Handle;
     /** Fires when all the layers have been reordered. */
@@ -3287,7 +3084,7 @@ declare namespace esri {
     static POINTS: any;
     /** esri.Units are square centimeters. */
     static SQUARE_CENTIMETERS: any;
-    /** esri.Units are square decimeters. */
+    /** esri.Units are square deciemeters. */
     static SQUARE_DECIMETERS: any;
     /** esri.Units are square feet. */
     static SQUARE_FEET: any;
@@ -3341,14 +3138,12 @@ declare namespace esri.arcgis {
     minTimeUntilExpiration: number;
     /** Set to true to show the OAuth sign in page in a popup window. */
     popup: boolean;
-    /** Applicable if working with the popup user-login workflow. */
+    /** The relative page URL for the user to be sent to from the OAuth sign in page. */
     popupCallbackUrl: string;
     /** The window features passed to window.open(). */
     popupWindowFeatures: string;
     /** The ArcGIS for Portal URL. */
     portalUrl: string;
-    /** Indicates whether to display social logins like Google/Facebook. */
-    showSocialLogins: boolean;
     /**
      * Creates a new esri.arcgis.OAuthInfo given the specified parameters.
      * @param params Various options to configure the esri.arcgis.OAuthInfo object.
@@ -3550,7 +3345,7 @@ declare namespace esri.arcgis {
     /** The date the group was last modified. */
     modified: Date;
     /** The username of the group's owner. */
-    owner: string;
+    owner: Portal;
     /** The portal for the group. */
     portal: Portal;
     /** A short summary that describes the group. */
@@ -3726,12 +3521,13 @@ declare namespace esri.arcgis {
      * Retrieve all the items in the specified folder.
      * @param folderId The id of the folder that contains the items to retrieve.
      */
-    getItems(folderId?: string): any;
+    getItems(folderId: string): any;
     /** Get information about any notifications for the portal user. */
     getNotifications(): any;
     /** Access the tag objects that have been created by the portal user. */
     getTags(): any;
   }
+
   /** Utility methods to work with content from ArcGIS.com. */
   export var utils: {
     /** Specify the domain where the map associated with the webmap id is located. */
@@ -3742,22 +3538,24 @@ declare namespace esri.arcgis {
      * @param mapDiv Container ID for referencing map.
      * @param options Optional parameters that define the map functionality.
      */
-    createMap(itemIdOrItemInfo: string | any, mapDiv: string, options?: any): any;
+    createMap(itemIdOrItemInfo: string, mapDiv: string, options?: any): any;
+    /**
+     * Create a map using information from an ArcGIS.com item.
+     * @param itemIdOrItemInfo An itemId for an ArcGIS.com item or the response object obtained from calling the arcgisUtils.getItem method.
+     * @param mapDiv Container ID for referencing map.
+     * @param options Optional parameters that define the map functionality.
+     */
+    createMap(itemIdOrItemInfo: any, mapDiv: string, options?: any): any;
     /**
      * Get details about the input ArcGIS.com item.
      * @param itemId The itemId for a publicly shared ArcGIS.com item.
      */
     getItem(itemId: string): any;
     /**
-     * Can be used with LayerList widget to get the layers list to be passed into the constructor.
-     * @param createMapResponse The object created from the resolved promise returned by createMap().
-     */
-    getLayerList(createMapResponse: any): any[];
-    /**
      * Can be used with esri.dijit.Legend to get the layerInfos list to be passed into the Legend constructor.
      * @param createMapResponse Object returned by .createMap() in the .then() callback.
      */
-    getLegendLayers(createMapResponse: any): any[];
+    getLegendLayers(createMapResponse: any): esri.layers.Layer[];
   };
 }
 declare namespace esri.dijit {
@@ -3775,7 +3573,13 @@ declare namespace esri.dijit {
      * @param params See options list.
      * @param srcNodeRef HTML element where the attribute inspector should be rendered.
      */
-    constructor(params: esri.AttributeInspectorOptions, srcNodeRef: Node | string);
+    constructor(params: esri.AttributeInspectorOptions, srcNodeRef: Node);
+    /**
+     * Creates a new Attribute Inspector object.
+     * @param params See options list.
+     * @param srcNodeRef HTML element where the attribute inspector should be rendered.
+     */
+    constructor(params: esri.AttributeInspectorOptions, srcNodeRef: string);
     /** Destroys the widget, used for page clean up. */
     destroy(): void;
     /** Moves to the first feature. */
@@ -3814,7 +3618,13 @@ declare namespace esri.dijit {
      * @param options An object that defines the attribution options.
      * @param srcNodeRef HTML element where the time slider should be rendered.
      */
-    constructor(options: esri.AttributionOptions, srcNodeRef: Node | string);
+    constructor(options: esri.AttributionOptions, srcNodeRef: Node);
+    /**
+     * Creates a new esri.dijit.Attribution object.
+     * @param options An object that defines the attribution options.
+     * @param srcNodeRef HTML element where the time slider should be rendered.
+     */
+    constructor(options: esri.AttributionOptions, srcNodeRef: string);
     /** Destroy the attribution widget. */
     destroy(): void;
     /** Finalizes the creation of the widget. */
@@ -3855,7 +3665,13 @@ declare namespace esri.dijit {
      * @param params Parameters used to configure the widget.
      * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
      */
-    constructor(params: esri.BasemapGalleryOptions, srcNodeRef?: Node | string);
+    constructor(params: esri.BasemapGalleryOptions, srcNodeRef?: Node);
+    /**
+     * Creates a new BasemapGallery dijit.
+     * @param params Parameters used to configure the widget.
+     * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
+     */
+    constructor(params: esri.BasemapGalleryOptions, srcNodeRef?: string);
     /**
      * Add a new basemap to the BasemapGallery's list of basemaps.
      * @param basemap The basemap to add to the map.
@@ -3923,7 +3739,7 @@ declare namespace esri.dijit {
   export class BasemapToggle {
     /** The secondary basemap to toggle to. */
     basemap: string;
-    /** Object containing the title and thumbnailURL for the image of each basemap. */
+    /** Object containing the labels and URLs for the image of each basemap. */
     basemaps: any;
     /** Whether the widget has been loaded. */
     loaded: boolean;
@@ -3938,7 +3754,13 @@ declare namespace esri.dijit {
      * @param params Various parameters to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.BasemapToggleOptions, srcNodeRef: Node | string);
+    constructor(params: esri.BasemapToggleOptions, srcNodeRef: Node);
+    /**
+     * Creates a new BasemapToggle dijit using the given DOM node.
+     * @param params Various parameters to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.BasemapToggleOptions, srcNodeRef: string);
     /** Destroys the widget. */
     destroy(): void;
     /** Hides the widget. */
@@ -3976,7 +3798,13 @@ declare namespace esri.dijit {
      * @param params See options list for parameters.
      * @param srcNodeRef HTML element where the bookmark widget should be rendered.
      */
-    constructor(params: esri.BookmarksOptions, srcNodeRef: Node | string);
+    constructor(params: esri.BookmarksOptions, srcNodeRef: Node);
+    /**
+     * Creates a new Bookmark widget
+     * @param params See options list for parameters.
+     * @param srcNodeRef HTML element where the bookmark widget should be rendered.
+     */
+    constructor(params: esri.BookmarksOptions, srcNodeRef: string);
     /**
      * Add a new bookmark to the bookmark widget.
      * @param bookmarkItem A esri.dijit.BookmarkItem or json object with the same structure that defines the new location.
@@ -4008,47 +3836,55 @@ declare namespace esri.dijit {
 
   /** A widget to assist with managing a renderer used for visualizing features by their class and color. */
   export class ClassedColorSlider extends esri.dijit.RendererSlider {
-    /** Required: The data map containing renderer information. */
+    /** Required */
     breakInfos: any;
-    /** Optional: Indicates the classification method used to divide the range of values into bins. */
+    /** Optional */
     classificationMethod: string;
     /** Required: Handles identified by their index values within the stops array. */
     handles: number[];
-    /** Optional: Represents the histogram data object. */
+    /** Optional: Property representing histogram data object. */
     histogram: any;
-    /** Optional: The width of the histogram in pixels. */
+    /** Optional */
     histogramWidth: boolean;
-    /** Read Only. */
+    /** Optional */
     maxValue: number;
-    /** Read Only. */
+    /** Optional */
     minValue: number;
-    /** Optional: Indicates how data values are normalized. */
+    /** Optional */
     normalizationType: string;
-    /** Optional: The handle identified by its index value within the stops array. */
+    /** Optional: Handle identified by its index value within the stops array. */
     primaryHandle: number;
-    /** Optional: Width of the widget ramp in pixels. */
+    /** Optional */
     rampWidth: number;
-    /** Optional: Indicates whether to display handles. */
+    /** Property for showing handles. */
     showHandles: boolean;
-    /** Optional: Indicates whether to display the histogram. */
+    /** Optional: Property for displaying the histogram. */
     showHistogram: boolean;
-    /** Optional: Indicates whether to display labels. */
+    /** Property for showing labels. */
     showLabels: boolean;
-    /** Optional: Indicates whether to display tick marks. */
+    /** Property for showing ticks. */
     showTicks: boolean;
-    /** Optional: Represents the statistics data object. */
+    /** Property for displaying the transparent background. */
+    showTransparentBackground: boolean;
+    /** Optional: Property representing statistics data object. */
     statistics: any;
     /**
      * Creates a new ClassedColorSlider widget.
      * @param params Set of parameters used to specify the ClassedColorSlider widget options.
      * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
      */
-    constructor(params: esri.ClassedColorSliderOptions, srcNodeRef: Node | string);
+    constructor(params: esri.ClassedColorSliderOptions, srcNodeRef: Node);
+    /**
+     * Creates a new ClassedColorSlider widget.
+     * @param params Set of parameters used to specify the ClassedColorSlider widget options.
+     * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
+     */
+    constructor(params: esri.ClassedColorSliderOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
     /** Fires when the ClassedColorSlider widget properties change. */
     on(type: "change", listener: (event: { breakInfos: any; target: ClassedColorSlider }) => void): esri.Handle;
-    /** Fires when  minValue or  maxValue of the ClassedColorSlider changes. */
+    /** Fires when minValue or maxValue of ClassedColorSlider changes. */
     on(type: "data-value-change", listener: (event: { breakInfos: any; maxValue: number; minValue: number; target: ClassedColorSlider }) => void): esri.Handle;
     /** Fires when a ClassedColorSlider handle is moved. */
     on(type: "handle-value-change", listener: (event: { breakInfos: any; target: ClassedColorSlider }) => void): esri.Handle;
@@ -4057,45 +3893,51 @@ declare namespace esri.dijit {
 
   /** A widget to assist with managing a renderer for visualizing features by varying classes and size. */
   export class ClassedSizeSlider extends esri.dijit.RendererSlider {
-    /** Required: The data map containing renderer information. */
+    /** Required. */
     breakInfos: any;
-    /** Optional: Indicates the classification method used to divide the range of values into bins. */
+    /** Optional. */
     classificationMethod: string;
-    /** Required: Handles identified by their index values within the stops array. */
+    /** Required. */
     handles: number[];
-    /** Optional: Represents the histogram data object. */
+    /** Optional. */
     histogram: any;
-    /** Optional: Width of histogram in pixels. */
-    histogramWidth: number;
-    /** Read Only. */
+    /** Optional. */
+    histogramWidth: boolean;
+    /** Optional. */
     maxValue: number;
-    /** Read Only. */
+    /** Optional. */
     minValue: number;
-    /** Optional: Indicates how data values are normalized. */
+    /** Optional. */
     normalizationType: string;
-    /** Optional: Handle identified by its index value within the stops array. */
+    /** Optional. */
     primaryHandle: number;
-    /** Optional: Width of the widget ramp in pixels. */
+    /** Optional */
     rampWidth: number;
-    /** Optional: Indicates whether to display handles. */
+    /** Property for showing handles. */
     showHandles: boolean;
-    /** Optional: Indicates whether to display the histogram. */
+    /** Optional. */
     showHistogram: boolean;
-    /** Optional: Indicates whether to display labels. */
+    /** Property for showing labels. */
     showLabels: boolean;
-    /** Optional: Indicates whether to display ticks marks. */
+    /** Property for showing ticks. */
     showTicks: boolean;
-    /** Optional: Represents the statistics data object. */
+    /** Optional. */
     statistics: any;
     /**
      * Creates a new ClassedSizeSlider widget within the provided DOM node srcNodeRef.
      * @param params Set of parameters used to specify the ClassedSizeSlider widget options.
      * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
      */
-    constructor(params: esri.ClassedSizeSliderOptions, srcNodeRef: Node | string);
+    constructor(params: esri.ClassedSizeSliderOptions, srcNodeRef: Node);
+    /**
+     * Creates a new ClassedSizeSlider widget within the provided DOM node srcNodeRef.
+     * @param params Set of parameters used to specify the ClassedSizeSlider widget options.
+     * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
+     */
+    constructor(params: esri.ClassedSizeSliderOptions, srcNodeRef: string);
     /** Fires when ClassedSizeSlider changes. */
     on(type: "change", listener: (event: { breakInfos: any; target: ClassedSizeSlider }) => void): esri.Handle;
-    /** Fires when  minValue or  maxValue of the ClassedSizeSlider changes. */
+    /** Fires when minValue or maxValue changes in ClassedSizeSlider. */
     on(type: "data-value-change", listener: (event: { breakInfos: any; maxValue: number; minValue: number; target: ClassedSizeSlider }) => void): esri.Handle;
     /** Fires when a ClassedSizeSlider handle is moved. */
     on(type: "handle-value-change", listener: (event: { breakInfos: any; target: ClassedSizeSlider }) => void): esri.Handle;
@@ -4104,58 +3946,60 @@ declare namespace esri.dijit {
 
   /** A widget to assist with managing a renderer for visualizing features based upon colors. */
   export class ColorInfoSlider extends esri.dijit.RendererSlider {
-    /** The classification method used for the ColorInfoSlider. */
+    /** Optional */
     classificationMethod: string;
-    /** Required: The data map containing renderer information. */
+    /** Required: Example colorInfo: colorRenderer.renderer.visualVariables[0]. */
     colorInfo: any;
     /** Required: Handles identified by their index values within the stops array. */
     handles: number[];
-    /** Optional: Represents the histogram data object. */
+    /** Optional: Property representing histogram data object. */
     histogram: any;
-    /** Optional: Width of histogram in pixels. */
-    histogramWidth: number;
-    /** Optional: The absolute maximum value of the slider. */
+    /** Optional */
+    histogramWidth: boolean;
+    /** Optional */
     maxValue: number;
-    /** Optional: The absolute minimum value of the slider. */
+    /** Optional */
     minValue: number;
     /** Optional */
     normalizationType: string;
-    /** Optional: The handle identified by its index value within the stops array. */
+    /** Optional: Handle identified by its index value within the stops array. */
     primaryHandle: number;
-    /** Optional: Width of the widget ramp in pixels. */
+    /** Optional */
     rampWidth: number;
-    /** Optional: Indicates whether to display handles. */
+    /** Property for showing handles. */
     showHandles: boolean;
-    /** Optional: Indicates whether to display the histogram. */
+    /** Optional: Property for displaying the histogram. */
     showHistogram: boolean;
-    /** Optional: Indicates whether to display handles. */
+    /** Property for showing labels. */
     showLabels: boolean;
-    /** Indicates whether to display percentage labels. */
-    showRatioLabels: boolean | string;
-    /** Optional: Indicates whether to display ticks marks. */
+    /** Property for showing ticks. */
     showTicks: boolean;
-    /** Optional: Indicates whether to display a transparent background. */
+    /** Property for displaying the transparent background. */
     showTransparentBackground: boolean;
-    /** Optional: Represents a statistics data object. */
+    /** Optional: Property representing statistics data object. */
     statistics: any;
-    /** Optional: Additional options to customize slider. */
+    /** Optional */
     zoomOptions: any;
     /**
      * Creates a new ColorInfoSlider widget within the provided DOM node srcNodeRef.
      * @param params Set of parameters used to specify the ColorInfoSlider widget options.
      * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
      */
-    constructor(params: esri.ColorInfoSliderOptions, srcNodeRef: Node | string);
+    constructor(params: esri.ColorInfoSliderOptions, srcNodeRef: Node);
+    /**
+     * Creates a new ColorInfoSlider widget within the provided DOM node srcNodeRef.
+     * @param params Set of parameters used to specify the ColorInfoSlider widget options.
+     * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
+     */
+    constructor(params: esri.ColorInfoSliderOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
     /** Fires when ColorInfoSlider changes. */
     on(type: "change", listener: (event: { colorInfo: any; target: ColorInfoSlider }) => void): esri.Handle;
-    /** Fires when  minValue or  maxValue of the ColorInfoSlider changes. */
+    /** Fires when minValue or maxValue of ColorInfoSlider changes. */
     on(type: "data-value-change", listener: (event: { colorInfo: any; maxValue: number; minValue: number; target: ColorInfoSlider }) => void): esri.Handle;
     /** Fires when a ColorInfoSlider handle is moved. */
-    on(type: "handle-value-change", listener: (event: { colorInfo: any; target: ColorInfoSlider }) => void): esri.Handle;
-    /** Fires when the zoom state changes. */
-    on(type: "zoomed", listener: (event: { zoomed: boolean; target: ColorInfoSlider }) => void): esri.Handle;
+    on(type: "handle-value-change", listener: (event: { target: ColorInfoSlider }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 
@@ -4172,7 +4016,13 @@ declare namespace esri.dijit {
      * @param params Set of parameters used to specify the ColorPicker widget options.
      * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
      */
-    constructor(params: esri.ColorPickerOptions, srcNodeRef: Node | string);
+    constructor(params: esri.ColorPickerOptions, srcNodeRef: Node);
+    /**
+     * Creates a new ColorPicker widget.
+     * @param params Set of parameters used to specify the ColorPicker widget options.
+     * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
+     */
+    constructor(params: esri.ColorPickerOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
     /** Fires when the selected color has changed. */
@@ -4184,6 +4034,8 @@ declare namespace esri.dijit {
   export class Directions {
     /** Read-only: Get the directions to all the locations along the route. */
     directions: esri.tasks.Directionsesri.tasks.FeatureSet;
+    /** An array of  objects that defines the potential matches for the input locations. */
+    geocoderResults: any[];
     /** Indicates whether the Directions widget adds a stop on each map click. */
     mapClickActive: boolean;
     /** Read-only: When true, the maximum number of stops for the route has been reached. */
@@ -4215,7 +4067,13 @@ declare namespace esri.dijit {
      * @param options Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(options: esri.DirectionsOptions, srcNodeRef: Node | string);
+    constructor(options: esri.DirectionsOptions, srcNodeRef: Node);
+    /**
+     * Creates a new Directions dijit using the given DOM node.
+     * @param options Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(options: esri.DirectionsOptions, srcNodeRef: string);
     /** Deprecated at v3.13. */
     activate(): void;
     /**
@@ -4223,13 +4081,49 @@ declare namespace esri.dijit {
      * @param stop A point that defines the stop location.
      * @param index The index location where the stop should be added.
      */
-    addStop(stop: esri.geometry.Point | number[] | string | any, index?: number): any;
+    addStop(stop: esri.geometry.Point, index?: number): any;
+    /**
+     * Add a stop to the directions widget at the specified index location.
+     * @param stop A point that defines the stop location.
+     * @param index The index location where the stop should be added.
+     */
+    addStop(stop: number[], index?: number): any;
+    /**
+     * Add a stop to the directions widget at the specified index location.
+     * @param stop A point that defines the stop location.
+     * @param index The index location where the stop should be added.
+     */
+    addStop(stop: string, index?: number): any;
+    /**
+     * Add a stop to the directions widget at the specified index location.
+     * @param stop A point that defines the stop location.
+     * @param index The index location where the stop should be added.
+     */
+    addStop(stop: any, index?: number): any;
     /**
      * Add multiple stops to the directions list starting at the specified location.
      * @param stops An array of points that define the stop locations.
      * @param index The index location where the stops will be added.
      */
-    addStops(stops: esri.geometry.Point[] | number[][] | string[] | any[], index?: number): any;
+    addStops(stops: esri.geometry.Point[], index?: number): any;
+    /**
+     * Add multiple stops to the directions list starting at the specified location.
+     * @param stops An array of points that define the stop locations.
+     * @param index The index location where the stops will be added.
+     */
+    addStops(stops: number[][], index?: number): any;
+    /**
+     * Add multiple stops to the directions list starting at the specified location.
+     * @param stops An array of points that define the stop locations.
+     * @param index The index location where the stops will be added.
+     */
+    addStops(stops: string[], index?: number): any;
+    /**
+     * Add multiple stops to the directions list starting at the specified location.
+     * @param stops An array of points that define the stop locations.
+     * @param index The index location where the stops will be added.
+     */
+    addStops(stops: any[], index?: number): any;
     /**
      * Center the map at the start of the specified route segment.
      * @param index The index of the segment where the map should be centered.
@@ -4273,12 +4167,45 @@ declare namespace esri.dijit {
      * @param stop A point that defines the stop location.
      * @param index The index of the stop to update.
      */
-    updateStop(stop: esri.geometry.Point | number[] | string | any, index: number): any;
+    updateStop(stop: esri.geometry.Point, index: number): any;
+    /**
+     * Update the existing stop at the specified index location.
+     * @param stop A point that defines the stop location.
+     * @param index The index of the stop to update.
+     */
+    updateStop(stop: number[], index: number): any;
+    /**
+     * Update the existing stop at the specified index location.
+     * @param stop A point that defines the stop location.
+     * @param index The index of the stop to update.
+     */
+    updateStop(stop: string, index: number): any;
+    /**
+     * Update the existing stop at the specified index location.
+     * @param stop A point that defines the stop location.
+     * @param index The index of the stop to update.
+     */
+    updateStop(stop: any, index: number): any;
     /**
      * Update multiple stops in the directions widget by specifying an array of stops information.
      * @param stops An array of points that define the stop locations.
      */
-    updateStops(stops: esri.geometry.Point[] | number[][] | string[] | any[]): any;
+    updateStops(stops: esri.geometry.Point[]): any;
+    /**
+     * Update multiple stops in the directions widget by specifying an array of stops information.
+     * @param stops An array of points that define the stop locations.
+     */
+    updateStops(stops: number[][]): any;
+    /**
+     * Update multiple stops in the directions widget by specifying an array of stops information.
+     * @param stops An array of points that define the stop locations.
+     */
+    updateStops(stops: string[]): any;
+    /**
+     * Update multiple stops in the directions widget by specifying an array of stops information.
+     * @param stops An array of points that define the stop locations.
+     */
+    updateStops(stops: any[]): any;
     /**
      * Sets the corresponding stop to point at the user's current location.
      * @param stopIndex Index of the stop that will point to the user's current location.
@@ -4312,121 +4239,60 @@ declare namespace esri.dijit {
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 
-  /** (Currently in beta)The Elevation Profile widget allows a user to create an elevation profile based on a polyline geometry input parameter or existing features.NOTE: Currently there is a known issue when creating an elevation profile that crosses the international dateline multiple times. */
-  export class ElevationProfile {
-    /** The measurement unit of the polyline geometry. */
-    measureUnits: string;
-    /** The polyline input geometry used to create the elevation profile. */
-    profileGeometry: esri.geometry.Geometry;
-    /** The title of the resulting elevation profile. */
-    title: string;
-    /**
-     * Create a new ElevationProfile widget using the given DOM node.
-     * @param options See options table below for the full descriptions of the properties needed for this object.
-     * @param srcNode Reference or id of the HTML element where the widget should be rendered.
-     */
-    constructor(options: esri.ElevationProfileOptions, srcNode: Node | string);
-    /** Clears the elevation profile chart. */
-    clearProfile(): void;
-    /** Destroy the widget. */
-    destroy(): void;
-    /** Finalizes the creation of the ElevationProfile widget. */
-    startup(): void;
-    /** Fires when the elevation profile is cleared. */
-    on(type: "clear-profile", listener: (event: { target: ElevationProfile }) => void): esri.Handle;
-    /** Fires when the widget has fully loaded. */
-    on(type: "load", listener: (event: { target: ElevationProfile }) => void): esri.Handle;
-    /** Fires when the title of the elevation profile is changed */
-    on(type: "title-changed", listener: (event: { target: ElevationProfile }) => void): esri.Handle;
-    /** Fires when the elevation profile is updated. */
-    on(type: "update-profile", listener: (event: { profileResults: any; target: ElevationProfile }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-
-  /** Creates an instance of the FeatureTable widget within the provided DOM node. */
+  /** (Beta at v3.12) Creates an instance of the FeatureTable widget within the provided DOM node. */
   export class FeatureTable {
-    /** Read-only: A reference to the column objects and their parameters. */
+    /** An optional dGrid property. */
+    allowSelectAll: boolean;
+    /** An optional dGrid property. */
+    cellNavigation: boolean;
+    /** A reference to the column objects and their parameters. */
     columns: any[];
-    /** Read-only: Reference to the dataStore used by the dGrid. */
+    /** Reference to the dataStore used by the dGrid. */
     dataStore: any;
     /** Object defining the date options specifically for formatting date and time editors. */
     dateOptions: any;
-    /** Sets the editing state for the FeatureTable. */
-    editable: boolean;
-    /** Read-only: Number of records displayed in FeatureTable. */
-    featureCount: number;
     /** The featureesri.layers.Layer that the table is associated with. */
     featureLayer: esri.layers.Featureesri.layers.Layer;
-    /** An array of objects representing field information. */
-    fieldInfos: any[];
     /** Reference to the dGrid. */
     grid: any;
-    /** Reference to the 'Options' drop-down menu. */
-    gridMenu: any;
-    /** Object that can be used to set properties used by the underlying dgrid. */
-    gridOptions: any;
     /** Optional columns to hide by default using the dGrid ColumnHider extension. */
     hiddenFields: string[];
-    /** Read-only: A reference to the primary key used by the dataStore to differentiate columns. */
+    /** A reference to the primary key used by the dataStore to differentiate columns. */
     idProperty: string;
     /** When true, the FeatureTable widget has successfully loaded. */
     loaded: boolean;
     /** Reference to the map. */
     map: esri.Map;
-    /** Adds additional functional menu items for the 'Options' drop-down menu. */
-    menuFunctions: any[];
+    /** A dGrid property. */
+    noDataMessage: string;
     /** Attribute fields to include in the FeatureTable. */
     outFields: string[];
-    /** Read-only: A comma delimited array of ObjectIds for the features selected in the FeatureTable. */
-    selectedRowIds: number[];
-    /** Read-only: Each element in the array is an object that contains name-value pair of fields and field values associated with the selected rows. */
-    selectedRows: any[];
-    /** Displays the data type of the field right under the field label in the column header. */
-    showDataTypes: boolean;
-    /** Displays or hides the FeatureTable header. */
-    showGridHeader: boolean;
-    /** Displays or hides 'Options' drop-down menu of the FeatureTable. */
-    showGridMenu: boolean;
-    /** Enables an interaction between the map and the feature table. */
-    syncSelection: boolean;
-    /** Enables pans to selected features on the map when the table in 'sync selection' mode. */
-    zoomToSelection: boolean;
+    /** Indicates whether the data is editable via the widget. */
+    readOnly: boolean;
+    /** A dGrid property. */
+    selectionMode: string;
     /**
      * Creates an instance of the FeatureTable widget within the provided DOM node.
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.FeatureTableOptions, srcNodeRef: Node | string);
+    constructor(params: esri.FeatureTableOptions, srcNodeRef: Node);
+    /**
+     * Creates an instance of the FeatureTable widget within the provided DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.FeatureTableOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
-    /** Fires when the grid column is resized. */
-    on(type: "column-resize", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when a column is hidden or shown via 'Options' drop-down menu. */
-    on(type: "column-state-change", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when grid editor field loses focus after being changed. */
-    on(type: "data-change", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when grid editor is hidden. */
-    on(type: "editor-hide", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when grid editor is shown. */
-    on(type: "editor-show", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when editing is complete. */
-    on(type: "edits-complete", listener: (event: { adds: esri.layers.FeatureEditResult[]; deletes: esri.layers.FeatureEditResult[]; updates: esri.layers.FeatureEditResult[]; target: FeatureTable }) => void): esri.Handle;
-    /** Fires when an error occurs in the grid. */
-    on(type: "error", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when grid is filtered. */
-    on(type: "filter", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when the FeatureTable is loaded. */
+    /** Fired when a row is deselected. */
+    on(type: "dgrid-deselect", listener: (event: { target: FeatureTable }) => void): esri.Handle;
+    /** Fired when the grid is refreshed. */
+    on(type: "dgrid-refresh-complete", listener: (event: { target: FeatureTable }) => void): esri.Handle;
+    /** Fired when a row is selected. */
+    on(type: "dgrid-select", listener: (event: { target: FeatureTable }) => void): esri.Handle;
+    /** Fired when the FeatureTable is loaded. */
     on(type: "load", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when the grid is refreshed. */
-    on(type: "refresh", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when a row is deselected. */
-    on(type: "row-deselect", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when a row is selected. */
-    on(type: "row-select", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when the statistics dialog box shows the calculated statistics on a column with numeric data. */
-    on(type: "show-statistics", listener: (event: { statistics: any; target: FeatureTable }) => void): esri.Handle;
-    /** Fires when a column is sorted. */
-    on(type: "sort", listener: (event: { target: FeatureTable }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 
@@ -4437,7 +4303,13 @@ declare namespace esri.dijit {
      * @param params See options list.
      * @param srcNodeRef HTML element where the  gallery should be rendered.
      */
-    constructor(params: esri.GalleryOptions, srcNodeRef: Node | string);
+    constructor(params: esri.GalleryOptions, srcNodeRef: Node);
+    /**
+     * Creates a new mobile Gallery.
+     * @param params See options list.
+     * @param srcNodeRef HTML element where the  gallery should be rendered.
+     */
+    constructor(params: esri.GalleryOptions, srcNodeRef: string);
     /** Removes any object references and associated objects created by the gallery. */
     destroy(): void;
     /** Gets the item with the current focus. */
@@ -4474,26 +4346,44 @@ declare namespace esri.dijit {
      * @param params See options list for parameters.
      * @param srcNodeRef HTML element where the  gauge should be rendered.
      */
-    constructor(params: esri.GaugeOptions, srcNodeRef: Node | string);
+    constructor(params: esri.GaugeOptions, srcNodeRef: Node);
+    /**
+     * Create a new Gauge object.
+     * @param params See options list for parameters.
+     * @param srcNodeRef HTML element where the  gauge should be rendered.
+     */
+    constructor(params: esri.GaugeOptions, srcNodeRef: string);
     /** Destroy the gauge. */
     destroy(): void;
     /**
      * Get the value of the property from the Gauge.
      * @param name Property to get value.
      */
-    get(name: string): string | esri.Graphic | number;
+    get(name: string): any;
     /**
      * Set the value of a property from the Gauge.
      * @param name Property to set value.
      * @param value Value to set.
      */
-    set(name: string, value: string | esri.Graphic | number): Gauge;
+    set(name: string, value: string): Gauge;
+    /**
+     * Set the value of a property from the Gauge.
+     * @param name Property to set value.
+     * @param value Value to set.
+     */
+    set(name: string, value: Graphic): Gauge;
+    /**
+     * Set the value of a property from the Gauge.
+     * @param name Property to set value.
+     * @param value Value to set.
+     */
+    set(name: string, value: number): Gauge;
     /** Finalizes the creation of the gauge. */
     startup(): void;
   }
 
-  /** Starting with version 3.13, the Search Widget supersedes the Geocoder Widget and is deprecated. */
-  export class Geocoder {
+  /** Add a geographic search box to an application. */
+  class esri.dijit.Geocoder {
     /** Currently selected locator object. */
     activeGeocoder: any;
     /** Current locator index to search by default. */
@@ -4529,11 +4419,17 @@ declare namespace esri.dijit {
     /** Scale to zoom to when geocoder does not return an extent. */
     zoomScale: number;
     /**
-     * Create a new Geocoder widget using the given DOM node.
-     * @param params Set of parameters used to specify Geocoder options.
+     * Create a new esri.dijit.Geocoder widget using the given DOM node.
+     * @param params Set of parameters used to specify esri.dijit.Geocoder options.
      * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
      */
-    constructor(params: esri.GeocoderOptions, srcNodeRef: Node | string);
+    constructor(params: esri.GeocoderOptions, srcNodeRef: Node);
+    /**
+     * Create a new esri.dijit.Geocoder widget using the given DOM node.
+     * @param params Set of parameters used to specify esri.dijit.Geocoder options.
+     * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
+     */
+    constructor(params: esri.GeocoderOptions, srcNodeRef: string);
     /** Unfocus the widget's text input. */
     blur(): void;
     /** Clears the values currently set in the widget. */
@@ -4556,27 +4452,28 @@ declare namespace esri.dijit {
     /** Finalizes the creation of the widget. */
     startup(): void;
     /** Fired when results are returned from an auto-complete. */
-    on(type: "auto-complete", listener: (event: { results : any; target: Geocoder }) => void): esri.Handle;
+    on(type: "auto-complete", listener: (event: { results : any; target: esri.dijit.Geocoder }) => void): esri.Handle;
     /** Fired when a result is cleared from the input box or a new result is selected. */
-    on(type: "clear", listener: (event: { target: Geocoder }) => void): esri.Handle;
+    on(type: "clear", listener: (event: { target: esri.dijit.Geocoder }) => void): esri.Handle;
     /** Fired when results are returned from a search. */
-    on(type: "find-results", listener: (event: { results: any; target: Geocoder }) => void): esri.Handle;
+    on(type: "find-results", listener: (event: { results: any; target: esri.dijit.Geocoder }) => void): esri.Handle;
     /** Fired when a geocoder is selected. */
-    on(type: "geocoder-select", listener: (event: { geocoder: any; target: Geocoder }) => void): esri.Handle;
+    on(type: "geocoder-select", listener: (event: { geocoder: any; target: esri.dijit.Geocoder }) => void): esri.Handle;
     /** Fired when a result has been selected, the submit button is pressed, or the enter key is fired. */
-    on(type: "select", listener: (event: { results: any; target: Geocoder }) => void): esri.Handle;
+    on(type: "select", listener: (event: { results: any; target: esri.dijit.Geocoder }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
+  export = esri.dijit.Geocoder;
 
-  /** A widget to assist in obtaining values for managing and setting properties on a HeatmapRenderer. */
+  /** A widget to assist in managing properties of a HeatmapRenderer. */
   export class HeatmapSlider extends esri.dijit.RendererSlider {
     /** Required. */
     colorStops: any;
     /** Required. */
     handles: number[];
-    /** Optional, absolute maximum value of the slider.NOTE: This value overrides statistics' max property. */
+    /** Optional. */
     maxValue: number;
-    /** Optional, absolute minimum value of the slider.NOTE: This value overrides statistics' min property. */
+    /** Optional. */
     minValue: number;
     /** Optional */
     rampWidth: number;
@@ -4591,7 +4488,13 @@ declare namespace esri.dijit {
      * @param params Set of parameters used to specify the HeatmapSlider widget options.
      * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
      */
-    constructor(params: esri.HeatmapSliderOptions, srcNodeRef: Node | string);
+    constructor(params: esri.HeatmapSliderOptions, srcNodeRef: Node);
+    /**
+     * Creates a new HeatmapSlider widget within the provided DOM node srcNodeRef.
+     * @param params Set of parameters used to specify the HeatmapSlider widget options.
+     * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
+     */
+    constructor(params: esri.HeatmapSliderOptions, srcNodeRef: string);
     /** Fires when HeatmapSlider changes. */
     on(type: "change", listener: (event: { colorStops: any; target: HeatmapSlider }) => void): esri.Handle;
     /** Fires when HeatmapSlider handle is moved. */
@@ -4606,7 +4509,13 @@ declare namespace esri.dijit {
      * @param params Input parameters.
      * @param srcNodeRef HTML element where the tool should be rendered.
      */
-    constructor(params: esri.HistogramTimeSliderOptions, srcNodeRef: Node | string);
+    constructor(params: esri.HistogramTimeSliderOptions, srcNodeRef: Node);
+    /**
+     * Creates a new Histogramesri.dijit.TimeSlider dijit using the given DOM node.
+     * @param params Input parameters.
+     * @param srcNodeRef HTML element where the tool should be rendered.
+     */
+    constructor(params: esri.HistogramTimeSliderOptions, srcNodeRef: string);
     /** Set related objects as null and hide the widget. */
     destroy(): void;
     /** Finalizes the creation of the widget. */
@@ -4636,7 +4545,13 @@ declare namespace esri.dijit {
      * @param params Various parameters to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.HomeButtonOptions, srcNodeRef: Node | string);
+    constructor(params: esri.HomeButtonOptions, srcNodeRef: Node);
+    /**
+     * Creates a new HomeButton dijit using the given DOM node.
+     * @param params Various parameters to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.HomeButtonOptions, srcNodeRef: string);
     /** Destroys the widget. */
     destroy(): void;
     /** Hides the widget. */
@@ -4663,26 +4578,15 @@ declare namespace esri.dijit {
      * @param params Set of parameters used to specify the HorizontalSlider widget options.
      * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
      */
-    constructor(params: esri.HorizontalSliderOptions, srcNodeRef: Node | string);
+    constructor(params: esri.HorizontalSliderOptions, srcNodeRef: Node);
+    /**
+     * Creates a new HorizontalSlider widget.
+     * @param params Set of parameters used to specify the HorizontalSlider widget options.
+     * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
+     */
+    constructor(params: esri.HorizontalSliderOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
-  }
-
-  /** This widget allows you to perform measurements on image services. */
-  export class ImageServiceMeasure {
-    /** esri.symbols.Symbol to be used when drawing a polygon or extent. */
-    fillSymbol: SimpleFillesri.symbols.Symbol;
-    /** esri.symbols.Symbol to be used when drawing a line. */
-    lineSymbol: SimpleLineesri.symbols.Symbol;
-    /** esri.symbols.Symbol to be used when drawing a point. */
-    markerSymbol: SimpleMarkeresri.symbols.Symbol;
-    /** The instance of esri.toolbars.ImageServiceMeasureTool associated with this widget. */
-    measureToolbar: esri.toolbars.ImageServiceMeasureTool;
-    /**
-     * Creates an instance of the ImageServiceMeasure widget.
-     * @param params An Object containing constructor options.
-     */
-    constructor(params: esri.ImageServiceMeasureOptions);
   }
 
   /** An esri.dijit.InfoWindow is an HTML popup. */
@@ -4708,7 +4612,13 @@ declare namespace esri.dijit {
      * @param params Optional parameters.
      * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
      */
-    constructor(params: any, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: Node);
+    /**
+     * Create a new Info Window.
+     * @param params Optional parameters.
+     * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
+     */
+    constructor(params: any, srcNodeRef: string);
     /** Hides the InfoWindow. */
     hide(): void;
     /**
@@ -4806,47 +4716,6 @@ declare namespace esri.dijit {
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 
-  /** (Currently in beta) The LayerList widget provides a list of layers that allows the toggling of layer visibility. */
-  export class LayerList {
-    /** An array of operational layers. */
-    layers: any[];
-    /** Indicates whether the widget has been loaded. */
-    loaded: boolean;
-    /** Reference to the map. */
-    map: esri.Map;
-    /** Indicates whether to remove underscores from the layer title */
-    removeUnderscores: boolean;
-    /** Indicates whether to display a legend for the layer items. */
-    showLegend: boolean;
-    /** Indicates whether to display the opacity slider. */
-    showOpacitySlider: boolean;
-    /** Indicates whether to show sublayers in the list of layers. */
-    showSubLayers: boolean;
-    /** CSS Class for uniquely styling the widget. */
-    theme: string;
-    /** Indicates whether to show the widget. */
-    visible: boolean;
-    /**
-     * Create a new LayerList widget using the given DOM node.
-     * @param options Set of options used to specify LayerList options.
-     * @param srcNode Reference or id of the HTML element where the widget should be rendered.
-     */
-    constructor(options: esri.LayerListOptions, srcNode: Node | string);
-    /** Destroy the LayerList widget. */
-    destroy(): void;
-    /** Reloads all layers and properties that may have changed. */
-    refresh(): void;
-    /** Finalizes the creation of the LayerList widget. */
-    startup(): void;
-    /** Fired when the LayerList widget has fully loaded. */
-    on(type: "load", listener: (event: { target: LayerList }) => void): esri.Handle;
-    /** Fired when refresh() is called on the widget. */
-    on(type: "refresh", listener: (event: { target: LayerList }) => void): esri.Handle;
-    /** Fired when the layer is toggled on/off within the widget. */
-    on(type: "toggle", listener: (event: { layerIndex: number; subLayerIndex: number; visible: boolean; target: LayerList }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-
   /** LayerSwipe provides a simple tool to show a portion of a layer or layers on top of a map. */
   export class LayerSwipe {
     /** The number of pixels to clip the swipe tool. */
@@ -4874,7 +4743,13 @@ declare namespace esri.dijit {
      * @param params Various parameters to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.LayerSwipeOptions, srcNodeRef: Node | string);
+    constructor(params: esri.LayerSwipeOptions, srcNodeRef: Node);
+    /**
+     * Creates a new LayerSwipe dijit using the given DOM node.
+     * @param params Various parameters to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.LayerSwipeOptions, srcNodeRef: string);
     /** Destroys the widget. */
     destroy(): void;
     /** Disables the widget. */
@@ -4899,7 +4774,13 @@ declare namespace esri.dijit {
      * @param params Parameters used to configure the dijit.
      * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
      */
-    constructor(params: esri.LegendOptions, srcNodeRef: Node | string);
+    constructor(params: esri.LegendOptions, srcNodeRef: Node);
+    /**
+     * Creates a new Legend dijit.
+     * @param params Parameters used to configure the dijit.
+     * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
+     */
+    constructor(params: esri.LegendOptions, srcNodeRef: string);
     /** Destroys the legend. */
     destroy(): void;
     /** Refresh the legend. */
@@ -4945,7 +4826,13 @@ declare namespace esri.dijit {
      * @param params Various parameters to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.LocateButtonOptions, srcNodeRef: Node | string);
+    constructor(params: esri.LocateButtonOptions, srcNodeRef: Node);
+    /**
+     * Creates a new LocateButton dijit using the given DOM node.
+     * @param params Various parameters to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.LocateButtonOptions, srcNodeRef: string);
     /** Clears the point graphic. */
     clear(): void;
     /** Destroys the widget. */
@@ -4972,7 +4859,13 @@ declare namespace esri.dijit {
      * @param params See options list for parameters.
      * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
      */
-    constructor(params: esri.MeasurementOptions, srcNodeRef: Node | string);
+    constructor(params: esri.MeasurementOptions, srcNodeRef: Node);
+    /**
+     * Creates a new Measurement widget.
+     * @param params See options list for parameters.
+     * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
+     */
+    constructor(params: esri.MeasurementOptions, srcNodeRef: string);
     /** Remove the measurement graphics and results. */
     clearResult(): void;
     /** Destroy the measurement widget. */
@@ -4992,7 +4885,17 @@ declare namespace esri.dijit {
      * Invoke the measurement functionality of the widget by passing in a previously created geometry.
      * @param geometry esri.geometry.Geometry to be measured.
      */
-    measure(geometry: esri.geometry.Point | esri.geometry.Polyline | Polygon): void;
+    measure(geometry: Point): void;
+    /**
+     * Invoke the measurement functionality of the widget by passing in a previously created geometry.
+     * @param geometry esri.geometry.Geometry to be measured.
+     */
+    measure(geometry: Polyline): void;
+    /**
+     * Invoke the measurement functionality of the widget by passing in a previously created geometry.
+     * @param geometry esri.geometry.Geometry to be measured.
+     */
+    measure(geometry: Polygon): void;
     /**
      * Activate or deactivate a tool.
      * @param toolName The name of the tool to activate or deactivate.
@@ -5008,161 +4911,84 @@ declare namespace esri.dijit {
     showTool(toolName: string): void;
     /** Finalizes the creation of the measurement widget . */
     startup(): void;
-    /** Fires any time the mouse pointer moves while doing a distance measurement. */
-    on(type: "measure", listener: (event: { geometry: esri.geometry.Geometry; segmentLength: number; toolName: string; unitName: string; values: number; target: Measurement }) => void): esri.Handle;
+    /** Fires when a measurement is made but the measurement is not complete (single-click). */
+    on(type: "measure", listener: (event: { geometry: esri.geometry.Geometry; toolName: string; unitName: string; values: number; target: Measurement }) => void): esri.Handle;
     /** Fired when the measurement is complete. */
-    on(type: "measure-end", listener: (event: { geometry: esri.geometry.Geometry; toolName: string; unitName: string; values: number[] | number; target: Measurement }) => void): esri.Handle;
+    on(type: "measure-end", listener: (event: { geometry: esri.geometry.Geometry; toolName: string; unitName: string; values: any; target: Measurement }) => void): esri.Handle;
     /** Fires when a measurement operation begins (single-click). */
     on(type: "measure-start", listener: (event: { toolName: string; unitName: string; target: Measurement }) => void): esri.Handle;
     /** Fires when the primary tool is changed. */
-    on(type: "tool-change", listener: (event: { previousToolName: string; toolName: string; unitName: string; target: Measurement }) => void): esri.Handle;
+    on(type: "tool-change", listener: (event: { toolName: string; unitName: string; target: Measurement }) => void): esri.Handle;
     /** Fires when the units currently being used by the Measurement widget changes. */
     on(type: "unit-change", listener: (event: { toolName: string; unitName: string; target: Measurement }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 
-  /** (Currently in beta) The oblique viewer widget, displays images in their native coordinate system using an Image Coordinate System (ICS). */
-  export class ObliqueViewer {
-    /** Indicates the current azimuth angle of the viewer. */
-    azimuthAngle: number;
-    /** Image service field that denotes the sensor azimuth value for a record. */
-    azimuthField: string;
-    /** Indicates the tolerance value applied when selecting images for a given azimuth angle value. */
-    azimuthTolerance: number;
-    /** Image service field that denotes the sensor elevation value for a record. */
-    elevationField: string;
-    /** Elevation value between 0 and 90 that differentiates an image as oblique or nadir. */
-    elevationThreshold: number;
-    /** Subset of records, filtered based on current azimuth angle. */
-    filteredRecords: any[];
-    /** Image service layer to be used as source for oblique images. */
-    imageServiceLayer: ArcGISImageServiceesri.layers.Layer;
-    /** Indicates whether current view is nadir. */
-    isNadir: boolean;
-    /** esri.Map object associated with the widget. */
-    map: esri.Map;
-    /** When true, the widget doesn't refresh itself with new oblique records when the map's extent changes. */
-    noQueryOnExtentChange: boolean;
-    /** Raster info fields to be queried and displayed in the raster list. */
-    rasterInfoFields: any[];
-    /** When true, the list is populated on data refresh. */
-    rasterListRefresh: boolean;
-    /** Oblique image data that is currently being used by the viewer. */
-    records: any[];
-    /** Object containing additional information about the raster. */
-    selectedRaster: any;
-    /** Id of the raster currently being displayed. */
-    selectedRasterId: number;
-    /** When true, thumbnail images for records are displayed in the list. */
-    showThumbnail: boolean;
-    /**
-     * Creates an instance of the ObliqueViewer widget.
-     * @param params Constructor options.
-     */
-    constructor(params: esri.ObliqueViewerOptions);
-    /**
-     * Queries and displays the best image in a specific direction.
-     * @param geometry The specified input geometry needed for querying for the best image in a given azimuth direction.
-     */
-    locate(geometry: Geometry): void;
-    /**
-     * Projects the input geometry to the specified spatial reference.
-     * @param geometry The geometry to project.
-     * @param outesri.SpatialReference The spatial reference to project the geometry to.
-     */
-    projectGeometry(geometry: esri.geometry.Geometry, outSpatialReference: SpatialReference): any;
-    /**
-     * Performs a query on the image service for oblique images covering the input geometry.
-     * @param geometry The input geometry to use for the search.
-     */
-    search(geometry: Geometry): any;
-    /**
-     * Sets the records and extent on the viewer.
-     * @param records An array of raster data objects.
-     * @param extent The extent to set the viewer to.
-     */
-    setData(records: any[], extent: Extent): void;
-    /**
-     * Projects the given extent to the map's spatial reference and sets the extent.
-     * @param extent The extent to project the map's spatial reference to.
-     */
-    setExtent(extent: Extent): any;
-    /**
-     * Sets the input image (based on the image ID) to the given extent.
-     * @param id The ID of the raster image.
-     * @param extent The extent to set the raster image to.
-     */
-    setImage(id: number, extent: Extent): void;
-    /** Sets the map extent to the currently selected image. */
-    zoomToSelectedImage(): void;
-    /** Fires when the azimuth is changed. */
-    on(type: "azimuth-change", listener: (event: { azimuth: number; target: ObliqueViewer }) => void): esri.Handle;
-    /** Fires when the selected raster is changed. */
-    on(type: "raster-select", listener: (event: { selectedRasterId: number; target: ObliqueViewer }) => void): esri.Handle;
-    /** Fires when the viewer records are refreshed. */
-    on(type: "records-refresh", listener: (event: { filteredRecords: any[]; records: any[]; target: ObliqueViewer }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-
   /** A widget to assist with managing opacity with a renderer. */
   export class OpacitySlider extends esri.dijit.RendererSlider {
-    /** Required: Handles identified by their index values within the stops array. */
+    /** Required. */
     handles: number[];
-    /** Optional: Represents the histogram data object. */
+    /** Optional. */
     histogram: any;
-    /** Optional: Width of histogram in pixels. */
-    histogramWidth: number;
-    /** Optional: The absolute maximum value of the slider. */
+    /** Optional: */
+    histogramWidth: boolean;
+    /** Optional. */
     maxValue: number;
-    /** Optional: The absolute minimum value of the slider. */
+    /** Optional. */
     minValue: number;
-    /** Required: The data map containing renderer information. */
+    /** Required. */
     opacityInfo: any;
-    /** Optional: The handle identified by its index value within the stops array. */
-    primaryHandle: number;
-    /** Optional: Represents the width of the SVG ramp in pixels. */
+    /** Optional */
     rampWidth: number;
-    /** Optional: Indicates whether to display slider handles. */
+    /** Property for showing handles. */
     showHandles: boolean;
-    /** Optional: Indicates whether to display the histogram. */
+    /** Optional. */
     showHistogram: boolean;
-    /** Optional: Indicates whether to display slider labels. */
+    /** Property for showing labels. */
     showLabels: boolean;
-    /** Optional: Indicates whether to display slider tick marks. */
+    /** Property for showing ticks. */
     showTicks: boolean;
-    /** Optional: Indicates whether to display the transparent background. */
+    /** Property for displaying the transparent background. */
     showTransparentBackground: boolean;
-    /** Optional: Represents a statistics data object. */
+    /** Optional. */
     statistics: any;
-    /** Optional: Additional options to customize slider. */
+    /** Optional. */
     zoomOptions: any;
     /**
      * Creates a new OpacitySlider widget within the provided DOM node srcNodeRef.
      * @param params Set of parameters used to specify the OpacitySlider widget options.
      * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
      */
-    constructor(params: esri.OpacitySliderOptions, srcNodeRef: Node | string);
+    constructor(params: esri.OpacitySliderOptions, srcNodeRef: Node);
+    /**
+     * Creates a new OpacitySlider widget within the provided DOM node srcNodeRef.
+     * @param params Set of parameters used to specify the OpacitySlider widget options.
+     * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
+     */
+    constructor(params: esri.OpacitySliderOptions, srcNodeRef: string);
     /** Fires when OpacitySlider changes. */
     on(type: "change", listener: (event: { opacityInfo: any; target: OpacitySlider }) => void): esri.Handle;
-    /** Fires when  minValue or  maxValue of the OpacitySlider changes. */
+    /** Fires when minValue or maxValue of OpacitySlider changes. */
     on(type: "data-value-change", listener: (event: { maxValue: number; minValue: number; opacityInfo: any; target: OpacitySlider }) => void): esri.Handle;
     /** Fires when an OpacitySlider handle is moved. */
     on(type: "handle-value-change", listener: (event: { opacityInfo: any; target: OpacitySlider }) => void): esri.Handle;
-    /** Fires when the zoom state changes. */
-    on(type: "zoomed", listener: (event: { zoomed: boolean; target: OpacitySlider }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 
   /** The Overviewesri.Map widget displays the current extent of the map within the context of a larger area. */
   class Overviewesri.Map {
-    /** The esri.Map instance displayed in the Overviewesri.Map widget's container. */
-    overviewMap: esri.Map;
     /**
      * Creates a new Overviewesri.Map object.
      * @param params Parameters that define the functionality of the Overviewesri.Map widget.
      * @param srcNodeRef HTML element where the widget should be rendered.
      */
-    constructor(params: esri.OverviewMapOptions, srcNodeRef?: Node | string);
+    constructor(params: esri.OverviewMapOptions, srcNodeRef: Node);
+    /**
+     * Creates a new Overviewesri.Map object.
+     * @param params Parameters that define the functionality of the Overviewesri.Map widget.
+     * @param srcNodeRef HTML element where the widget should be rendered.
+     */
+    constructor(params: esri.OverviewMapOptions, srcNodeRef: string);
     /** Releases  the resources used by the dijit. */
     destroy(): void;
     /** Hide the overview map. */
@@ -5202,7 +5028,7 @@ declare namespace esri.dijit {
     /** Indicates whether a feature should remain highlighted after the user closes the popup window. */
     keepHighlightOnHide: boolean;
     /** Define the symbol used to highlight line features. */
-    lineSymbol: Lineesri.symbols.Symbol;
+    lineSymbol: esri.symbols.Lineesri.symbols.Symbol;
     /** The location the info window is pointing to. */
     location: esri.geometry.Point;
     /** Specify the margin (in pixels) to leave to the left of the popup window when it is maximized. */
@@ -5210,7 +5036,7 @@ declare namespace esri.dijit {
     /** Specify the margin (in pixels) to leave at the top of the popup window when it is maximized. */
     marginTop: number;
     /** Define the marker symbol used to highlight point features. */
-    markerSymbol: Markeresri.symbols.Symbol;
+    markerSymbol: esri.symbols.Markeresri.symbols.Symbol;
     /** Specify the x-offset (in pixels) used when positioning the popup. */
     offsetX: number;
     /** Specify the y-offset (in pixels) used when positioning the popup. */
@@ -5234,7 +5060,13 @@ declare namespace esri.dijit {
      * @param options Optional parameters.
      * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
      */
-    constructor(options: esri.PopupOptions, srcNodeRef: Node | string);
+    constructor(options: esri.PopupOptions, srcNodeRef: Node);
+    /**
+     * Create a new Popup object.
+     * @param options Optional parameters.
+     * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
+     */
+    constructor(options: esri.PopupOptions, srcNodeRef: string);
     /** Removes all features and destroys any pending deferreds. */
     clearFeatures(): void;
     /** Destroy the popup. */
@@ -5274,17 +5106,32 @@ declare namespace esri.dijit {
      * Set the content for the info window.
      * @param content The content for the info window.
      */
-    setContent(content: string | Function): void;
+    setContent(content: string): void;
+    /**
+     * Set the content for the info window.
+     * @param content The content for the info window.
+     */
+    setContent(content: Function): void;
     /**
      * Associate an array of features or an array of deferreds that return features with the info window.
      * @param features An array of features or deferreds.
      */
-    setFeatures(features: esri.Graphic[] | any[]): void;
+    setFeatures(features: esri.Graphic[]): void;
+    /**
+     * Associate an array of features or an array of deferreds that return features with the info window.
+     * @param features An array of features or deferreds.
+     */
+    setFeatures(features: any[]): void;
     /**
      * Sets the info window title.
      * @param title The text for the title.
      */
-    setTitle(title: string | Function): void;
+    setTitle(title: string): void;
+    /**
+     * Sets the info window title.
+     * @param title The text for the title.
+     */
+    setTitle(title: Function): void;
     /**
      * Display the info window at the specified location.
      * @param location An instance of esri.geometry.esri.geometry.Point that represents the geographic location to display the popup.
@@ -5319,7 +5166,13 @@ declare namespace esri.dijit {
      * @param options Optional parameters.
      * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
      */
-    constructor(options: esri.PopupMobileOptions, srcNodeRef: Node | string);
+    constructor(options: esri.PopupMobileOptions, srcNodeRef: Node);
+    /**
+     * Create a new PopupMobile object.
+     * @param options Optional parameters.
+     * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
+     */
+    constructor(options: esri.PopupMobileOptions, srcNodeRef: string);
     /** Removes all features and destroys any pending deferreds. */
     clearFeatures(): void;
     /** Destroy the popup. */
@@ -5341,17 +5194,32 @@ declare namespace esri.dijit {
      * Set the content for the info window.
      * @param content The content for the info window.
      */
-    setContent(content: string | Function): void;
+    setContent(content: string): void;
+    /**
+     * Set the content for the info window.
+     * @param content The content for the info window.
+     */
+    setContent(content: Function): void;
     /**
      * Associate an array of features or an array of deferreds that return features with the info window.
      * @param features An array of features or deferreds.
      */
-    setFeatures(features: esri.Graphic[] | any[]): void;
+    setFeatures(features: esri.Graphic[]): any;
+    /**
+     * Associate an array of features or an array of deferreds that return features with the info window.
+     * @param features An array of features or deferreds.
+     */
+    setFeatures(features: any[]): any;
     /**
      * Sets the info window title.
      * @param title The text for the title.
      */
-    setTitle(title: string | Function): void;
+    setTitle(title: string): void;
+    /**
+     * Sets the info window title.
+     * @param title The text for the title.
+     */
+    setTitle(title: Function): void;
     /**
      * Display the info window at the specified location.
      * @param location An instance of esri.geometry.esri.geometry.Point that represents the geographic location to display the popup.
@@ -5391,7 +5259,13 @@ declare namespace esri.dijit {
      * @param params Parameters for the print widget.
      * @param srcNodeRef HTML element where the print widget button and drop down list will be rendered.
      */
-    constructor(params: esri.PrintOptions, srcNodeRef: Node | string);
+    constructor(params: esri.PrintOptions, srcNodeRef: Node);
+    /**
+     * Creates a new Print widget.
+     * @param params Parameters for the print widget.
+     * @param srcNodeRef HTML element where the print widget button and drop down list will be rendered.
+     */
+    constructor(params: esri.PrintOptions, srcNodeRef: string);
     /** Destroys the print widget. */
     destroy(): void;
     /** Hide the print widget. */
@@ -5429,17 +5303,23 @@ declare namespace esri.dijit {
     /** Toggle for showing the black handle bars. */
     showHandles: boolean;
     /** Flexible toggle for showing labels e.g. */
-    showLabels: boolean | string[];
+    showLabels: any;
     /** Toggle for showing the horizontal line indicators from the center of the handle. */
     showTicks: boolean;
-    /** Required: Handle positions represented as numbers that fall between minimum and maximum. */
+    /** Handle positions represented as numbers that fall between minimum and maximum. */
     values: number[];
     /**
      * Creates a new esri.dijit.RendererSlider widget.
      * @param params Set of parameters used to specify the esri.dijit.RendererSlider widget options.
      * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
      */
-    constructor(params: esri.RendererSliderOptions, srcNodeRef: Node | string);
+    constructor(params: esri.RendererSliderOptions, srcNodeRef: Node);
+    /**
+     * Creates a new esri.dijit.RendererSlider widget.
+     * @param params Set of parameters used to specify the esri.dijit.RendererSlider widget options.
+     * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
+     */
+    constructor(params: esri.RendererSliderOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
     /** Fires when the user actively slides the handle. */
@@ -5457,7 +5337,13 @@ declare namespace esri.dijit {
      * @param params Parameters used to configure the widget.
      * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
      */
-    constructor(params: esri.ScalebarOptions, srcNodeRef?: Node | string);
+    constructor(params: esri.ScalebarOptions, srcNodeRef?: Node);
+    /**
+     * Creates a new Scalebar dijit.
+     * @param params Parameters used to configure the widget.
+     * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
+     */
+    constructor(params: esri.ScalebarOptions, srcNodeRef?: string);
     /** Destroy the scalebar. */
     destroy(): void;
     /** Hide the scalebar dijit. */
@@ -5476,14 +5362,10 @@ declare namespace esri.dijit {
     activeSourceIndex: number;
     /** Indicates whether to automatically add all the feature layers from the map. */
     addLayersFromMap: boolean;
-    /** This is the default value used as a hint for input text when searching on multiple sources. */
-    allPlaceholder: string;
     /** Indicates whether to automatically navigate to the selected result. */
     autoNavigate: boolean;
-    /** Indicates whether to automatically select the first geocoded result. */
+    /** Indicates whether to automatically select the first result. */
     autoSelect: boolean;
-    /** (Read-only), the default source used for the Search widget. */
-    defaultSource: any;
     /** Indicates whether to enable an option to collapse/expand the search into a button. */
     enableButtonMode: boolean;
     /** Show the selected feature on the map using a default symbol determined by the source's geometry type. */
@@ -5492,8 +5374,6 @@ declare namespace esri.dijit {
     enableInfoWindow: boolean;
     /** Indicates whether to enable showing a label for the geometry. */
     enableLabel: boolean;
-    /** Indicates whether to display the option to search "All" sources. */
-    enableSearchingAll: boolean;
     /** Indicates whether to enable the menu for selecting different sources. */
     enableSourcesMenu: boolean;
     /** Enable suggestions for the widget. */
@@ -5547,7 +5427,13 @@ declare namespace esri.dijit {
      * @param options Set of options used to specify Search options.
      * @param srcNode Reference or id of the HTML element where the widget should be rendered.
      */
-    constructor(options: esri.SearchOptions, srcNode: Node | string);
+    constructor(options: esri.SearchOptions, srcNode: Node);
+    /**
+     * Create a new Search widget using the given DOM node.
+     * @param options Set of options used to specify Search options.
+     * @param srcNode Reference or id of the HTML element where the widget should be rendered.
+     */
+    constructor(options: esri.SearchOptions, srcNode: string);
     /** Unfocus the widget's text input. */
     blur(): void;
     /** Clears the current value, search results, suggest results, graphic, and/or graphics layer. */
@@ -5564,32 +5450,46 @@ declare namespace esri.dijit {
      * Get the value of the property from the Search widget.
      * @param name String value indicating the property to get.
      */
-    get(name: string): any | boolean | esri.layers.Layer | esri.Graphic | esri.InfoTemplate | number | Textesri.symbols.Symbol | esri.Map | any[] | string;
+    get(name: string): any;
     /** Hides the Search widget. */
     hide(): void;
     /**
      * Depending on the sources specified, search() queries the feature layer(s) and/or performs address matching using any specified Locator(s) and returns any applicable results.
      * @param value This value can be a string, geometry, suggest candidate object, or an array of [latitude,longitude].
      */
-    search(value?: string | esri.geometry.Geometry | any | number[]): any;
+    search(value?: string): any;
+    /**
+     * Depending on the sources specified, search() queries the feature layer(s) and/or performs address matching using any specified Locator(s) and returns any applicable results.
+     * @param value This value can be a string, geometry, suggest candidate object, or an array of [latitude,longitude].
+     */
+    search(value?: Geometry): any;
+    /**
+     * Depending on the sources specified, search() queries the feature layer(s) and/or performs address matching using any specified Locator(s) and returns any applicable results.
+     * @param value This value can be a string, geometry, suggest candidate object, or an array of [latitude,longitude].
+     */
+    search(value?: any): any;
+    /**
+     * Depending on the sources specified, search() queries the feature layer(s) and/or performs address matching using any specified Locator(s) and returns any applicable results.
+     * @param value This value can be a string, geometry, suggest candidate object, or an array of [latitude,longitude].
+     */
+    search(value?: any[]): any;
     /**
      * Selects a result.
      * @param value The result object to select.
      */
     select(value: any): void;
     /**
-     * Sets the value of a non "read-only" property from the widget.
+     * Set the value of a non "read-only" property from the widget.
      * @param name The string value to set.
-     * @param value The value to set the specified property to.
      */
-    set(name: string, value: any | boolean | esri.layers.Layer | esri.Graphic | esri.InfoTemplate | number | Textesri.symbols.Symbol | esri.Map | any[] | string): void;
+    set(name: string): any;
     /** Show the Search widget. */
     show(): void;
     /** Finalizes the creation of the Search widget. */
     startup(): void;
     /**
-     * Performs a suggest() request on the active esri.tasks.Locator or feature layer.
-     * @param value The string value used to suggest() on an active locator or feature layer.
+     * Performs a suggest() request on the active Locator.
+     * @param value The string value used to suggest() on an active Locator.
      */
     suggest(value?: string): any;
     /** Fired when the widget's text input loses focus. */
@@ -5600,67 +5500,68 @@ declare namespace esri.dijit {
     on(type: "focus", listener: (event: { target: Search }) => void): esri.Handle;
     /** Fired when the search widget has fully loaded. */
     on(type: "load", listener: (event: { target: Search }) => void): esri.Handle;
-    /** Fires when the search method is called and returns its results. */
-    on(type: "search-results", listener: (event: { activeSourceIndex: number; errors: Error[]; numErrors: number; numResults: number; results: any[]; value: string; target: Search }) => void): esri.Handle;
+    /** Fired when the search method is called and returns its results. */
+    on(type: "search-results", listener: (event: { activeSourceIndex: number; error: Error; numResults: number; results: any; value: string; target: Search }) => void): esri.Handle;
     /** Fired when a search result is selected. */
     on(type: "select-result", listener: (event: { result: any; source: any; sourceIndex: number; target: Search }) => void): esri.Handle;
     /** Fired when the suggest method is called and returns its results. */
-    on(type: "suggest-results", listener: (event: { activeSourceIndex: number; errors: Error[]; numErrors: number; numResults: number; results: any[]; value: string; target: Search }) => void): esri.Handle;
+    on(type: "suggest-results", listener: (event: { activeSourceIndex: number; error: Error; numResults: number; results: any; value: string; target: Search }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 
-  /** A widget to assist with managing size with a renderer. */
   export class SizeInfoSlider extends esri.dijit.RendererSlider {
-    /** Optional, the classification method used for the SizeInfoSlider. */
+    /** Optional. */
     classificationMethod: string;
-    /** Required: Handles identified by their index values within the stops array. */
+    /** Required. */
     handles: number[];
-    /** Optional: Represents the histogram data object. */
+    /** Optional. */
     histogram: any;
-    /** Optional: Width of the histogram in pixels. */
-    histogramWidth: number;
-    /** Optional: The absolute maximum value of the slider. */
+    /** Optional. */
+    histogramWidth: boolean;
+    /** Optional. */
     maxValue: number;
-    /** Optional: The absolute minimum value of the slider. */
+    /** Optional. */
     minValue: number;
-    /** Optional, indicates how data values are normalized. */
+    /** Optional. */
     normalizationType: string;
-    /** Optional: The handle identified by its index value within the stops array. */
+    /** Optional. */
     primaryHandle: number;
-    /** Optional: Represents the width of the SVG ramp in pixels. */
+    /** Optional */
     rampWidth: number;
-    /** Optional: Indicates whether to display slider handles. */
+    /** Property for showing handles. */
     showHandles: boolean;
-    /** Optional: Indicates whether to display the histogram. */
+    /** Optional. */
     showHistogram: boolean;
-    /** Optional:  Indicates whether to display the slider labels. */
+    /** Property for showing labels. */
     showLabels: boolean;
-    /** Optional: Indicates whether to display the slider tick marks. */
+    /** Property for showing ticks. */
     showTicks: boolean;
-    /** Required: Defines the size of the symbol where feature size is proportional to data value. */
+    /** Required. */
     sizeInfo: any;
-    /** Optional: Represents the statistics data object. */
+    /** Optional. */
     statistics: any;
-    /** Required: The SimpleLineesri.symbols.Symbol or SimpleMarkeresri.symbols.Symbol used with the widget. */
-    symbol: SimpleMarkeresri.symbols.Symbol | SimpleLineesri.symbols.Symbol;
-    /** Optional: Additional options to customize slider. */
+    /** Optional. */
     zoomOptions: any;
     /**
      * Creates a new SizeInfoSlider widget.
      * @param params Set of parameters used to specify the SizeInfoSlider widget options.
      * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
      */
-    constructor(params: esri.SizeInfoSliderOptions, srcNodeRef: Node | string);
+    constructor(params: esri.SizeInfoSliderOptions, srcNodeRef: Node);
+    /**
+     * Creates a new SizeInfoSlider widget.
+     * @param params Set of parameters used to specify the SizeInfoSlider widget options.
+     * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
+     */
+    constructor(params: esri.SizeInfoSliderOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
     /** Fires when the SizeInfoSlider properties change. */
     on(type: "change", listener: (event: { sizeInfo: any; target: SizeInfoSlider }) => void): esri.Handle;
-    /** Fires when  minValue or  maxValue of the SizeInfoSlider changes. */
+    /** Fires when minValue or maxValue of SizeInfoSlider change. */
     on(type: "data-value-change", listener: (event: { maxValue: number; minValue: number; sizeInfo: any; target: SizeInfoSlider }) => void): esri.Handle;
     /** Fires when a SizeInfoSlider handle is moved. */
     on(type: "handle-value-change", listener: (event: { sizeInfo: any; target: SizeInfoSlider }) => void): esri.Handle;
-    /** Fires when the zoom state changes. */
-    on(type: "zoomed", listener: (event: { zoomed: boolean; target: SizeInfoSlider }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 
@@ -5673,7 +5574,13 @@ declare namespace esri.dijit {
      * @param params Set of parameters used to specify the SymbolStyler widget options.
      * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
      */
-    constructor(params: esri.SymbolStylerOptions, srcNodeRef: Node | string);
+    constructor(params: esri.SymbolStylerOptions, srcNodeRef: Node);
+    /**
+     * Creates a new SymbolStyler widget.
+     * @param params Set of parameters used to specify the SymbolStyler widget options.
+     * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
+     */
+    constructor(params: esri.SymbolStylerOptions, srcNodeRef: string);
     /**
      * Sets the symbol to edit.
      * @param symbol esri.symbols.Symbol to edit.
@@ -5705,7 +5612,13 @@ declare namespace esri.dijit {
      * @param params Parameters for the time slider object.
      * @param srcNodeRef HTML element where the time slider should be rendered.
      */
-    constructor(params: esri.TimeSliderOptions, srcNodeRef: Node | string);
+    constructor(params: esri.TimeSliderOptions, srcNodeRef: Node);
+    /**
+     * Creates a new esri.dijit.TimeSlider object.
+     * @param params Parameters for the time slider object.
+     * @param srcNodeRef HTML element where the time slider should be rendered.
+     */
+    constructor(params: esri.TimeSliderOptions, srcNodeRef: string);
     /**
      * The specified number of time stops are created for the input time extent.
      * @param timeesri.geometry.Extent The time extent used to define the time slider's start and end time stops.
@@ -5771,24 +5684,16 @@ declare namespace esri.dijit {
     singleThumbAsTimeInstant(createTimeInstants: boolean): void;
     /** Finalizes the creation of the widget. */
     startup(): void;
-    /** Fires when the next button is clicked or TimeSlider.next() method is invoked. */
-    on(type: "next", listener: (event: { timeExtent: Timeesri.geometry.Extent; target: esri.dijit.TimeSlider }) => void): esri.Handle;
-    /** Fires when the pause button is clicked or TImeSlider.pause() method is invoked. */
-    on(type: "pause", listener: (event: { timeExtent: Timeesri.geometry.Extent; target: esri.dijit.TimeSlider }) => void): esri.Handle;
-    /** Fires once when the play button is clicked or Timeslider.play() method is invoked. */
-    on(type: "play", listener: (event: { timeExtent: Timeesri.geometry.Extent; target: esri.dijit.TimeSlider }) => void): esri.Handle;
-    /** Fires when the previous button is clicked or TimeSlider.previous() is invoked. */
-    on(type: "previous", listener: (event: { timeExtent: Timeesri.geometry.Extent; target: esri.dijit.TimeSlider }) => void): esri.Handle;
     /** Fires when the timeesri.geometry.Extent of the esri.dijit.TimeSlider is changed. */
     on(type: "time-extent-change", listener: (event: { timeExtent: Timeesri.geometry.Extent; target: esri.dijit.TimeSlider }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
   export = esri.dijit.TimeSlider;
 
-  /** A widget that sets the displayed visible scale values. */
+  /** A widget that helps set the visible scale range for a layer. */
   export class VisibleScaleRangeSlider {
     /** Setting the layer will update the suggested scale range, minScale and maxScale. */
-    layer: esri.layers.Layer;
+    layer: esri.layers.Featureesri.layers.Layer;
     /** Setting this property will update the slider's minimum/maximum values and current scale indicator. */
     map: esri.Map;
     /** Read-only: The maxScale bound in the slider range */
@@ -5804,11 +5709,17 @@ declare namespace esri.dijit {
      * @param params Set of parameters used to specify the VisibleScaleRangeSlider widget options.
      * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
      */
-    constructor(params: esri.VisibleScaleRangeSliderOptions, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: Node);
+    /**
+     * Creates a new VisibleScaleRangeSlider widget.
+     * @param params Set of parameters used to specify the VisibleScaleRangeSlider widget options.
+     * @param srcNodeRef Reference or ID of the HTMLElement where the widget should be rendered.
+     */
+    constructor(params: any, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
     /** Dispatched whenever minScale or maxScale changes. */
-    on(type: "scale-range-change", listener: (event: { maxScale: number; minScale: number; target: VisibleScaleRangeSlider }) => void): esri.Handle;
+    on(type: "scale-range-change", listener: (event: { target: VisibleScaleRangeSlider }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 }
@@ -5838,14 +5749,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /** An array of attribute field names and statistic types that you would like to aggregate for all points within each polygon. */
@@ -5855,7 +5762,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.AggregatePointsOptions, srcNodeRef: Node | string);
+    constructor(params: esri.AggregatePointsOptions, srcNodeRef: Node);
+    /**
+     * Creates a new AggregatePoints dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.AggregatePointsOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -5868,14 +5781,8 @@ declare namespace esri.dijit.analysis {
     folderId: string;
     /** Sets the selected folder of the select folder dropdown, based on the provided folderName, when showSelectFolder is true. */
     folderName: string;
-    /** The self response of the Portal. */
-    portalSelf: any;
     /** The URL to the ArcGIS.com site or in-house portal where the GP server is hosted, for example "http://www.arcgis.com". */
     portalUrl: string;
-    /** When true, adds an option to the UI that allows users to choose ready to use analysis layers from the Living Atlas Analysis Layers. */
-    showReadyToUseLayers: boolean;
-    /** Overrides the default widget title with a custom title. */
-    title: string;
     /**
      * Cancels an analysis job that is being processed.
      * @param jobInfo An object containing job information including job ID, status, message, etc returned by the job-status event.
@@ -5945,14 +5852,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -5960,79 +5863,15 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: any, srcNodeRef: Node | string);
-    /** Finalizes the creation of the widget. */
-    startup(): void;
-  }
-
-  /** Choose Best Facilities allows you to choose the best locations for facilities. */
-  export class ChooseBestFacilities extends esri.dijit.analysis.AnalysisBase {
-    /** The URL to the analysis service, for example "http://analysis.arcgis.com/arcgis/rest/services/tasks/GPServer". */
-    analysisGpServer: string;
-    /** The number of facilities to choose when allocating demand locations. */
-    candidateCount: number;
-    /** This specifies how much demand every facility in the candidateFacilitiesesri.layers.Layer is capable of supplying. */
-    candidateFacilitiesCapacity: string;
-    /** String value indicating the field name on the candidateFacilitiesesri.layers.Layer  representing how much demand each facility in the candidatesFacilitiesesri.layers.Layer is capable of supplying. */
-    candidateFacilitiesCapacityField: string;
-    /** A point layer specifying one or more locations that act as facilities by providing some kind of service. */
-    candidateFacilitiesLayer: esri.layers.Featureesri.layers.Layer;
-    /** The amount of demand available at every demand locations. */
-    demand: number;
-    /** String value indicating the field name on the demandLocationesri.layers.Layer  representing the amount of demand available at each demand location. */
-    demandField: string;
-    /** A point layer specifying the locations that have demand for facilities. */
-    demandLocationLayer: esri.layers.Featureesri.layers.Layer;
-    /** Array of point layers to be used for choosing the demandLocationLayer. */
-    demandLocationLayers: esri.layers.Featureesri.layers.Layer[];
-    /** When true, Travel Modes (Driving Time) is enabled for the inputesri.layers.Layer with the point geometries (esriGeometryPoint). */
-    enableTravelModes: boolean;
-    /** Array of point layers used for setting the required facilities layer and candidate facilities layer. */
-    featureLayers: esri.layers.Featureesri.layers.Layer[];
-    /** Sets the selected folder of the select folder dropdown. */
-    folderId: string;
-    /** Sets the selected folder of the select folder dropdown. */
-    folderName: string;
-    /** Reference to the map. */
-    map: esri.Map;
-    /** The maximum travel time or distance allowed between a demand location and its allocated facility. */
-    maxTravelRange: number;
-    /** String value indicating the field name on the demandLocationesri.layers.Layer specifying the maximum travel time or distance allowed between a demand location and its allocated facility. */
-    maxTravelRangeField: string;
-    /** The name of the output layer to be displayed in the result layer  nameinputbox. */
-    outputLayerName: string;
-    /** The percentage of the total demand that you want the chosen and required facilities to capture. */
-    percentDemandCoverage: number;
-    /** The URL to the ArcGIS organization or Portal site where the GP server is hosted. */
-    portalUrl: string;
-    /** Specify how much demand every facility in the requiredFacilitiesesri.layers.Layer is capable of supplying. */
-    requiredFacilitiesCapacity: number;
-    /** A field on the requiredFacilitiesesri.layers.Layer representing how much demand each facility in this layer is capable of supplying. */
-    requiredFacilitiesCapacityField: string;
-    /** A point layer specifying one or more locations that act as facilities by providing some kind of service. */
-    requiredFacilitiesLayer: esri.layers.Featureesri.layers.Layer;
-    /** Indicates whether to return the result of analysis as a client-side feature collection. */
-    returnFeatureCollection: boolean;
-    /** Indicates whether the "choose extent checkbox" is displayed. */
-    showChooseExtent: boolean;
-    /** Indicates whether to show the credit options. */
-    showCredits: boolean;
-    /** Indicates whether the help links are displayed. */
-    showHelp: boolean;
-    /** Indicates whether to add an option to the UI that allows users to choose ready-to-use analysis layers from the Living Atlas Analysis Layers. */
-    showReadyToUseLayers: boolean;
-    /** Indicates whether to display a dropdown menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
-    /** Indicates whether the select folder dropdown will be displayed. */
-    showSelectFolder: boolean;
-    /** The default widget title with a custom title. */
-    title: string;
+    constructor(params: any, srcNodeRef: Node);
     /**
-     * Creates a new ChooseBestFacilities dijit using the given DOM node.
+     * Creates a new CalculateDensity dijit using the given DOM node.
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.ChooseBestFacilitiesOptions, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: string);
+    /** Finalizes the creation of the widget. */
+    startup(): void;
   }
 
   /** Measure the travel time or distance between pairs of points. */
@@ -6053,14 +5892,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -6068,7 +5903,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.ConnectOriginsToDestinationsOptions, srcNodeRef: Node | string);
+    constructor(params: esri.ConnectOriginsToDestinationsOptions, srcNodeRef: Node);
+    /**
+     * Creates a new ConnectOriginsToDestinations dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.ConnectOriginsToDestinationsOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6087,14 +5928,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /** The linear unit to be used with the distance value(s). */
@@ -6104,7 +5941,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.CreateBuffersOptions, srcNodeRef: Node | string);
+    constructor(params: esri.CreateBuffersOptions, srcNodeRef: Node);
+    /**
+     * Creates a new CreateBuffers dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.CreateBuffersOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6129,14 +5972,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -6144,7 +5983,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.CreateDriveTimeAreasOptions, srcNodeRef: Node | string);
+    constructor(params: esri.CreateDriveTimeAreasOptions, srcNodeRef: Node);
+    /**
+     * Creates a new CreateDriveTimeAreas dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.CreateDriveTimeAreasOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6169,14 +6014,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /** The height of structures or people on the ground used to establish visibility. */
@@ -6188,7 +6029,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.CreateViewshedOptions, srcNodeRef: Node | string);
+    constructor(params: esri.CreateViewshedOptions, srcNodeRef: Node);
+    /**
+     * Creates a new CreateViewshed dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.CreateViewshedOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6207,14 +6054,10 @@ declare namespace esri.dijit.analysis {
     searchUnits: string;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -6222,7 +6065,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.CreateWatershedsOptions, srcNodeRef: Node | string);
+    constructor(params: esri.CreateWatershedsOptions, srcNodeRef: Node);
+    /**
+     * Creates a new CreateWatersheds dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.CreateWatershedsOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6239,14 +6088,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -6254,7 +6099,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: any, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: Node);
+    /**
+     * Creates a new DeriveNewLocations dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: any, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6273,14 +6124,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /** An array of field names and statistical summary types that you wish to calculate from the polygons that are dissolved together. */
@@ -6290,7 +6137,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.DissolveBoundariesOptions, srcNodeRef: Node | string);
+    constructor(params: esri.DissolveBoundariesOptions, srcNodeRef: Node);
+    /**
+     * Creates a new DissolveBoundaries dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.DissolveBoundariesOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6311,14 +6164,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /** When true, you can specify a time for traffic condition under Define areas to enrich - Driving Time. */
@@ -6328,7 +6177,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.EnrichLayerOptions, srcNodeRef: Node | string);
+    constructor(params: esri.EnrichLayerOptions, srcNodeRef: Node);
+    /**
+     * Creates a new Enrichesri.layers.Layer dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.EnrichLayerOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6350,14 +6205,10 @@ declare namespace esri.dijit.analysis {
     outputLayerName: string;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -6365,7 +6216,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.ExtractDataOptions, srcNodeRef: Node | string);
+    constructor(params: esri.ExtractDataOptions, srcNodeRef: Node);
+    /**
+     * Creates a new ExtractData dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.ExtractDataOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6382,14 +6239,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -6397,7 +6250,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: any, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: Node);
+    /**
+     * Creates a new FindExistingLocations dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: any, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6424,14 +6283,10 @@ declare namespace esri.dijit.analysis {
     returnProcessInfo: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -6439,7 +6294,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.FindHotSpotsOptions, srcNodeRef: Node | string);
+    constructor(params: esri.FindHotSpotsOptions, srcNodeRef: Node);
+    /**
+     * Creates a new FindHotSpots dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.FindHotSpotsOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6468,14 +6329,10 @@ declare namespace esri.dijit.analysis {
     searchCutoffUnits: string;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -6483,7 +6340,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.FindNearestOptions, srcNodeRef: Node | string);
+    constructor(params: esri.FindNearestOptions, srcNodeRef: Node);
+    /**
+     * Creates a new FindNearest dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.FindNearestOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6502,14 +6365,10 @@ declare namespace esri.dijit.analysis {
     searchLayers: esri.layers.Featureesri.layers.Layer[];
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -6517,7 +6376,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: any, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: Node);
+    /**
+     * Creates a new FindSimilarLocations dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: any, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
     /** Fires when the select tool option is activated. */
@@ -6551,14 +6416,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -6566,7 +6427,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: any, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: Node);
+    /**
+     * Creates a new InterpolatePoints dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: any, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6589,14 +6456,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /**
@@ -6604,7 +6467,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.MergeLayersOptions, srcNodeRef: Node | string);
+    constructor(params: esri.MergeLayersOptions, srcNodeRef: Node);
+    /**
+     * Creates a new MergeLayers dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.MergeLayersOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6625,14 +6494,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /** When the distance between features is less than the tolerance, the features in the overlay layer will snap to the features in the input layer. */
@@ -6644,7 +6509,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.OverlayLayersOptions, srcNodeRef: Node | string);
+    constructor(params: esri.OverlayLayersOptions, srcNodeRef: Node);
+    /**
+     * Creates a new OverlayLayers dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.OverlayLayersOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6671,14 +6542,10 @@ declare namespace esri.dijit.analysis {
     routeCount: number;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /** Provide the locations where the people or vehicles start their routes. */
@@ -6690,7 +6557,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: any, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: Node);
+    /**
+     * Creates a new PlanRoutes dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: any, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6719,14 +6592,10 @@ declare namespace esri.dijit.analysis {
     shapeUnits: string;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /** An array of possible statistics attribute field names and summary types that you wish to calculate for all nearby features. */
@@ -6746,7 +6615,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.SummarizeNearbyOptions, srcNodeRef: Node | string);
+    constructor(params: esri.SummarizeNearbyOptions, srcNodeRef: Node);
+    /**
+     * Creates a new SummarizeNearby dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.SummarizeNearbyOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6767,14 +6642,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /** A list of field names and statistical summary type that you wish to calculate for all features in Summaryesri.layers.Layer that are within each polygon in sumWithinLayer. */
@@ -6790,7 +6661,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: esri.SummarizeWithinOptions, srcNodeRef: Node | string);
+    constructor(params: esri.SummarizeWithinOptions, srcNodeRef: Node);
+    /**
+     * Creates a new SummarizeWithin dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: esri.SummarizeWithinOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6811,14 +6688,10 @@ declare namespace esri.dijit.analysis {
     returnFeatureCollection: boolean;
     /** When true, the choose extent checkbox will be shown. */
     showChooseExtent: boolean;
-    /** Indicates whether to show the close icon on the widget's user interface. */
-    showCloseIcon: boolean;
     /** When true, the show credit option is visible. */
     showCredits: boolean;
     /** When true, the help links will be shown. */
     showHelp: boolean;
-    /** Indicates whether to display a drop down menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
     /** When true, the select folder dropdown will be shown. */
     showSelectFolder: boolean;
     /** The trace line will be split into multiple lines where each line is of the specified length. */
@@ -6830,7 +6703,13 @@ declare namespace esri.dijit.analysis {
      * @param params Various options to configure this dijit.
      * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
      */
-    constructor(params: any, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: Node);
+    /**
+     * Creates a new TraceDownstream dijit using the given DOM node.
+     * @param params Various options to configure this dijit.
+     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
+     */
+    constructor(params: any, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
   }
@@ -6857,7 +6736,13 @@ declare namespace esri.dijit.editing {
      * @param params No parameter options.
      * @param srcNodeRef HTML element where the widget is rendered.
      */
-    constructor(params: any, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: Node);
+    /**
+     * Creates a new AttachmentEditor object.
+     * @param params No parameter options.
+     * @param srcNodeRef HTML element where the widget is rendered.
+     */
+    constructor(params: any, srcNodeRef: string);
     /**
      * Display the attachment editor.
      * @param graphic esri.Graphic, with attachments, to display in the attachment editor.
@@ -6916,14 +6801,18 @@ declare namespace esri.dijit.editing {
     static CREATE_TOOL_RECTANGLE: any;
     /** Triangle tool */
     static CREATE_TOOL_TRIANGLE: any;
-    /** The default esri.toolbars.Edit toolbar instance. */
-    editToolbar: esri.toolbars.Edit;
     /**
      * Creates a new Editor object.
      * @param params Parameters that define the functionality of the editor widget.
      * @param srcNodeRef HTML element where the widget should be rendered.
      */
-    constructor(params: esri.EditorOptions, srcNodeRef: Node | string);
+    constructor(params: esri.EditorOptions, srcNodeRef: Node);
+    /**
+     * Creates a new Editor object.
+     * @param params Parameters that define the functionality of the editor widget.
+     * @param srcNodeRef HTML element where the widget should be rendered.
+     */
+    constructor(params: esri.EditorOptions, srcNodeRef: string);
     /** Finalizes the creation of the widget. */
     startup(): void;
     /** Fires when the widget has fully loaded. */
@@ -6942,7 +6831,13 @@ declare namespace esri.dijit.editing {
      * @param params FeatureLayers or items are required all other parameters are optional.
      * @param srcNodeRef HTML element where the TemplatePicker will be rendered.
      */
-    constructor(params: esri.TemplatePickerOptions, srcNodeRef: Node | string);
+    constructor(params: esri.TemplatePickerOptions, srcNodeRef: Node);
+    /**
+     * Creates a new TemplatePicker object that displays a gallery of templates from the input feature layers or items.
+     * @param params FeatureLayers or items are required all other parameters are optional.
+     * @param srcNodeRef HTML element where the TemplatePicker will be rendered.
+     */
+    constructor(params: esri.TemplatePickerOptions, srcNodeRef: string);
     /**
      * Get or set the properties of the template picker.
      * @param name Name of the attribute of interest.
@@ -6994,14 +6889,18 @@ declare namespace esri.dijit.geoenrichment {
 
   /** The DataBrowser widget allows users to search or browse for geoenrichment variables. */
   export class DataBrowser {
-    /** An array of the variables currently loaded in the Data Browser. */
-    variables: any[];
     /**
      * Creates a new DataBrowser dijit using the given DOM node.
      * @param options Optional parameters used to create the layer.
      * @param srcNodeRef Reference or id of an HTML element where the DataBrowser should be rendered.
      */
-    constructor(options: esri.DataBrowserOptions, srcNodeRef: Node | string);
+    constructor(options: esri.DataBrowserOptions, srcNodeRef: Node);
+    /**
+     * Creates a new DataBrowser dijit using the given DOM node.
+     * @param options Optional parameters used to create the layer.
+     * @param srcNodeRef Reference or id of an HTML element where the DataBrowser should be rendered.
+     */
+    constructor(options: esri.DataBrowserOptions, srcNodeRef: string);
     /** Finalizes the creation of the DataBrowser. */
     startup(): void;
     /** Fires when user clicks the Back button. */
@@ -7030,7 +6929,7 @@ declare namespace esri.dijit.geoenrichment {
     /** The study area for this Infographic. */
     studyArea: esri.tasks.geoenrichment.Geometryesri.tasks.geoenrichment.StudyArea;
     /** The options to apply to the study area. */
-    studyAreaOptions: esri.tasks.geoenrichment.RingBuffer | esri.tasks.geoenrichment.DriveBuffer | esri.tasks.geoenrichment.IntersectingGeographies;
+    studyAreaOptions: any;
     /** An HTML template string used to define the Infographic subtitle. */
     subtitle: string;
     /** The title of the Infographic. */
@@ -7044,7 +6943,13 @@ declare namespace esri.dijit.geoenrichment {
      * @param params Various optional parameters that can be used to configure the dijit.
      * @param srcNodeRef Reference or id of an HTML element where the Infographic should be rendered.
      */
-    constructor(params: any, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: Node);
+    /**
+     * Creates a new Infographic dijit using the given DOM node.
+     * @param params Various optional parameters that can be used to configure the dijit.
+     * @param srcNodeRef Reference or id of an HTML element where the Infographic should be rendered.
+     */
+    constructor(params: any, srcNodeRef: string);
     /**
      * Define the infographic data.
      * @param data Specify the esri.tasks.FeatureSet containing the custom data to display in the Infographic.
@@ -7085,7 +6990,13 @@ declare namespace esri.dijit.geoenrichment {
      * @param params Various optional parameters that can be used to configure the dijit.
      * @param srcNodeRef Reference or id of an HTML element where the Directions widget should be rendered.
      */
-    constructor(params: any, srcNodeRef: Node | string);
+    constructor(params: any, srcNodeRef: Node);
+    /**
+     * Creates a new InfographicsCarousel dijit using the given DOM node.
+     * @param params Various optional parameters that can be used to configure the dijit.
+     * @param srcNodeRef Reference or id of an HTML element where the Directions widget should be rendered.
+     */
+    constructor(params: any, srcNodeRef: string);
     /** Finalizes the creation of this dijit. */
     startup(): void;
     /** Fires if an error occurs in retrieving data for the study area. */
@@ -7098,11 +7009,10 @@ declare namespace esri.dijit.geoenrichment {
     on(type: "resize", listener: (event: { size: number[]; target: InfographicsCarousel }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
-
   /** esri.dijit.geoenrichment.InfographicsOptions is used to customize and configure the Infographic's included in a InfographicCarousel. */
   class esri.dijit.geoenrichment.InfographicsOptions {
     /** The options to apply to the study area. */
-    studyAreaOptions: esri.tasks.geoenrichment.RingBuffer | esri.tasks.geoenrichment.DriveBuffer | esri.tasks.geoenrichment.IntersectingGeographies;
+    studyAreaOptions: any;
     /** The name of the css theme used to format the InfographicsCarousel. */
     theme: string;
     /**
@@ -7147,7 +7057,19 @@ declare namespace esri.dijit.util {
      * @param target The String (Node id, dijit/_WidgetBase id), HTMLElement reference (Node), or dijit/_WidgetBase.
      * @param params (Optional) The params options can be used when needing more fine-grained control.
      */
-    create(target: string | HTMLElement | any, params?: any): any;
+    create(target: string, params?: any): any;
+    /**
+     * Creates a busy indicator on a target.
+     * @param target The String (Node id, dijit/_WidgetBase id), HTMLElement reference (Node), or dijit/_WidgetBase.
+     * @param params (Optional) The params options can be used when needing more fine-grained control.
+     */
+    create(target: HTMLElement, params?: any): any;
+    /**
+     * Creates a busy indicator on a target.
+     * @param target The String (Node id, dijit/_WidgetBase id), HTMLElement reference (Node), or dijit/_WidgetBase.
+     * @param params (Optional) The params options can be used when needing more fine-grained control.
+     */
+    create(target: any, params?: any): any;
   };
 }
 declare namespace esri.geometry {
@@ -7155,7 +7077,7 @@ declare namespace esri.geometry {
   /** A circle (Polygon) created by a specified center point. */
   export class Circle extends esri.geometry.Polygon {
     /** Center point of the circle. */
-    center: esri.geometry.Point | number[];
+    center: any;
     /** The radius of the circle based. */
     radius: number;
     /** Unit of the radius. */
@@ -7169,7 +7091,13 @@ declare namespace esri.geometry {
      * @param center Center point of the circle.
      * @param options See options descriptions for further information.
      */
-    constructor(center: esri.geometry.Point | number[], options?: esri.CircleOptions1);
+    constructor(center: esri.geometry.Point, options?: esri.CircleOptions1);
+    /**
+     * Create a new Circle by specifying an input center location using either an esri.geometry.esri.geometry.Point object or a latitude/longitude array and an object with the following optional properties: radius, radiusesri.Units, geodesic and numberOfPoints.
+     * @param center Center point of the circle.
+     * @param options See options descriptions for further information.
+     */
+    constructor(center: number[], options?: esri.CircleOptions1);
     /**
      * Create a new Circle by specifying an object with a required center location, defined as a longitude/latitude array or an esri.geometry.esri.geometry.Point, and the following additional optional parameters: radius, radiusesri.Units, geodesic, and numberOfPoints.
      * @param params If no center parameter is provided, it must be set within the options.
@@ -7223,22 +7151,22 @@ declare namespace esri.geometry {
     /** Distance between xmin and xmax. */
     getWidth(): number;
     /**
-     * Returns the intersection extent if the input geometry is an extent that intersects this extent.
+     * Returns the interesection extent if the input geometry is an extent that intersects this extent.
      * @param geometry The geometry used to test the intersection.
      */
-    intersects(geometry: Geometry): esri.geometry.Extent | boolean;
+    intersects(geometry: Geometry): any;
     /** Returns an array with either one esri.geometry.Extent that's been shifted to within +/- 180 or two Extents if the original extent intersects the dateline. */
     normalize(): esri.geometry.Extent[];
     /**
      * Returns a new esri.geometry.Extent with x and y offsets.
-     * @param dx The offset distance in map units for the x-coordinate.
-     * @param dy The offset distance in map units for the y-coordinate.
+     * @param dx The offset distance in map units for the y-coordinate.
+     * @param dy The offset distance in map units for the x-coordinate.
      */
     offset(dx: number, dy: number): esri.geometry.Extent;
     /** Returns an extent with a spatial reference with a custom shifted central meridian if the extent intersects the dateline. */
     shiftCentralMeridian(): esri.geometry.Extent;
     /**
-     * Expands this extent to include the extent of the argument.NOTE: Performing a Union returns a new extent as opposed to modifying the existing extent.
+     * Expands this extent to include the extent of the argument.
      * @param extent The minx, miny, maxx, and maxy bounding box.
      */
     union(extent: Extent): esri.geometry.Extent;
@@ -7303,7 +7231,12 @@ declare namespace esri.geometry {
      * Adds a point to the Multipoint.
      * @param point The point to add.
      */
-    addPoint(point: esri.geometry.Point | number[]): Multipoint;
+    addPoint(point: Point): Multipoint;
+    /**
+     * Adds a point to the Multipoint.
+     * @param point The point to add.
+     */
+    addPoint(point: number[]): Multipoint;
     /** Gets the extent of all the points. */
     getExtent(): esri.geometry.Extent;
     /**
@@ -7423,12 +7356,22 @@ declare namespace esri.geometry {
      * Create a new polygon by providing an array of geographic coordinate pairs.
      * @param coordinates An array of geographic coordinates that define the polygon.
      */
-    constructor(coordinates: number[][] | number[][][]);
+    constructor(coordinates: number[][]);
+    /**
+     * Create a new polygon by providing an array of geographic coordinate pairs.
+     * @param coordinates An array of geographic coordinates that define the polygon.
+     */
+    constructor(coordinates: number[][][]);
     /**
      * Adds a ring to the Polygon.
      * @param ring A polygon ring.
      */
-    addRing(ring: esri.geometry.Point[] | number[][]): esri.geometry.Polygon;
+    addRing(ring: esri.geometry.Point[]): esri.geometry.Polygon;
+    /**
+     * Adds a ring to the Polygon.
+     * @param ring A polygon ring.
+     */
+    addRing(ring: number[][]): esri.geometry.Polygon;
     /**
      * Checks on the client if the specified point is inside the polygon.
      * @param point The location defined by an X- and Y- coordinate in map units.
@@ -7460,7 +7403,12 @@ declare namespace esri.geometry {
      * Checks if a esri.geometry.Polygon ring is clockwise.
      * @param ring A polygon ring.
      */
-    isClockwise(ring: esri.geometry.Point[] | number[][]): boolean;
+    isClockwise(ring: esri.geometry.Point[]): boolean;
+    /**
+     * Checks if a esri.geometry.Polygon ring is clockwise.
+     * @param ring A polygon ring.
+     */
+    isClockwise(ring: number[][]): boolean;
     /**
      * When true, the polygon is self-intersecting which means that the ring of the polygon crosses itself.
      * @param polygon The polygon to test for self-intersection.
@@ -7505,12 +7453,22 @@ declare namespace esri.geometry {
      * Create a new polyline by providing an array of geographic coordinates.
      * @param coordinates An array of geographic coordinates that define the polyline.
      */
-    constructor(coordinates: number[][] | number[][][]);
+    constructor(coordinates: number[][]);
+    /**
+     * Create a new polyline by providing an array of geographic coordinates.
+     * @param coordinates An array of geographic coordinates that define the polyline.
+     */
+    constructor(coordinates: number[][][]);
     /**
      * Adds a path to the Polyline.
      * @param path Path to add to the Polyline.
      */
-    addPath(path: esri.geometry.Point[] | number[][]): esri.geometry.Polyline;
+    addPath(path: esri.geometry.Point[]): esri.geometry.Polyline;
+    /**
+     * Adds a path to the Polyline.
+     * @param path Path to add to the Polyline.
+     */
+    addPath(path: number[][]): esri.geometry.Polyline;
     /** Returns the extent of the Polyline. */
     getExtent(): esri.geometry.Extent;
     /**
@@ -7617,16 +7575,40 @@ declare namespace esri.geometry {
     geodesicLengths(polylines: esri.geometry.Polyline[], lengthUnit: string): number[];
   };
 
-  /** A client-side geometry engine. */
+  /** (Beta at v3.13) A client-side geometry engine. */
   export var geometryEngine: {
     /**
-     * Creates planar (or Euclidean) buffer polygons at a specified distance around the input geometries.
+     * Creates buffer polygons at a specified distance around the given geometries.
      * @param geometry The buffer input geometry.
      * @param distance The specified distance(s) for buffering.
-     * @param unit Measurement unit for the distance(s).
+     * @param unit Unit for the distances.
      * @param unionResults Whether the output geometries should be unioned into a single polygon.
      */
-    buffer(geometry: esri.geometry.Geometry | esri.geometry.Geometry[], distance: number | number[], unit: string | number, unionResults?: boolean): esri.geometry.Polygon | esri.geometry.Polygon[];
+    buffer(geometry: esri.geometry.Geometry, distance: number[], unit?: number, unionResults?: boolean): any;
+    /**
+     * Creates buffer polygons at a specified distance around the given geometries.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
+     */
+    buffer(geometry: esri.geometry.Geometry[], distance: number, unit?: number, unionResults?: boolean): any;
+    /**
+     * Creates buffer polygons at a specified distance around the given geometries.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
+     */
+    buffer(geometry: esri.geometry.Geometry, distance: number, unit?: number, unionResults?: boolean): any;
+    /**
+     * Creates buffer polygons at a specified distance around the given geometries.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
+     */
+    buffer(geometry: esri.geometry.Geometry[], distance: number[], unit?: number, unionResults?: boolean): any;
     /**
      * Calculates the clipped geometry from a target geometry by an envelope.
      * @param geometry The geometry to be clipped.
@@ -7644,7 +7626,13 @@ declare namespace esri.geometry {
      * @param geometry The input geometry.
      * @param merge Whether to merge output geometries.
      */
-    convexHull(geometry: esri.geometry.Geometry | esri.geometry.Geometry[], merge?: boolean): esri.geometry.Geometry | esri.geometry.Geometry[];
+    convexHull(geometry: esri.geometry.Geometry, merge?: boolean): any;
+    /**
+     * Calculates the convex hull of the input geometry.
+     * @param geometry The input geometry.
+     * @param merge Whether to merge output geometries.
+     */
+    convexHull(geometry: esri.geometry.Geometry[], merge?: boolean): any;
     /**
      * Indicates if one geometry crosses another geometry.
      * @param geometry1 The geometry to cross.
@@ -7652,7 +7640,7 @@ declare namespace esri.geometry {
      */
     crosses(geometry1: esri.geometry.Geometry, geometry2: Geometry): boolean;
     /**
-     * Split the input esri.geometry.Polyline or esri.geometry.Polygon where it crosses a cutting Polyline.
+     * Split the input polyline or polygon where it crosses a cutting polyline.
      * @param geometry The geometry to be cut.
      * @param cutter The polyline to cut the geometry.
      */
@@ -7661,32 +7649,38 @@ declare namespace esri.geometry {
      * Densify geometries by plotting points between existing vertices.
      * @param geometry The geometry to be densified.
      * @param maxSegmentLength The maximum segment length allowed.
-     * @param maxSegmentLengthUnit Measurement unit for maxSegmentLength.
+     * @param maxSegmentLengthUnit Unit for the maximum segment length.
      */
-    densify(geometry: esri.geometry.Geometry, maxSegmentLength: number, maxSegmentLengthUnit: string | number): esri.geometry.Geometry;
+    densify(geometry: esri.geometry.Geometry, maxSegmentLength: number, maxSegmentLengthUnit?: number): esri.geometry.Geometry;
     /**
      * Creates the difference of two geometries.
-     * @param inputesri.geometry.Geometry The input geometry to subtract from.
-     * @param subtractor The geometry being subtracted from inputGeometry.
+     * @param geometry The input geometry.
+     * @param subtractor The geometry being subtracted.
      */
-    difference(inputGeometry: esri.geometry.Geometry | esri.geometry.Geometry[], subtractor: Geometry): esri.geometry.Geometry | esri.geometry.Geometry[];
+    difference(geometry: esri.geometry.Geometry, subtractor: Geometry): any;
     /**
-     * Indicates if one geometry is disjoint (doesn't intersect in any way) with another geometry.
-     * @param geometry1 The base geometry that is tested for the "disjoint" relationship to the other geometry.
+     * Creates the difference of two geometries.
+     * @param geometry The input geometry.
+     * @param subtractor The geometry being subtracted.
+     */
+    difference(geometry: esri.geometry.Geometry[], subtractor: Geometry): any;
+    /**
+     * Indicates if one geometry is disjoint from another geometry.
+     * @param geometry1 The base geometry that is tested for within relationship to the other geometry.
      * @param geometry2 The comparison geometry that is tested for the disjoint relationship to the other geometry.
      */
     disjoint(geometry1: esri.geometry.Geometry, geometry2: Geometry): boolean;
     /**
-     * Calculates the shortest planar distance between two geometries.
-     * @param geometry1 First input geometry.
-     * @param geometry2 Second input geometry.
-     * @param distanceUnit Measurement unit of the return value.
+     * Calculates the 2D planar shortest distance between two geometries.
+     * @param geometry1
+     * @param geometry2
+     * @param distanceUnit esri.Units of the return value.
      */
-    distance(geometry1: esri.geometry.Geometry, geometry2: esri.geometry.Geometry, distanceUnit: string | number): number;
+    distance(geometry1: esri.geometry.Geometry, geometry2: esri.geometry.Geometry, distanceUnit?: number): number;
     /**
      * Indicates if two geometries are equal.
-     * @param geometry1 First input geometry.
-     * @param geometry2 Second input geometry.
+     * @param geometry1
+     * @param geometry2
      */
     equals(geometry1: esri.geometry.Geometry, geometry2: Geometry): boolean;
     /**
@@ -7711,42 +7705,65 @@ declare namespace esri.geometry {
      * @param geometry The geometry to be generalized.
      * @param maxDeviation The maximum allowed deviation from the generalized geometry to the original geometry.
      * @param removeDegenerateParts When true, the degenerate parts of the geometry will be removed from the output (may be undesired for drawing).
-     * @param maxDeviationUnit Measurement unit for maxDeviation.
+     * @param maxDeviationUnit A unit for maximum deviation.
      */
-    generalize(geometry: esri.geometry.Geometry, maxDeviation: number, removeDegenerateParts?: boolean, maxDeviationUnit?: string | number): esri.geometry.Geometry;
+    generalize(geometry: esri.geometry.Geometry, maxDeviation: number, removeDegenerateParts?: boolean, maxDeviationUnit?: number): esri.geometry.Geometry;
     /**
-     * Calculates the area of the input geometry.
-     * @param geometry The input geometry.
-     * @param unit Measurement unit of the return value.
+     * Calculates area of input geometry using geographic (geodesic) coordinates.
+     * @param geometry
+     * @param unit esri.Units of the return value.
      */
-    geodesicArea(geometry: esri.geometry.Geometry, unit: string | number): number;
+    geodesicArea(geometry: esri.geometry.Geometry, unit?: number): number;
     /**
-     * Creates geodesic buffer polygons at a specified distance around the input geometries.
+     * Creates buffer polygons at a specified distance around the given geometries using geographic (geodesic) coordinates.
      * @param geometry The buffer input geometry.
      * @param distance The specified distance(s) for buffering.
-     * @param unit Measurement unit for the distance(s).
+     * @param unit Unit for the distances.
      * @param unionResults Whether the output geometries should be unioned into a single polygon.
      */
-    geodesicBuffer(geometry: esri.geometry.Geometry | esri.geometry.Geometry[], distance: number | number[], unit: string | number, unionResults?: boolean): esri.geometry.Polygon | esri.geometry.Polygon[];
+    geodesicBuffer(geometry: esri.geometry.Geometry, distance: number[], unit?: number, unionResults?: boolean): any;
     /**
-     * Returns a geodesically densified version of the input geometry.
-     * @param geometry A polyline or polygon geometry to densify.
-     * @param maxSegmentLength The maximum segment length allowed.
-     * @param maxSegmentLengthUnit Measurement unit for maxSegmentLength.
+     * Creates buffer polygons at a specified distance around the given geometries using geographic (geodesic) coordinates.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
      */
-    geodesicDensify(geometry: esri.geometry.Polyline | esri.geometry.Polygon, maxSegmentLength: number, maxSegmentLengthUnit?: number): esri.geometry.Geometry;
+    geodesicBuffer(geometry: esri.geometry.Geometry[], distance: number, unit?: number, unionResults?: boolean): any;
     /**
-     * Calculates the length of the input geometry.
-     * @param geometry The input geometry.
-     * @param unit Measurement unit of the return value.
+     * Creates buffer polygons at a specified distance around the given geometries using geographic (geodesic) coordinates.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
      */
-    geodesicLength(geometry: esri.geometry.Geometry, unit: string | number): number;
+    geodesicBuffer(geometry: esri.geometry.Geometry, distance: number, unit?: number, unionResults?: boolean): any;
+    /**
+     * Creates buffer polygons at a specified distance around the given geometries using geographic (geodesic) coordinates.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
+     */
+    geodesicBuffer(geometry: esri.geometry.Geometry[], distance: number[], unit?: number, unionResults?: boolean): any;
+    /**
+     * Calculates length of the input geometry using geographic (geodesic) coordinates.
+     * @param geometry
+     * @param unit esri.Units of the return value.
+     */
+    geodesicLength(geometry: esri.geometry.Geometry, unit?: number): number;
     /**
      * Creates a new geometry through intersection between two geometries.
      * @param geometry The input geometry.
      * @param intersector The geometry being intersected.
      */
-    intersect(geometry: esri.geometry.Geometry | esri.geometry.Geometry[], intersector: Geometry): esri.geometry.Geometry | esri.geometry.Geometry[];
+    intersect(geometry: esri.geometry.Geometry, intersector: Geometry): any;
+    /**
+     * Creates a new geometry through intersection between two geometries.
+     * @param geometry The input geometry.
+     * @param intersector The geometry being intersected.
+     */
+    intersect(geometry: esri.geometry.Geometry[], intersector: Geometry): any;
     /**
      * Indicates if one geometry intersects another geometry.
      * @param geometry1 The geometry that is tested for the intersects relationship to the other geometry.
@@ -7754,26 +7771,26 @@ declare namespace esri.geometry {
      */
     intersects(geometry1: esri.geometry.Geometry, geometry2: Geometry): boolean;
     /**
-     * Indicates if the given geometry is topologically simple.
+     * Indicates if the given geometry is simple.
      * @param geometry esri.geometry.Geometry
      */
     isSimple(geometry: Geometry): boolean;
     /**
      * Finds the coordinate of the geometry which is closest to the specified point.
      * @param geometry The geometry to consider.
-     * @param inputesri.geometry.Point The point used to search the nearest coordinate in the geometry.
+     * @param inputesri.geometry.Point The point to find the nearest coordinate in the geometry for.
      */
     nearestCoordinate(geometry: esri.geometry.Geometry, inputPoint: Point): any;
     /**
      * Finds vertex on the geometry nearest to the specified point.
      * @param geometry The geometry to consider.
-     * @param inputesri.geometry.Point The point used to search the nearest vertex in the geometry.
+     * @param inputesri.geometry.Point The point to find the nearest vertex in the geometry for.
      */
     nearestVertex(geometry: esri.geometry.Geometry, inputPoint: Point): any;
     /**
      * Finds all vertices in the given distance from the specified point, sorted from the closest to the furthest and returns them as an array of objects.
      * @param geometry The geometry to consider.
-     * @param inputesri.geometry.Point The point from which to measure.
+     * @param inputesri.geometry.Point The point to start from.
      * @param searchRadius The search radius.
      * @param maxVertexCountToReturn The maximum number number of vertices to return.
      */
@@ -7781,13 +7798,23 @@ declare namespace esri.geometry {
     /**
      * Creates offset version of the input geometry.
      * @param geometry The geometries to offset.
-     * @param offsetDistance The offset distance for the Geometries.
-     * @param offsetUnit Measurement unit for the offset.
+     * @param distance The offset distance for the Geometries.
+     * @param offsetUnit Unit for the offset.
      * @param joinType The join type.
      * @param bevelRatio Applicable to MITER, bevelRatio is multiplied by the offset distance and the result determines how far a mitered offset intersection can be located before it is beveled.
      * @param flattenError Applicable to ROUND, flattenError determines the maximum distance of the resulting segments compared to the true circular arc.
      */
-    offset(geometry: esri.geometry.Geometry | esri.geometry.Geometry[], offsetDistance: number, offsetUnit: string | number, joinType: string, bevelRatio?: number, flattenError?: number): esri.geometry.Geometry | esri.geometry.Geometry[];
+    offset(geometry: esri.geometry.Geometry, distance: number, offsetUnit: number, joinType: number, bevelRatio?: number, flattenError?: number): any;
+    /**
+     * Creates offset version of the input geometry.
+     * @param geometry The geometries to offset.
+     * @param distance The offset distance for the Geometries.
+     * @param offsetUnit Unit for the offset.
+     * @param joinType The join type.
+     * @param bevelRatio Applicable to MITER, bevelRatio is multiplied by the offset distance and the result determines how far a mitered offset intersection can be located before it is beveled.
+     * @param flattenError Applicable to ROUND, flattenError determines the maximum distance of the resulting segments compared to the true circular arc.
+     */
+    offset(geometry: esri.geometry.Geometry[], distance: number, offsetUnit: number, joinType: number, bevelRatio?: number, flattenError?: number): any;
     /**
      * Indicates if one geometry  overlaps another geometry.
      * @param geometry1 The base geometry that is tested for overlaps relationship to the other geometry.
@@ -7795,22 +7822,22 @@ declare namespace esri.geometry {
      */
     overlaps(geometry1: esri.geometry.Geometry, geometry2: Geometry): boolean;
     /**
-     * Calculates the area of the input geometry.
-     * @param geometry The input geometry.
-     * @param unit Measurement unit of the return value.
+     * Calculates the area of the input geometry using projected (planar) coordinates.
+     * @param geometry
+     * @param unit esri.Units of the return value.
      */
-    planarArea(geometry: esri.geometry.Geometry, unit: string | number): number;
+    planarArea(geometry: esri.geometry.Geometry, unit?: number): number;
     /**
-     * Calculates the length of the input geometry.
-     * @param geometry The input geometry.
-     * @param unit Measurement unit of the return value.
+     * Calculates the length of the input geometry using projected (planar) coordinates.
+     * @param geometry
+     * @param unit esri.Units of the return value.
      */
-    planarLength(geometry: esri.geometry.Geometry, unit: string | number): number;
+    planarLength(geometry: esri.geometry.Geometry, unit: number): number;
     /**
-     * Indicates if the given DE-9IM relation holds for the two geometries.
+     * Indicates if the given relation holds for the two geometries.
      * @param geometry1 The first geometry for the relation.
      * @param geometry2 The second geometry for the relation.
-     * @param relation The Dimensionally Extended 9 Intersection Model (DE-9IM) matrix relation (encoded as a string) to test against the relationship of the two geometries.
+     * @param relation The DE-9IM matrix relation encoded as a string.
      */
     relate(geometry1: esri.geometry.Geometry, geometry2: esri.geometry.Geometry, relation: string): boolean;
     /**
@@ -7822,7 +7849,7 @@ declare namespace esri.geometry {
     rotate(geometry: esri.geometry.Geometry, angle: number, rotationOrigin?: Point): esri.geometry.Geometry;
     /**
      * Performs the simplify operation on the geometry which alters the given geometries to make their definitions topologically legal with respect to their geometry type.
-     * @param geometry The geometry to be simplified.
+     * @param geometry esri.geometry.Geometry
      */
     simplify(geometry: Geometry): esri.geometry.Geometry;
     /**
@@ -7830,7 +7857,13 @@ declare namespace esri.geometry {
      * @param leftesri.geometry.Geometry One of the esri.geometry.Geometry instances in the XOR operation.
      * @param rightesri.geometry.Geometry One of the esri.geometry.Geometry instances in the XOR operation.
      */
-    symmetricDifference(leftGeometry: esri.geometry.Geometry | esri.geometry.Geometry[], rightGeometry: Geometry): esri.geometry.Geometry | esri.geometry.Geometry[];
+    symmetricDifference(leftGeometry: esri.geometry.Geometry, rightGeometry: Geometry): any;
+    /**
+     * Creates the symmetric difference of two geometries.
+     * @param leftesri.geometry.Geometry One of the esri.geometry.Geometry instances in the XOR operation.
+     * @param rightesri.geometry.Geometry One of the esri.geometry.Geometry instances in the XOR operation.
+     */
+    symmetricDifference(leftGeometry: esri.geometry.Geometry[], rightGeometry: Geometry): any;
     /**
      * Indicates if one geometry touches another geometry.
      * @param geometry1 The geometry which may be touching another geometry.
@@ -7850,16 +7883,40 @@ declare namespace esri.geometry {
     within(geometry1: esri.geometry.Geometry, geometry2: Geometry): boolean;
   };
 
-  /** A client-side asynchronous geometry engine. */
+  /** (Beta at v3.13) A client-side asynchronous geometry engine. */
   export var geometryEngineAsync: {
     /**
-     * Creates planar (or Euclidean) buffer polygons at a specified distance around the input geometries.
+     * Creates buffer polygons at a specified distance around the given geometries.
      * @param geometry The buffer input geometry.
      * @param distance The specified distance(s) for buffering.
-     * @param unit Measurement unit for the distance(s).
+     * @param unit Unit for the distances.
      * @param unionResults Whether the output geometries should be unioned into a single polygon.
      */
-    buffer(geometry: esri.geometry.Geometry | esri.geometry.Geometry[], distance: number | number[], unit: string | number, unionResults?: boolean): any;
+    buffer(geometry: esri.geometry.Geometry, distance: number[], unit?: number, unionResults?: boolean): any;
+    /**
+     * Creates buffer polygons at a specified distance around the given geometries.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
+     */
+    buffer(geometry: esri.geometry.Geometry[], distance: number, unit?: number, unionResults?: boolean): any;
+    /**
+     * Creates buffer polygons at a specified distance around the given geometries.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
+     */
+    buffer(geometry: esri.geometry.Geometry, distance: number, unit?: number, unionResults?: boolean): any;
+    /**
+     * Creates buffer polygons at a specified distance around the given geometries.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
+     */
+    buffer(geometry: esri.geometry.Geometry[], distance: number[], unit?: number, unionResults?: boolean): any;
     /**
      * Calculates the clipped geometry from a target geometry by an envelope.
      * @param geometry The geometry to be clipped.
@@ -7877,7 +7934,13 @@ declare namespace esri.geometry {
      * @param geometry The input geometry.
      * @param merge Whether to merge output geometries.
      */
-    convexHull(geometry: esri.geometry.Geometry | esri.geometry.Geometry[], merge?: boolean): any;
+    convexHull(geometry: esri.geometry.Geometry, merge?: boolean): any;
+    /**
+     * Calculates the convex hull of the input geometry.
+     * @param geometry The input geometry.
+     * @param merge Whether to merge output geometries.
+     */
+    convexHull(geometry: esri.geometry.Geometry[], merge?: boolean): any;
     /**
      * Indicates if one geometry crosses another geometry.
      * @param geometry1 The geometry to cross.
@@ -7894,37 +7957,43 @@ declare namespace esri.geometry {
      * Densify geometries by plotting points between existing vertices.
      * @param geometry The geometry to be densified.
      * @param maxSegmentLength The maximum segment length allowed.
-     * @param maxSegmentLengthUnit Measurement unit for maxSegmentLength.
+     * @param maxSegmentLengthUnit Unit for the maximum segment length.
      */
-    densify(geometry: esri.geometry.Geometry, maxSegmentLength: number, maxSegmentLengthUnit: string | number): any;
+    densify(geometry: esri.geometry.Geometry, maxSegmentLength: number, maxSegmentLengthUnit?: number): any;
     /**
      * Creates the difference of two geometries.
-     * @param inputesri.geometry.Geometry The input geometry to subtract from.
+     * @param geometry The input geometry.
      * @param subtractor The geometry being subtracted.
      */
-    difference(inputGeometry: esri.geometry.Geometry | esri.geometry.Geometry[], subtractor: Geometry): any;
+    difference(geometry: esri.geometry.Geometry, subtractor: Geometry): any;
     /**
-     * Indicates if one geometry is disjoint (doesn't intersect in any way) with another geometry.
-     * @param geometry1 The base geometry that is tested for the "disjoint" relationship to the other geometry.
+     * Creates the difference of two geometries.
+     * @param geometry The input geometry.
+     * @param subtractor The geometry being subtracted.
+     */
+    difference(geometry: esri.geometry.Geometry[], subtractor: Geometry): any;
+    /**
+     * Indicates if one geometry is disjoint from another geometry.
+     * @param geometry1 The base geometry that is tested for within relationship to the other geometry.
      * @param geometry2 The comparison geometry that is tested for the disjoint relationship to the other geometry.
      */
     disjoint(geometry1: esri.geometry.Geometry, geometry2: Geometry): any;
     /**
-     * Calculates the shortest planar distance between two geometries.
-     * @param geometry1 First input geometry.
-     * @param geometry2 Second input geometry.
-     * @param distanceUnit Measurement unit of the return value.
+     * Calculates the 2D planar shortest distance between two geometries.
+     * @param geometry1
+     * @param geometry2
+     * @param distanceUnit esri.Units of the return value.
      */
-    distance(geometry1: esri.geometry.Geometry, geometry2: esri.geometry.Geometry, distanceUnit: string | number): any;
+    distance(geometry1: esri.geometry.Geometry, geometry2: esri.geometry.Geometry, distanceUnit?: number): any;
     /**
      * Indicates if two geometries are equal.
-     * @param geometry1 First input geometry.
-     * @param geometry2 Second input geometry.
+     * @param geometry1
+     * @param geometry2
      */
     equals(geometry1: esri.geometry.Geometry, geometry2: Geometry): any;
     /**
      * Returns an object containing additional information about the input spatial reference.
-     * @param spatialReference The input spatial reference.
+     * @param spatialReference The spatial Reference.
      */
     extendedSpatialReferenceInfo(spatialReference: SpatialReference): any;
     /**
@@ -7944,42 +8013,65 @@ declare namespace esri.geometry {
      * @param geometry The geometry to be generalized.
      * @param maxDeviation The maximum allowed deviation from the generalized geometry to the original geometry.
      * @param removeDegenerateParts When true, the degenerate parts of the geometry will be removed from the output (may be undesired for drawing).
-     * @param maxDeviationUnit Measurement unit for maxDeviation.
+     * @param maxDeviationUnit A unit for maximum deviation.
      */
-    generalize(geometry: esri.geometry.Geometry, maxDeviation: number, removeDegenerateParts?: boolean, maxDeviationUnit?: string | number): any;
+    generalize(geometry: esri.geometry.Geometry, maxDeviation: number, removeDegenerateParts?: boolean, maxDeviationUnit?: number): any;
     /**
-     * Calculates the area of the input geometry.
-     * @param geometry The input geometry.
-     * @param unit Measurement unit of the return value.
+     * Calculates area of input geometry using geographic (geodesic) coordinates.
+     * @param geometry
+     * @param unit esri.Units of the return value.
      */
-    geodesicArea(geometry: esri.geometry.Geometry, unit: string | number): any;
+    geodesicArea(geometry: esri.geometry.Geometry, unit?: number): any;
     /**
-     * Creates geodesic buffer polygons at a specified distance around the input geometries.
+     * Creates buffer polygons at a specified distance around the given geometries using geographic (geodesic) coordinates.
      * @param geometry The buffer input geometry.
      * @param distance The specified distance(s) for buffering.
-     * @param unit Measurement unit for the distance(s).
+     * @param unit Unit for the distances.
      * @param unionResults Whether the output geometries should be unioned into a single polygon.
      */
-    geodesicBuffer(geometry: esri.geometry.Geometry | esri.geometry.Geometry[], distance: number | number[], unit: string | number, unionResults?: boolean): any;
+    geodesicBuffer(geometry: esri.geometry.Geometry, distance: number[], unit?: number, unionResults?: boolean): any;
     /**
-     * Resolves to a geodesically densified version of the input geometry.
-     * @param geometry A polyline or polygon geometry to densify.
-     * @param maxSegmentLength The maximum segment length allowed.
-     * @param maxSegmentLengthUnit Measurement unit for maxSegmentLength.
+     * Creates buffer polygons at a specified distance around the given geometries using geographic (geodesic) coordinates.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
      */
-    geodesicDensify(geometry: esri.geometry.Polyline | esri.geometry.Polygon, maxSegmentLength: number, maxSegmentLengthUnit?: number): any;
+    geodesicBuffer(geometry: esri.geometry.Geometry[], distance: number, unit?: number, unionResults?: boolean): any;
     /**
-     * Calculates the length of the input geometry.
-     * @param geometry The input geometry.
-     * @param unit Measurement unit of the return value.
+     * Creates buffer polygons at a specified distance around the given geometries using geographic (geodesic) coordinates.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
      */
-    geodesicLength(geometry: esri.geometry.Geometry, unit: string | number): any;
+    geodesicBuffer(geometry: esri.geometry.Geometry, distance: number, unit?: number, unionResults?: boolean): any;
+    /**
+     * Creates buffer polygons at a specified distance around the given geometries using geographic (geodesic) coordinates.
+     * @param geometry The buffer input geometry.
+     * @param distance The specified distance(s) for buffering.
+     * @param unit Unit for the distances.
+     * @param unionResults Whether the output geometries should be unioned into a single polygon.
+     */
+    geodesicBuffer(geometry: esri.geometry.Geometry[], distance: number[], unit?: number, unionResults?: boolean): any;
+    /**
+     * Calculates length of the input geometry using geographic (geodesic) coordinates.
+     * @param geometry
+     * @param unit esri.Units of the return value.
+     */
+    geodesicLength(geometry: esri.geometry.Geometry, unit?: number): any;
     /**
      * Creates a new geometry through intersection between two geometries.
      * @param geometry The input geometry.
      * @param intersector The geometry being intersected.
      */
-    intersect(geometry: esri.geometry.Geometry | esri.geometry.Geometry[], intersector: Geometry): any;
+    intersect(geometry: esri.geometry.Geometry, intersector: Geometry): any;
+    /**
+     * Creates a new geometry through intersection between two geometries.
+     * @param geometry The input geometry.
+     * @param intersector The geometry being intersected.
+     */
+    intersect(geometry: esri.geometry.Geometry[], intersector: Geometry): any;
     /**
      * Indicates if one geometry intersects another geometry.
      * @param geometry1 The geometry that is tested for the intersects relationship to the other geometry.
@@ -7987,26 +8079,26 @@ declare namespace esri.geometry {
      */
     intersects(geometry1: esri.geometry.Geometry, geometry2: Geometry): any;
     /**
-     * Indicates if the given geometry is topologically simple.
+     * Indicates if the given geometry is simple.
      * @param geometry esri.geometry.Geometry
      */
     isSimple(geometry: Geometry): any;
     /**
      * Finds the coordinate of the geometry which is closest to the specified point.
      * @param geometry The geometry to consider.
-     * @param inputesri.geometry.Point The point used to search the nearest coordinate in the geometry.
+     * @param inputesri.geometry.Point The point used to find the nearest coordinate in the geometry.
      */
     nearestCoordinate(geometry: esri.geometry.Geometry, inputPoint: Point): any;
     /**
      * Finds vertex on the geometry nearest to the specified point.
      * @param geometry The geometry to consider.
-     * @param inputesri.geometry.Point The point used to search the nearest vertex in the geometry.
+     * @param inputesri.geometry.Point The point to find the nearest vertex in the geometry for.
      */
     nearestVertex(geometry: esri.geometry.Geometry, inputPoint: Point): any;
     /**
      * Finds all vertices in the given distance from the specified point, sorted from the closest to the furthest and returns them as an array of objects once resolved.
      * @param geometry The geometry to consider.
-     * @param inputesri.geometry.Point The point from which to measure.
+     * @param inputesri.geometry.Point The point to start from.
      * @param searchRadius The search radius.
      * @param maxVertexCountToReturn The maximum number number of vertices to return.
      */
@@ -8014,13 +8106,23 @@ declare namespace esri.geometry {
     /**
      * Creates offset version of the input geometry.
      * @param geometry The geometries to offset.
-     * @param offsetDistance The offset distance for the Geometries.
-     * @param offsetUnit Measurement unit for the offset.
+     * @param distance The offset distance for the Geometries.
+     * @param offsetUnit Unit for the offset.
      * @param joinType The join type.
      * @param bevelRatio Applicable to MITER, bevelRatio is multiplied by the offset distance and the result determines how far a mitered offset intersection can be located before it is beveled.
      * @param flattenError Applicable to ROUND, flattenError determines the maximum distance of the resulting segments compared to the true circular arc.
      */
-    offset(geometry: esri.geometry.Geometry | esri.geometry.Geometry[], offsetDistance: number, offsetUnit: string | number, joinType: string, bevelRatio?: number, flattenError?: number): any;
+    offset(geometry: esri.geometry.Geometry, distance: number, offsetUnit: number, joinType: number, bevelRatio?: number, flattenError?: number): any;
+    /**
+     * Creates offset version of the input geometry.
+     * @param geometry The geometries to offset.
+     * @param distance The offset distance for the Geometries.
+     * @param offsetUnit Unit for the offset.
+     * @param joinType The join type.
+     * @param bevelRatio Applicable to MITER, bevelRatio is multiplied by the offset distance and the result determines how far a mitered offset intersection can be located before it is beveled.
+     * @param flattenError Applicable to ROUND, flattenError determines the maximum distance of the resulting segments compared to the true circular arc.
+     */
+    offset(geometry: esri.geometry.Geometry[], distance: number, offsetUnit: number, joinType: number, bevelRatio?: number, flattenError?: number): any;
     /**
      * Indicates if one geometry  overlaps another geometry.
      * @param geometry1 The base geometry that is tested for overlaps relationship to the other geometry.
@@ -8028,22 +8130,22 @@ declare namespace esri.geometry {
      */
     overlaps(geometry1: esri.geometry.Geometry, geometry2: Geometry): any;
     /**
-     * Calculates the area of the input geometry.
-     * @param geometry The input geometry.
-     * @param unit Measurement unit of the return value.
+     * Calculates the area of the input geometry using projected (planar) coordinates.
+     * @param geometry
+     * @param unit esri.Units of the return value.
      */
-    planarArea(geometry: esri.geometry.Geometry, unit: string | number): any;
+    planarArea(geometry: esri.geometry.Geometry, unit?: number): any;
     /**
-     * Calculates the length of the input geometry.
-     * @param geometry The input geometry.
-     * @param unit Measurement unit of the return value.
+     * Calculates the length of the input geometry using projected (planar) coordinates.
+     * @param geometry
+     * @param unit esri.Units of the return value.
      */
-    planarLength(geometry: esri.geometry.Geometry, unit: string | number): any;
+    planarLength(geometry: esri.geometry.Geometry, unit: number): any;
     /**
-     * Indicates if the given DE-9IM relation holds for the two geometries.
+     * Indicates if the given relation holds for the two geometries.
      * @param geometry1 The first geometry for the relation.
      * @param geometry2 The second geometry for the relation.
-     * @param relation The Dimensionally Extended 9 Intersection Model (DE-9IM) matrix relation (encoded as a string) to test against the relationship of the two geometries.
+     * @param relation The DE-9IM matrix relation encoded as a string.
      */
     relate(geometry1: esri.geometry.Geometry, geometry2: esri.geometry.Geometry, relation: string): any;
     /**
@@ -8055,7 +8157,7 @@ declare namespace esri.geometry {
     rotate(geometry: esri.geometry.Geometry, angle: number, rotationOrigin?: Point): any;
     /**
      * Performs the simplify operation on the geometry which alters the given geometries to make their definitions topologically legal with respect to their geometry type.
-     * @param geometry The geometry to be simplified.
+     * @param geometry esri.geometry.Geometry
      */
     simplify(geometry: Geometry): any;
     /**
@@ -8063,7 +8165,13 @@ declare namespace esri.geometry {
      * @param leftesri.geometry.Geometry One of the esri.geometry.Geometry instances in the XOR operation.
      * @param rightesri.geometry.Geometry One of the esri.geometry.Geometry instances in the XOR operation.
      */
-    symmetricDifference(leftGeometry: esri.geometry.Geometry | esri.geometry.Geometry[], rightGeometry: Geometry): any;
+    symmetricDifference(leftGeometry: esri.geometry.Geometry, rightGeometry: Geometry): any;
+    /**
+     * Creates the symmetric difference of two geometries.
+     * @param leftesri.geometry.Geometry One of the esri.geometry.Geometry instances in the XOR operation.
+     * @param rightesri.geometry.Geometry One of the esri.geometry.Geometry instances in the XOR operation.
+     */
+    symmetricDifference(leftGeometry: esri.geometry.Geometry[], rightGeometry: Geometry): any;
     /**
      * Indicates if one geometry touches another geometry.
      * @param geometry1 The geometry which may be touching another geometry.
@@ -8144,7 +8252,17 @@ declare namespace esri.geometry {
      * Returns the value of one map unit for the given spatial reference (in meters).
      * @param sr The spatial reference represented as a esri.SpatialReference class, Number, or String.
      */
-    getUnitValueForSR(sr: esri.SpatialReference | number | string): number;
+    getUnitValueForSR(sr: SpatialReference): number;
+    /**
+     * Returns the value of one map unit for the given spatial reference (in meters).
+     * @param sr The spatial reference represented as a esri.SpatialReference class, Number, or String.
+     */
+    getUnitValueForSR(sr: number): number;
+    /**
+     * Returns the value of one map unit for the given spatial reference (in meters).
+     * @param sr The spatial reference represented as a esri.SpatialReference class, Number, or String.
+     */
+    getUnitValueForSR(sr: string): number;
   };
 
   /** Convert map coordinates to screen coordinates and vice versa. */
@@ -8152,8 +8270,8 @@ declare namespace esri.geometry {
     /**
      * Converts the geometry argument to map coordinates based on the extent, width, and height of the Map.
      * @param extent The current extent of the map in map coordinates.
-     * @param width The current width of the map in screen units.
-     * @param height The current height of the map in screen units.
+     * @param width The current width of the map in map units.
+     * @param height The current width of the map in map units.
      * @param screenesri.geometry.Geometry The geometry to convert from screen to map units.
      */
     toMapGeometry(extent: esri.geometry.Extent, width: number, height: number, screenGeometry: Geometry): esri.geometry.Geometry;
@@ -8161,7 +8279,7 @@ declare namespace esri.geometry {
      * Converts and returns the argument screen point in map coordinates.
      * @param extent The current extent of the map in map coordinates.
      * @param width The current width of the map in screen units.
-     * @param height The current height of the map in screen units.
+     * @param height The current width of the map in screen units.
      * @param screenesri.geometry.Point The screenesri.geometry.Point to convert from screen to map units.
      */
     toMapPoint(extent: esri.geometry.Extent, width: number, height: number, screenPoint: ScreenPoint): esri.geometry.Point;
@@ -8169,7 +8287,7 @@ declare namespace esri.geometry {
      * Converts the geometry argument to screen coordinates based on the extent, width, and height of the Map.
      * @param extent The current extent of the map in map coordinates.
      * @param width The current width of the map in screen units.
-     * @param height The current height of the map in screen units.
+     * @param height The current width of the map in screen units.
      * @param mapesri.geometry.Geometry The geometry to convert from map to screen units.
      */
     toScreenGeometry(extent: esri.geometry.Extent, width: number, height: number, mapGeometry: Geometry): esri.geometry.Geometry;
@@ -8177,7 +8295,7 @@ declare namespace esri.geometry {
      * Converts and returns the argument map point in screen coordinates.
      * @param extent The current extent of the map in map coordinates.
      * @param width The current width of the map in screen units.
-     * @param height The current height of the map in screen units.
+     * @param height The current width of the map in screen units.
      * @param mapesri.geometry.Point The point to convert from map to screen units.
      */
     toScreenPoint(extent: esri.geometry.Extent, width: number, height: number, mapPoint: Point): Screenesri.geometry.Point;
@@ -8190,7 +8308,25 @@ declare namespace esri.geometry {
      * @param source An input of type esri.SpatialReference or an object with spatialReference property such as esri.geometry.Geometry or Map.
      * @param target The target spatial reference, of type esri.SpatialReference or an object with spatialReference property such as Map.
      */
-    canProject(source: esri.SpatialReference | any, target: esri.SpatialReference | any): boolean;
+    canProject(source: esri.SpatialReference, target: any): boolean;
+    /**
+     * Returns true if the 'source' can be projected to 'target' by the project() function, or if the 'source' and 'target' is the same spatialReference.
+     * @param source An input of type esri.SpatialReference or an object with spatialReference property such as esri.geometry.Geometry or Map.
+     * @param target The target spatial reference, of type esri.SpatialReference or an object with spatialReference property such as Map.
+     */
+    canProject(source: any, target: SpatialReference): boolean;
+    /**
+     * Returns true if the 'source' can be projected to 'target' by the project() function, or if the 'source' and 'target' is the same spatialReference.
+     * @param source An input of type esri.SpatialReference or an object with spatialReference property such as esri.geometry.Geometry or Map.
+     * @param target The target spatial reference, of type esri.SpatialReference or an object with spatialReference property such as Map.
+     */
+    canProject(source: esri.SpatialReference, target: SpatialReference): boolean;
+    /**
+     * Returns true if the 'source' can be projected to 'target' by the project() function, or if the 'source' and 'target' is the same spatialReference.
+     * @param source An input of type esri.SpatialReference or an object with spatialReference property such as esri.geometry.Geometry or Map.
+     * @param target The target spatial reference, of type esri.SpatialReference or an object with spatialReference property such as Map.
+     */
+    canProject(source: any, target: any): boolean;
     /**
      * Converts geometry from geographic units to Web Mercator units.
      * @param geometry The geometry to convert.
@@ -8207,7 +8343,13 @@ declare namespace esri.geometry {
      * @param geometry An input geometry.
      * @param target The target spatial reference, of type esri.SpatialReference or an object with spatialReference property such as Map.
      */
-    project(geometry: esri.geometry.Geometry, target: esri.SpatialReference | any): any;
+    project(geometry: esri.geometry.Geometry, target: SpatialReference): any;
+    /**
+     * Project the geometry clientside (if possible).
+     * @param geometry An input geometry.
+     * @param target The target spatial reference, of type esri.SpatialReference or an object with spatialReference property such as Map.
+     */
+    project(geometry: esri.geometry.Geometry, target: any): any;
     /**
      * Converts geometry from Web Mercator units to geographic units.
      * @param geometry The geometry to convert.
@@ -8239,8 +8381,6 @@ declare namespace esri.layers {
     dpi: number;
     /** Array of DynamicLayerInfos used to change the layer ordering or redefine the map. */
     dynamicLayerInfos: esri.layers.Dynamicesri.layers.LayerInfo[];
-    /** The geodatabase version. */
-    gdbVersion: string;
     /** When true, the layer has attribution data. */
     hasAttributionData: boolean;
     /** The output image type. */
@@ -8711,11 +8851,16 @@ declare namespace esri.layers {
      * Returns the name of the coded-value associated with the specified code.
      * @param code The code in which you wish to search for the name.
      */
-    getName(code: number | string): string;
+    getName(code: number): string;
+    /**
+     * Returns the name of the coded-value associated with the specified code.
+     * @param code The code in which you wish to search for the name.
+     */
+    getName(code: string): string;
   }
   export = CodedValueesri.layers.Domain;
 
-  /** (Currently in beta) Display features using data that contains location information such as X and Y coordinates, Street address, place names etc using a DataAdapter object to retrieve the features and a LocationProvider to generate their geometries. */
+  /** (Beta at v3.12) Display features using data that contains location information such as X and Y coordinates, Street address, place names etc using a DataAdapter object to retrieve the features and a LocationProvider to generate their geometries. */
   class DataAdapteresri.layers.Featureesri.layers.Layer extends esri.layers.Featureesri.layers.Layer {
     /** The DataAdapter object points to data sources that contain non-spatial tables. */
     dataAdapter: any;
@@ -8879,8 +9024,6 @@ declare namespace esri.layers {
     fields: esri.layers.Field[];
     /** The full extent of the layer. */
     fullExtent: esri.geometry.Extent;
-    /** The geodatabase version. */
-    gdbVersion: string;
     /** esri.geometry.Geometry type of the features in the layer. */
     geometryType: string;
     /** The globalIdesri.layers.Field for the layer. */
@@ -9102,7 +9245,7 @@ declare namespace esri.layers {
      */
     setAutoGeneralize(enable: boolean): esri.layers.Featureesri.layers.Layer;
     /**
-     * Sets the definition expression for the FeatureLayer.
+     * Set's the definition expression for the FeatureLayer.
      * @param expression The definition expression to apply.
      */
     setDefinitionExpression(expression: string): esri.layers.Featureesri.layers.Layer;
@@ -9158,7 +9301,7 @@ declare namespace esri.layers {
      */
     setScaleRange(minScale: number, maxScale: number): void;
     /**
-     * Sets the selection symbol for the feature layer.
+     * Set's the selection symbol for the feature layer.
      * @param symbol esri.symbols.Symbol for the current selection.
      */
     setSelectionSymbol(symbol: Symbol): esri.layers.Featureesri.layers.Layer;
@@ -9168,7 +9311,7 @@ declare namespace esri.layers {
      */
     setShowLabels(showLabels: boolean): void;
     /**
-     * Sets the time definition for the feature layer.
+     * Set's the time definition for the feature layer.
      * @param definition The new time extent used to filter the layer.
      */
     setTimeDefinition(definition: TimeExtent): esri.layers.Featureesri.layers.Layer;
@@ -9322,8 +9465,6 @@ declare namespace esri.layers {
     items: esri.Graphic[];
     /** The name of the layer. */
     name: string;
-    /** The publicly accessible URL to a GeoRSS file. */
-    url: string;
     /**
      * Creates a new GeoRSSesri.layers.Layer object.
      * @param url URL to the GeoRSS resource.
@@ -9341,7 +9482,7 @@ declare namespace esri.layers {
   /** A layer that contains one or more esri.Graphic features. */
   class esri.layers.Graphicsesri.layers.Layer extends esri.layers.Layer {
     /** List of attribute fields added as custom data attributes to graphics node. */
-    dataAttributes: string | string[];
+    dataAttributes: any;
     /** The array of graphics that make up the layer. */
     graphics: esri.Graphic[];
     /** The info template for the layer. */
@@ -9619,14 +9760,10 @@ declare namespace esri.layers {
   }
   export = esri.layers.LOD;
 
-  /** Use label classes to restrict labels to certain features or to specify different label fields, symbols, scale ranges, label priorities, and sets of label placement options for different groups of labels. */
+  /** esri.layers.LabelClass defines the styles of labels for ArcGISDynamicMapServiceLayer. */
   class esri.layers.LabelClass {
-    /** An array of objects representing field information to label. */
-    fieldInfos: any[];
     /** Adjusts the formatting of labels. */
     labelExpression: string;
-    /** Use this when working with esri.layers.Featureesri.layers.Layer layer types. */
-    labelExpressionInfo: any;
     /** The position of the label. */
     labelPlacement: string;
     /** The maximum scale to show labels. */
@@ -9642,14 +9779,14 @@ declare namespace esri.layers {
     /** A where clause determining which features are labeled. */
     where: string;
     /**
-     * Creates a label class, used for formatting parameters, symbols, date, etc.
+     * Create a esri.layers.LabelClass, in order to be added to layerDrawingOption.labelingInfo.
      * @param json Various options to configure this LabelClass.
      */
     constructor(json?: Object);
   }
   export = esri.layers.LabelClass;
 
-  /** NOTE: Deprecated as of version 3.14, read below for additional information on the suggested method of labeling. */
+  /** The Labelesri.layers.Layer inherits from the graphics layer and can be used to display texts and symbols on map. */
   class Labelesri.layers.Layer extends esri.layers.Graphicsesri.layers.Layer {
     /**
      * Creates a new Label layer.
@@ -9662,7 +9799,21 @@ declare namespace esri.layers {
      * @param renderer The renderer used to render text labels.
      * @param textExpression An expression determining what text and field(s) will be displayed as in labels.
      */
-    addFeatureLayer(featureLayer: esri.layers.Featureesri.layers.Layer, renderer?: Simpleesri.renderers.Renderer | UniqueValueesri.renderers.Renderer | ClassBreaksesri.renderers.Renderer, textExpression?: any): void;
+    addFeatureLayer(featureLayer: esri.layers.Featureesri.layers.Layer, renderer?: Simpleesri.renderers.Renderer, textExpression?: any): void;
+    /**
+     * Adds reference to the feature layer which is labeled.
+     * @param featureesri.layers.Layer The feature layer to be added to the label layer.
+     * @param renderer The renderer used to render text labels.
+     * @param textExpression An expression determining what text and field(s) will be displayed as in labels.
+     */
+    addFeatureLayer(featureLayer: esri.layers.Featureesri.layers.Layer, renderer?: UniqueValueesri.renderers.Renderer, textExpression?: any): void;
+    /**
+     * Adds reference to the feature layer which is labeled.
+     * @param featureesri.layers.Layer The feature layer to be added to the label layer.
+     * @param renderer The renderer used to render text labels.
+     * @param textExpression An expression determining what text and field(s) will be displayed as in labels.
+     */
+    addFeatureLayer(featureLayer: esri.layers.Featureesri.layers.Layer, renderer?: ClassBreaksesri.renderers.Renderer, textExpression?: any): void;
     /**
      * Returns reference to the feature layer which features will be labeled.
      * @param index Index of the referenced feature layer.
@@ -9837,8 +9988,6 @@ declare namespace esri.layers {
     static OPERATION_MEAN: any;
     /** Takes the minimum value of all overlapping pixels. */
     static OPERATION_MIN: any;
-    /** Takes the sum of all overlapping pixels. */
-    static OPERATION_SUM: any;
     /** Indicates whether the sort should be ascending or not. */
     ascending: boolean;
     /** An array of raster Ids. */
@@ -9883,7 +10032,7 @@ declare namespace esri.layers {
   }
   export = OpenStreetMapesri.layers.Layer;
 
-  /** The PixelBlock is used to hold pixels. */
+  /** (Beta at v3.13) The PixelBlock is used to hold pixels. */
   export class PixelBlock {
     /** Number of rows. */
     height: number;
@@ -9969,8 +10118,6 @@ declare namespace esri.layers {
     functionArguments: any;
     /** The raster function name. */
     functionName: string;
-    /** Defines the output image's pixel type. */
-    outputPixelType: string;
     /** Variable name for the raster function. */
     variableName: string;
     /** Creates a new esri.layers.RasterFunction object. */
@@ -9985,10 +10132,8 @@ declare namespace esri.layers {
   }
   export = esri.layers.RasterFunction;
 
-  /** The Rasteresri.layers.Layer is used to display image services. */
+  /** (Beta at v3.13) The Rasteresri.layers.Layer is used to display image services. */
   class Rasteresri.layers.Layer extends esri.layers.Layer {
-    /** A function that takes a pixelData object as input and processes it. */
-    pixelFilter: Function;
     /**
      * Creates a new Rasteresri.layers.Layer object.
      * @param url URL to the ArcGIS Server REST resource that represents a raster layer service.
@@ -9997,23 +10142,6 @@ declare namespace esri.layers {
     constructor(url: string, options?: esri.RasterLayerOptions);
     /** Returns the context of the Canvas. */
     getContext(): any;
-    /**
-     * Sets the image format.
-     * @param imageFormat The image format to set.
-     * @param doNotRefresh Use true to avoid refreshing the layer; false to refresh it.
-     */
-    setImageFormat(imageFormat: string, doNotRefresh?: boolean): void;
-    /**
-     * Sets a pixelFilter on the layer.
-     * @param pixelFilter The function defining the PixelFilter to set on the layer.
-     */
-    setPixelFilter(pixelFilter: Function): void;
-    /**
-     * Determines if the layer will update its content based on the map's current time extent.
-     * @param use Use true to update the layer's content based on the map's current time extent.
-     * @param doNotRefresh Use true to avoid refreshing the layer; false to refresh the layer.
-     */
-    setUseMapTime(use: boolean, doNotRefresh?: boolean): void;
   }
   export = Rasteresri.layers.Layer;
 
@@ -10053,8 +10181,6 @@ declare namespace esri.layers {
     getDefinitionExpression(): string;
     /** Gets the spatial filter set on the layer. */
     getGeometryDefinition(): esri.geometry.Extent;
-    /** Gets the latest observation for each track in the layer. */
-    getLatestObservations(): esri.Graphic;
     /**
      * Gets the unique values of the graphics (in the StreamLayer) based on the `fieldName` parameter.
      * @param fieldName esri.layers.Field to get the unique values from.
@@ -10207,99 +10333,17 @@ declare namespace esri.layers {
     trackIdField: string;
   }
   export = esri.layers.TimeInfo;
-  /** esri.layers.TimeReference contains read-only information about how the time was captured when the data was created. */
+  /** esri.layers.TimeReference contains information about how the time was measured. */
   class esri.layers.TimeReference {
-    /** A read-only property that indicates whether the time reference takes into account daylight savings time. */
+    /** Indicates whether the time reference respects daylight savings time. */
     respectsDaylightSaving: boolean;
-    /** The time zone in which the data was captured. */
+    /** The time zone information associated with the time reference. */
     timeZone: string;
   }
   export = esri.layers.TimeReference;
 
-  /** A VectorTileesri.layers.Layer accesses cached tiles of data and renders it in vector format. */
-  class VectorTileesri.layers.Layer extends esri.layers.Layer {
-    /** The full extent of the layer. */
-    fullExtent: esri.geometry.Extent;
-    /** The initial extent of the layer. */
-    initialExtent: esri.geometry.Extent;
-    /** The spatial reference of the layer. */
-    spatialReference: esri.SpatialReference;
-    /** The style object of the service with fully qualified URLs for glyphs and sprite. */
-    style: any;
-    /** Contains information about the tiling scheme for the layer. */
-    tileInfo: esri.layers.TileInfo;
-    /** The URL to the vector tile service or style JSON that will be used to draw the layer. */
-    url: string;
-    /**
-     * Create a new VectorTileesri.layers.Layer object.
-     * @param url The URL to the vector tile service or style JSON that will be used to draw the layer.
-     * @param options Optional parameters.
-     */
-    constructor(url: string | any, options?: esri.VectorTileLayerOptions);
-    /**
-     * Changes the style properties used to render the layers.
-     * @param styleUrl A url to a JSON file containing the stylesheet information to render the layer.
-     */
-    setStyle(styleUrl: string | any): void;
-    /** Fires when the style is changed on the layer. */
-    on(type: "style-change", listener: (event: { style: any; target: VectorTileesri.layers.Layer }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-  export = VectorTileesri.layers.Layer;
-
-  /** (Currently in beta) A layer for OGC Web Feature Services (WFS). */
-  class WFSesri.layers.Layer {
-    /** An array of fields in the layer. */
-    fields: esri.layers.Field[];
-    /** The full extent of the layer. */
-    fullExtent: esri.geometry.Extent;
-    /** The geometry type of the features in the layer. */
-    geometryType: string;
-    /** An array of features in the layer. */
-    graphics: esri.Graphic[];
-    /** ID assigned to the layer. */
-    id: string;
-    /** The esri.InfoTemplate for the layer. */
-    infoTemplate: esri.InfoTemplate;
-    /** The renderer to apply to the layer. */
-    renderer: esri.renderers.Renderer;
-    /** The visibility of the layer. */
-    visible: boolean;
-    /**
-     * Creates a new WFSesri.layers.Layer object
-     * @param options See options table below for full descriptions of the properties needed for this object.
-     */
-    constructor(options: esri.WFSLayerOptions);
-    /** Creates the getFeature parameter based on the version, nsLayerName, nsGeometryFieldName, mode, wkid, inverseFilter, maxFeatures constructor parameters. */
-    buildRequest(): string;
-    /**
-     * Gets the WFS layer capabilities.
-     * @param callback An array of WFS layers in JSON format.
-     */
-    getCapabilities(callback?: Function): void;
-    /** Performs the getFeature request. */
-    getFeature(): void;
-    /** Returns a JSON Object containing all of the WFS parameters. */
-    getWFSParameters(): any;
-    /** Redraws all the graphics in the layer. */
-    redraw(): void;
-    /** Refreshes the features in the WFS layer. */
-    refresh(): void;
-    /** Sets the default line symbol to be used if no renderer is specified. */
-    setLineSymbol(): void;
-    /** Sets the default point symbol to be used if no renderer is specified. */
-    setPointSymbol(): void;
-    /** Sets the default polygon symbol to be used if no renderer is specified. */
-    setPolygonSymbol(): void;
-    /** Sets the WFS parameters using the provided JSON Object. */
-    setWFSParameters(): void;
-  }
-  export = WFSesri.layers.Layer;
-
   /** A layer for OGC Web esri.Map Services (WMS). */
   class WMSesri.layers.Layer extends DynamicMapServiceesri.layers.Layer {
-    /** All bounding boxes defined for the layer. */
-    allExtents: esri.geometry.Extent[];
     /** Copyright of the WMS service. */
     copyright: string;
     /** Description of the WMS service. */
@@ -10318,8 +10362,6 @@ declare namespace esri.layers {
     maxWidth: number;
     /** Spatial reference of the WMS service. */
     spatialReference: esri.SpatialReference;
-    /** An array of WKIDs of all spatial references defined for the layer. */
-    spatialReferences: number[];
     /** Title of the WMS service. */
     title: string;
     /** Version of the WMS service. */
@@ -10350,8 +10392,6 @@ declare namespace esri.layers {
 
   /** The WMSesri.layers.LayerInfo class defines and provides information about layers in a WMS service. */
   class WMSesri.layers.LayerInfo {
-    /** All bounding boxes defined for the layer. */
-    allExtents: esri.geometry.Extent[];
     /** The layer description defines the value of the Abstract capabilities property. */
     description: string;
     /** The layer extent. */
@@ -10360,10 +10400,6 @@ declare namespace esri.layers {
     legendURL: string;
     /** The layer  name. */
     name: string;
-    /** An array of WKIDs of all spatial references defined for the layer. */
-    spatialReferences: number[];
-    /** WMSLayerInfos of the layer's sub layers. */
-    subLayers: WMSesri.layers.LayerInfo[];
     /** The layer title. */
     title: string;
     /**
@@ -10568,421 +10604,6 @@ declare namespace esri.layers {
   }
   export = esri.layers.Layer;
 }
-declare namespace esri.opsdashboard {
-
-  /** esri.opsdashboard.DataSourceProxy is a proxy class that represents a operations dashboard data source. */
-  class esri.opsdashboard.DataSourceProxy {
-    /** Read-only: The name of the display field. */
-    displayFieldName: string;
-    /** Read-only: The collection of fields. */
-    fields: esri.layers.Field[];
-    /** The geometry type. */
-    geometryType: string;
-    /** Read-only: The id of the data source. */
-    id: string;
-    /** Read-only: Indicates if the last query failed and the data source is in a broken state. */
-    isBroken: boolean;
-    /** Read-only: The mapWidgetId of the data source. */
-    mapWidgetId: string;
-    /** Read-only: The name of the data source. */
-    name: string;
-    /** Read-only: The name of the object id field. */
-    objectIdFieldName: string;
-    /** Read-only: Indicates if the data source supports selections. */
-    supportsSelection: boolean;
-    /** Read-only: The name of the type id field. */
-    typeIdFieldName: string;
-    /** Read-only: The collection of feature types. */
-    types: esri.layers.FeatureType[];
-    /** Clear the selection. */
-    clearSelection(): void;
-    /**
-     * Executes a query and get the result.
-     * @param query The query object to apply.
-     */
-    executeQuery(query: Query): any;
-    /** An object that contains service level metadata about whether or not the layer supports queries using statistics, order by fields, DISTINCT, pagination, query with distance, and returning queries with extents. */
-    getAdvancedQueryCapabilities(): any;
-    /** Retrieve the associated data source that supports selection. */
-    getAssociatedSelectionDataSourceProxy(): any;
-    /** Get the associated popupInfo for the data source if any available. */
-    getPopupInfo(): any;
-    /** Get the associated render object for the data source if any available. */
-    getRenderer(): any;
-    /**
-     * Get the feature type from a feature coming from the data source.
-     * @param feature A feature coming from the data source
-     */
-    getTypeFromFeature(feature: Graphic): number;
-    /**
-     * Returns the value corresponding to a field name from a feature coming from the data source.
-     * @param feature A feature coming from the data source
-     * @param fieldName The name of the field for which the value should be returned.
-     */
-    getValueFromFeature(feature: esri.Graphic, fieldName: string): number | string;
-    /**
-     * Select features in the data source using a query.
-     * @param query The query object to apply
-     */
-    selectFeatures(query: Query): void;
-    /**
-     * Select features in the data source using a collection of object ids.
-     * @param objectIds The collection of object ids of the features to select.
-     */
-    selectFeaturesByObjectIds(objectIds: string[]): void;
-  }
-  export = esri.opsdashboard.DataSourceProxy;
-
-  /** esri.opsdashboard.ExtensionBase is a base class used by all the extension proxies. */
-  class esri.opsdashboard.ExtensionBase {
-    /** "circle" */
-    static CIRCLE: any;
-    /** "extent" */
-    static EXTENT: any;
-    /** "freehandpolygon" */
-    static FREEHAND_POLYGON: any;
-    /** "freehandpolyline" */
-    static FREEHAND_POLYLINE: any;
-    /** "line" */
-    static LINE: any;
-    /** "point" */
-    static POINT: any;
-    /** "polygon" */
-    static POLYGON: any;
-    /** "polyline" */
-    static POLYLINE: any;
-    /** Read-only: Indicates if the host application is the Windows Operations Dashboard. */
-    isNative: boolean;
-    /** Read-only: The URL to the ArcGIS.com site or in-house portal that you are currently signed in to. */
-    portalUrl: string;
-    /** Get the collection of data sources from the host application. */
-    getDataSourceProxies(): any;
-    /** Get the data source corresponding to the data source id from the host application. */
-    getDataSourceProxy(): any;
-    /** Get the collection of map widgets from the host application. */
-    getMapWidgetProxies(): any;
-    /**
-     * Get the map widget corresponding to the map widget id from the host application.
-     * @param mapWidgetId A map widget id
-     */
-    getMapWidgetProxy(mapWidgetId: string): any;
-    /**
-     * Called when an error occurred during the initialization process with the host application.
-     * @param err The error that occurred.
-     */
-    hostInitializationError(err: Error): void;
-    /** Called by the host application when the relationship has been established with the extension. */
-    hostReady(): void;
-    /**
-     * Called by the host application when a map widget has been added to the current view.
-     * @param mapWidgetProxy A map widget id.
-     */
-    mapWidgetAdded(mapWidgetProxy: MapWidgetProxy): void;
-    /**
-     * Called by the host application when a map widget has been removed from the current view.
-     * @param mapWidgetId A map widget id.
-     */
-    mapWidgetRemoved(mapWidgetId: string): void;
-    /** Event indicating that a new data source has been added into the host operation view. */
-    on(type: "data-source-added", listener: (event: { dataSourceProxy: any; target: esri.opsdashboard.ExtensionBase }) => void): esri.Handle;
-    /** Event indicating that a data source has been removed from the host operation view. */
-    on(type: "data-source-removed", listener: (event: { dataSourceId: string; target: esri.opsdashboard.ExtensionBase }) => void): esri.Handle;
-    /** Event indicating that the initialization process was successful. */
-    on(type: "host-ready", listener: (event: { target: esri.opsdashboard.ExtensionBase }) => void): esri.Handle;
-    /** Event indicating that the initialization process encountered an error. */
-    on(type: "initialization-error", listener: (event: { error: Error; target: esri.opsdashboard.ExtensionBase }) => void): esri.Handle;
-    /** Event indicating that a new map widget has been added into the host operation view. */
-    on(type: "map-widget-added", listener: (event: { mapWidgetProxy: esri.opsdashboard.MapWidgetProxy; target: esri.opsdashboard.ExtensionBase }) => void): esri.Handle;
-    /** Event indicating that a map widget has been removed from the host operation view. */
-    on(type: "map-widget-removed", listener: (event: { mapWidgetId: string; target: esri.opsdashboard.ExtensionBase }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-  export = esri.opsdashboard.ExtensionBase;
-
-  /** esri.opsdashboard.ExtensionConfigurationBase is a base class used by all the extension configuration proxies. */
-  class esri.opsdashboard.ExtensionConfigurationBase extends esri.opsdashboard.ExtensionBase {
-    /** The object that will store the Widget/MapTool/FeatureAction configuration. */
-    config: any;
-    /** Indicates that the configuration is ready to be persisted or not. */
-    readyToPersistConfig: boolean;
-  }
-  export = esri.opsdashboard.ExtensionConfigurationBase;
-
-  /** FeatureActionConfigurationProxy is a class used to provide the configuration user experience for an operations dashboard extension feature action. */
-  export class FeatureActionConfigurationProxy extends esri.opsdashboard.ExtensionConfigurationBase {
-  }
-
-  /** esri.opsdashboard.FeatureActionFeatures is a specialized collection of features used by WidgetProxy to hold the collection of features for the associated feature actions. */
-  class esri.opsdashboard.FeatureActionFeatures {
-    /** The esri.opsdashboard.DataSourceProxy from which the collection of features belongs to. */
-    dataSourceProxy: esri.opsdashboard.DataSourceProxy;
-    /**
-     * Add a feature to the host collection.
-     * @param featureOrObjectId
-     */
-    addFeature(featureOrObjectId: esri.Graphic | number): void;
-    /**
-     * Add a collection of features or collection of object id in the host collection.
-     * @param featuresOrObjectIds
-     */
-    addFeatures(featuresOrObjectIds: esri.Graphic[] | number[]): void;
-    /** Remove all the features from the host collection. */
-    clear(): void;
-    /**
-     * Test if a feature exists in the host collection.
-     * @param featureOrObjectId Feature to test existance for.
-     */
-    contains(featureOrObjectId: esri.Graphic | number): boolean;
-    /**
-     * Returns the index of a feature in the host collection.
-     * @param featureOrObjectId Feature to return index from.
-     */
-    indexOf(featureOrObjectId: esri.Graphic | number): number;
-    /**
-     * Remove a collection of features from the host collection.
-     * @param featureOrObjectId Feature to remove.
-     */
-    removeFeature(featureOrObjectId: esri.Graphic | number): void;
-    /**
-     * Remove a feature from the host collection.
-     * @param featuresOrObjectIds Features to remove.
-     */
-    removeFeatures(featuresOrObjectIds: esri.Graphic[] | number[]): void;
-  }
-  export = esri.opsdashboard.FeatureActionFeatures;
-
-  /** esri.opsdashboard.GraphicsLayerProxy is a proxy class that represents a graphics layer in a map widget in the host application. */
-  class esri.opsdashboard.GraphicsLayerProxy {
-    /** Read-only: The current host graphics layer maximum visible scale. */
-    maxScale: number;
-    /** Read-only: The current host graphics layer minimum visible scale. */
-    minScale: number;
-    /** Read-only: The current host graphics layer opacity ratio. */
-    opacity: number;
-    /** The current renderer used by the host graphics layer. */
-    renderer: esri.renderers.Renderer;
-    /** Read-only: The current host graphics layer visibility. */
-    visible: boolean;
-    /**
-     * Update a graphic in the host graphics layer with a new version.
-     * @param graphic The graphic to update in the host graphics layer.
-     */
-    addOrUpdateGraphic(graphic: Graphic): void;
-    /**
-     * Update graphics in the host graphics layer with a new version.
-     * @param graphics The graphics to update in the host graphics layer.
-     */
-    addOrUpdateGraphics(graphics: esri.Graphic[]): void;
-    /** Removes all the graphics from the host graphics layer. */
-    clear(): void;
-    /**
-     * Removes from the host graphics layer a graphic.
-     * @param graphic The graphic to remove from the host graphics layer.
-     */
-    removeGraphic(graphic: Graphic): void;
-    /**
-     * Sets the host graphics layer maximum scale.
-     * @param maxScale
-     */
-    setMaxScale(maxScale: number): void;
-    /**
-     * Sets the host graphics layer minimum scale.
-     * @param minScale
-     */
-    setMinScale(minScale: number): void;
-    /**
-     * Sets the host graphics layer opacity ratio.
-     * @param opacity An opacity ratio between 0 and 1.
-     */
-    setOpacity(opacity: number): void;
-    /**
-     * Sets the host graphics layer renderer.
-     * @param renderer Since the Windows operations dashboard is built using ArcGIS Runtime SDK for WPF, only renderers supported by the WPF should be used, such as Simpleesri.renderers.Renderer, UniqueValueesri.renderers.Renderer and ClassBreaksRenderer.
-     */
-    setRenderer(renderer: Renderer): void;
-    /**
-     * Set the visibility of the host graphics layer.
-     * @param visibility The new visibility value.
-     */
-    setVisibility(visibility: boolean): void;
-  }
-  export = esri.opsdashboard.GraphicsLayerProxy;
-
-  /** MapToolConfigurationProxy is a class used to provide the configuration user experience for an operations dashboard extension map tool. */
-  export class MapToolConfigurationProxy extends esri.opsdashboard.ExtensionConfigurationBase {
-  }
-
-  /** MapToolProxy is a class used to define an operations dashboard extension map tool. */
-  export class MapToolProxy {
-    /** Read-only: The available size for the map tool user experience on the host map widget. */
-    availableDisplaySize: number;
-    /** Read-only: The map tool user experience size in pixels. */
-    displaySize: any;
-    /** Read-only: The map widget that is hosting the map tool user experience. */
-    mapWidgetProxy: esri.opsdashboard.MapWidgetProxy;
-    /** Read-only: The previous map tool user experience state that was passed the last time the map tool was deactivated. */
-    previousState: any;
-    /**
-     * Activates a drawing activity on the host map widget.
-     * @param options Drawing options.
-     */
-    activateMapDrawing(options: any): void;
-    /**
-     * Called by the host application when the available size for the map tool user experience has changed (user resizes the application or the map widget).
-     * @param availableSize The size available on the host map widget for the map tool user experience.
-     */
-    availableDisplaySizeChanged(availableSize: any): void;
-    /** Deactivates the drawing activity on the host map widget. */
-    deactivateMapDrawing(): void;
-    /**
-     * Deactivate the map tool user experience.
-     * @param state A JSON object that needs to be persisted in the host until the next activation of the map tool user experience.
-     */
-    deactivateMapTool(state: any): void;
-    /**
-     * Called by the host application when the user has completed the drawing activity on the map.
-     * @param geometry The geometry captured by the user during the drawing activity.
-     */
-    mapDrawComplete(geometry: Geometry): void;
-    /**
-     * Change the size of the user experience area in the host application for this map tool user experience.
-     * @param size The new size for the user experience.
-     */
-    setDisplaySize(size: any): any;
-    /** Event indicating that the available display size for the map tool user experience has changed. */
-    on(type: "available-display-size-changed", listener: (event: { size: any; target: MapToolProxy }) => void): esri.Handle;
-    /** Event indicating that a previously activate drawing activity has been completed by the user. */
-    on(type: "draw-complete", listener: (event: { geometry: esri.geometry.Geometry; target: MapToolProxy }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-
-  /** esri.opsdashboard.MapWidgetProxy is a proxy class that represents a operations dashboard map widget. */
-  class esri.opsdashboard.MapWidgetProxy {
-    /** Read-only: The map id. */
-    id: string;
-    /** Read-only: The name of the map. */
-    name: string;
-    /** Read-only: The spatial reference of the map. */
-    spatialReference: esri.SpatialReference;
-    /**
-     * Creates a graphics layer in the host map.
-     * @param options The options for the new graphics layer
-     */
-    createGraphicsLayerProxy(options?: any): any;
-    /**
-     * Destroys in the host map a host graphics layer.
-     * @param graphicsLayerProxy The host graphics layer to destroy.
-     */
-    destroyGraphicsLayerProxy(graphicsLayerProxy: GraphicsLayerProxy): void;
-    /** Gets the current host map extent. */
-    getMapExtent(): any;
-    /** Called by the host application when the extent of the host map has changed. */
-    mapExtentChanged(): void;
-    /**
-     * Pans the map to a new location.
-     * @param mapesri.geometry.Point A new location with the same spatial reference as the host map.
-     */
-    panTo(mapPoint: Point): void;
-    /**
-     * Sets an extent on the host map extent.
-     * @param extent A new map extent.
-     */
-    setExtent(extent: Extent): void;
-    /** Subscribes to the host map events. */
-    subscribeToMapEvents(): void;
-    /** Unsubscribes from the host map events. */
-    unsubscribeFromMapEvents(): void;
-    /** Event indicating that the host map extent has changed. */
-    on(type: "map-extent-change", listener: (event: { extent: esri.geometry.Extent; target: esri.opsdashboard.MapWidgetProxy }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-  export = esri.opsdashboard.MapWidgetProxy;
-
-  /** WidgetConfigurationProxy is a class used to provide the configuration user experience for an operations dashboard extension widget. */
-  export class WidgetConfigurationProxy extends esri.opsdashboard.ExtensionConfigurationBase {
-    /**
-     * Called by the host application when the user has changed the selected data source in the data source selector.
-     * @param dataSourceProxy The selected data source.
-     * @param dataSourceConfig The associated data source config.
-     */
-    dataSourceSelectionChanged(dataSourceProxy: esri.opsdashboard.DataSourceProxy, dataSourceConfig: any): void;
-    /**
-     * Get the data source config for a data source.
-     * @param dataSourceProxyOrDataSourceId A data source or a data source id.
-     */
-    getDataSourceConfig(dataSourceProxyOrDataSourceId: esri.opsdashboard.DataSourceProxy | string): any;
-    /**
-     * Called by the host application when the user has changed the selected map widget in the map widget selector.
-     * @param mapWidgetProxy The selected map widget.
-     */
-    mapWidgetSelectionChanged(mapWidgetProxy: MapWidgetProxy): void;
-    /** Event indicating the user has changed the selected data source for the configuration. */
-    on(type: "data-source-selection-changed", listener: (event: { dataSourceConfig: any; dataSourceProxy: esri.opsdashboard.DataSourceProxy; target: WidgetConfigurationProxy }) => void): esri.Handle;
-    /** Event indicating the user has changed the selected map widget for the configuration. */
-    on(type: "map-widget-selection-changed", listener: (event: { mapWidgetProxy: esri.opsdashboard.MapWidgetProxy; target: WidgetConfigurationProxy }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-
-  /** WidgetProxy is a class used to define an operations dashboard extension widget. */
-  export class WidgetProxy extends esri.opsdashboard.ExtensionBase {
-    /** Read-only: If the widget was configured to consume data sources, the dataSourceConfig array will hold a collection of dataSourceConfig objects. */
-    dataSourceConfigs: any[];
-    /** Read-only: The host collection of features used by the widget feature actions. */
-    featureActionFeatures: esri.opsdashboard.FeatureActionFeatures;
-    /** Read-only: Indicates if the widget has a default feature action associated with. */
-    hasDefaultFeatureAction: boolean;
-    /** Read-only: Indicates if the widget has feature actions associated with it. */
-    hasFeatureActions: boolean;
-    /**
-     * Activate a drawing toolbar on a map widget.
-     * @param options
-     * @param mapWidgetProxy The target map widget.
-     */
-    activateDrawingToolbar(options?: any, mapWidgetProxy?: MapWidgetProxy): any;
-    /**
-     * Called by the host application when a data source state has expired.
-     * @param dataSourceProxy
-     * @param associated dataSourceConfig
-     */
-    dataSourceExpired(dataSourceProxy: esri.opsdashboard.DataSourceProxy, associated?: any): void;
-    /**
-     * Deactivate the drawing toolbar on the map widget.
-     * @param mapWidgetProxy The target map widget.
-     */
-    deactivateDrawingToolbar(mapWidgetProxy?: MapWidgetProxy): void;
-    /** Called by the host application when the user has canceled the drawing activity. */
-    drawingToolbarDeactivated(): void;
-    /**
-     * Execute the default feature action.
-     * @param featuresOrObjectIds
-     */
-    executeDefaultFeatureAction(featuresOrObjectIds: esri.Graphic[] | number[]): void;
-    /**
-     * Get the data source config for a data source.
-     * @param dataSourceProxyOrDataSourceId A data source or a data source id.
-     */
-    getDataSourceConfig(dataSourceProxyOrDataSourceId: esri.opsdashboard.DataSourceProxy | string): any;
-    /**
-     * Called by the host application when the user has finished the drawing activity.
-     * @param geometry
-     */
-    toolbarDrawComplete(geometry: Geometry): void;
-    /** Event indicating that a data source validity has expired. */
-    on(type: "data-source-expired", listener: (event: { dataSourceConfig: any; dataSourceProxy: esri.opsdashboard.DataSourceProxy; target: WidgetProxy }) => void): esri.Handle;
-    /** Event indicating that the user has deactivated the previously activated drawing toolbar on the map widget. */
-    on(type: "drawing-toolbar-deactivated", listener: (event: { target: WidgetProxy }) => void): esri.Handle;
-    /** Event indicating the user has finished a drawing activity with the previously activated drawing toolbar. */
-    on(type: "toolbar-draw-complete", listener: (event: { geometry: esri.geometry.Geometry; target: WidgetProxy }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-
-  /** featureActionProxy is a singleton object that allows implementing an operations dashboard Feature Action extension. */
-  export class featureActionProxy extends esri.opsdashboard.ExtensionBase {
-    /** Event raised when the feature action should execute for a set of features. */
-    on(type: "execute", listener: (event: { config: any; dataSourceProxy: esri.opsdashboard.DataSourceProxy; featureSet: esri.tasks.FeatureSet; target: featureActionProxy }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-}
 declare namespace esri.plugins {
 
   /** This module defines a class and a feature layer plugin that is used to calculate feature layer statistics. */
@@ -10991,7 +10612,7 @@ declare namespace esri.plugins {
      * Creates a new object that is used to calculate statistics about features in a feature layer.
      * @param params Parameters that define the FeatureLayerStatistics.
      */
-    constructor(params: esri.FeatureLayerStatisticsOptions);
+    constructor(params: any);
     /**
      * This function is called internally when the plugin is added to a feature layer.
      * @param layer The target esri.layers.Featureesri.layers.Layer that have the plugin added.
@@ -11024,11 +10645,6 @@ declare namespace esri.plugins {
      */
     getSampleFeatures(options?: any): any;
     /**
-     * Returns a promise that resolves to an object containing spatial statistics for an array of input features.
-     * @param params See the Object Specifications table below for the structure of the params object.
-     */
-    getSpatialStatistics(params: any): any;
-    /**
      * Find optimal scale range for viewing this layer.
      * @param options See the Object Specifications table below for the structure of the options object.
      */
@@ -11052,7 +10668,13 @@ declare namespace esri.plugins {
      * @param target The map or feature layer to which the index is connected.
      * @param options See the object specifications table below for the structure of the index  options  object.
      */
-    add(target: esri.Map | esri.layers.Featureesri.layers.Layer, options?: any): void;
+    add(target: esri.Map, options?: any): void;
+    /**
+     * Adds an index property to the target instance.
+     * @param target The map or feature layer to which the index is connected.
+     * @param options See the object specifications table below for the structure of the index  options  object.
+     */
+    add(target: esri.layers.Featureesri.layers.Layer, options?: any): void;
     /** Removes the index plugin. */
     remove(): void;
   };
@@ -11118,7 +10740,28 @@ declare namespace esri.process {
      * @param layerId ID assigned to the layer.
      * @param getRects Whether to get the rectangle object with data in leaf, otherwise just get the stored data.
      */
-    intersects(test: esri.geometry.Point | esri.Graphic | esri.geometry.Extent | number[], layerId?: string, getRects?: boolean): any;
+    intersects(test: esri.geometry.Point, layerId?: string, getRects?: boolean): any;
+    /**
+     * Searches index for items which intersect the test object.
+     * @param test The point or area to intersect.
+     * @param layerId ID assigned to the layer.
+     * @param getRects Whether to get the rectangle object with data in leaf, otherwise just get the stored data.
+     */
+    intersects(test: esri.Graphic, layerId?: string, getRects?: boolean): any;
+    /**
+     * Searches index for items which intersect the test object.
+     * @param test The point or area to intersect.
+     * @param layerId ID assigned to the layer.
+     * @param getRects Whether to get the rectangle object with data in leaf, otherwise just get the stored data.
+     */
+    intersects(test: esri.geometry.Extent, layerId?: string, getRects?: boolean): any;
+    /**
+     * Searches index for items which intersect the test object.
+     * @param test The point or area to intersect.
+     * @param layerId ID assigned to the layer.
+     * @param getRects Whether to get the rectangle object with data in leaf, otherwise just get the stored data.
+     */
+    intersects(test: number[], layerId?: string, getRects?: boolean): any;
     /**
      * Searches for the nearest point(s) to the passed point within the specified criteria.
      * @param criteria See the object specifications table below for the structure of the  criteria  object.
@@ -11128,51 +10771,6 @@ declare namespace esri.process {
   }
 }
 declare namespace esri.renderers {
-
-  /** (Currently in beta) Blendesri.renderers.Renderer allows you to easily identify the predominant attribute among two or more competing attributes of a feature and visualizes the strength of that predominance using blended colors. */
-  class Blendesri.renderers.Renderer {
-    /** This determines how colors are blended together. */
-    blendMode: string;
-    /** An array of objects to blend containing the field name and color to use. */
-    fields: any[];
-    /** The field to normalize. */
-    normalizationField: string;
-    /** An array of objects which determines opacity. */
-    opacityStops: any[];
-    /** The Blendesri.renderers.Renderer applies to the color of the symbol. */
-    symbol: esri.symbols.Symbol;
-    /**
-     * Creates a new Blendesri.renderers.Renderer object.
-     * @param params Required and optional parameters.
-     */
-    constructor(params?: esri.BlendRendererOptions);
-    /**
-     * Sets the mode that determines how colors are blended together.
-     * @param blendMode The blend mode used to determine how colors are blended together.
-     */
-    setBlendMode(blendMode: string): void;
-    /**
-     * Sets an array of objects to blend containing the field name and color to use.
-     * @param fields An array of objects to blend containing the field name and color to use.
-     */
-    setFields(fields: any[]): void;
-    /**
-     * Sets the field to normalize
-     * @param field The field to normalize.
-     */
-    setNormalizationField(field: string): void;
-    /**
-     * Sets an array of objects which determines opacity.
-     * @param opacityStops Sets an array of objects which determines opacity.
-     */
-    setOpacityStops(opacityStops: any[]): void;
-    /**
-     * Sets the symbol to blend.
-     * @param symbol The symbol to blend.
-     */
-    setSymbol(symbol: Symbol): void;
-  }
-  export = Blendesri.renderers.Renderer;
 
   /** A class breaks renderer symbolizes each graphic based on the value of some numeric attribute. */
   class ClassBreaksesri.renderers.Renderer extends esri.renderers.Renderer {
@@ -11201,7 +10799,13 @@ declare namespace esri.renderers {
      * @param defaultesri.symbols.Symbol Default symbol for the renderer.
      * @param attributeesri.layers.Field Specify either the attribute field the renderer uses to match values or starting at version 3.3, a function that returns a value to be compared against class breaks.
      */
-    constructor(defaultSymbol: esri.symbols.Symbol, attributeField: string | Function);
+    constructor(defaultSymbol: esri.symbols.Symbol, attributeField: string);
+    /**
+     * Creates a new ClassBreaksesri.renderers.Renderer object.
+     * @param defaultesri.symbols.Symbol Default symbol for the renderer.
+     * @param attributeesri.layers.Field Specify either the attribute field the renderer uses to match values or starting at version 3.3, a function that returns a value to be compared against class breaks.
+     */
+    constructor(defaultSymbol: esri.symbols.Symbol, attributeField: Function);
     /**
      * Creates a new ClassBreaksRenderer.
      * @param json JSON object representing the ClassBreaksRenderer.
@@ -11213,7 +10817,14 @@ declare namespace esri.renderers {
      * @param maxValue Maximum value in the break.
      * @param symbol esri.symbols.Symbol used for the break.
      */
-    addBreak(minValueOrInfo: number | any, maxValue?: number, symbol?: Symbol): void;
+    addBreak(minValueOrInfo: number, maxValue?: number, symbol?: Symbol): void;
+    /**
+     * Adds a class break.
+     * @param minValueOrInfo The value can be provided as individual arguments or as an info object.
+     * @param maxValue Maximum value in the break.
+     * @param symbol esri.symbols.Symbol used for the break.
+     */
+    addBreak(minValueOrInfo: any, maxValue?: number, symbol?: Symbol): void;
     /** Remove all existing class breaks for this renderer. */
     clearBreaks(): void;
     /**
@@ -11253,7 +10864,7 @@ declare namespace esri.renderers {
     /** An array of objects, where each object defines a field to be mapped and its color. */
     fields: any[];
     /** The line symbol to use on the outline of the feature. */
-    outline: Lineesri.symbols.Symbol;
+    outline: esri.symbols.Lineesri.symbols.Symbol;
     /**
      * Creates a new instance of dot density renderer.
      * @param params An object with various options.
@@ -11336,7 +10947,7 @@ declare namespace esri.renderers {
   }
   export = Heatmapesri.renderers.Renderer;
 
-  /** The base class for the renderers - Simpleesri.renderers.Renderer, ClassBreaksesri.renderers.Renderer, UniqueValueesri.renderers.Renderer, DotDensityesri.renderers.Renderer, ScaleDependentesri.renderers.Renderer, Temporalesri.renderers.Renderer, Heatmapesri.renderers.Renderer, and VectorFieldesri.renderers.Renderer used with a esri.layers.Graphicsesri.layers.Layer and FeatureLayer. */
+  /** The base class for the renderers - Simpleesri.renderers.Renderer, ClassBreaksesri.renderers.Renderer, UniqueValueesri.renderers.Renderer, DotDensityesri.renderers.Renderer, ScaleDependentesri.renderers.Renderer, and Temporalesri.renderers.Renderer used with a esri.layers.Graphicsesri.layers.Layer and FeatureLayer. */
   class esri.renderers.Renderer {
     /** An object defining a color ramp used to render the layer. */
     colorInfo: any;
@@ -11346,44 +10957,31 @@ declare namespace esri.renderers {
     rotationInfo: any;
     /** Defines the size of the symbol where feature size is proportional to data value. */
     sizeInfo: any;
-    /** This property allows you to define how to render values in a layer. */
-    visualVariables: any[];
     /**
      * Gets the color for the Graphic.
      * @param graphic esri.Graphic to get color from.
-     * @param options This optional parameter supports colorInfo.
      */
-    getColor(graphic: esri.Graphic, options?: any): esri.Color;
+    getColor(graphic: Graphic): esri.Color;
     /**
      * Returns the opacity value for the specified graphic.
      * @param graphic Returns the opacity value appropriate for the given graphic.
-     * @param options This optional parameter supports opacityInfo.
      */
-    getOpacity(graphic: esri.Graphic, options?: any): number;
+    getOpacity(graphic: Graphic): number;
     /**
      * Returns the angle of rotation (in degrees) for the graphic calculated using rotationInfo.
      * @param graphic An input graphic for which you want to get the angle of rotation.
-     * @param options This optional parameter supports rotationInfo.
      */
-    getRotationAngle(graphic: esri.Graphic, options?: any): number;
+    getRotationAngle(graphic: Graphic): number;
     /**
      * Return the symbol size (in pixels) for the graphic, calculated using sizeInfo.
      * @param graphic The graphic for which you want to calculate the symbol size.
-     * @param options This optional parameter supports sizeInfo.
      */
-    getSize(graphic: esri.Graphic, options?: any): number;
+    getSize(graphic: Graphic): number;
     /**
      * Gets the symbol for the Graphic.
      * @param graphic esri.Graphic to symbolize.
      */
     getSymbol(graphic: Graphic): esri.symbols.Symbol;
-    /**
-     * Returns the visual variable of the specified type.
-     * @param type The type of visual variable desired.
-     */
-    getVisualVariablesForType(type: string): any;
-    /** Indicates if the renderer has defined visualVariables. */
-    hasVisualVariables(): boolean;
     /**
      * Sets the colorInfo property.
      * @param info An info object that defines the color.
@@ -11399,16 +10997,8 @@ declare namespace esri.renderers {
      * @param info An object with the same properties as rotationInfo.
      */
     setRotationInfo(info: any): esri.renderers.Renderer;
-    /**
-     * Set size info of the renderer to modify the symbol size based on data value.
-     * @param info An object with the same properties as sizeInfo.
-     */
-    setSizeInfo(info: any): esri.renderers.Renderer;
-    /**
-     * Sets the renderer with the specified  visualVariables.
-     * @param visualParams The specified visualVariables.
-     */
-    setVisualVariables(visualParams: any[]): void;
+    /** Set size info of the renderer to modify the symbol size based on data value. */
+    setSizeInfo(): esri.renderers.Renderer;
     /** Converts object to its ArcGIS Server JSON representation. */
     toJson(): any;
   }
@@ -11523,10 +11113,10 @@ declare namespace esri.renderers {
     static UNIT_YEARS: any;
     /**
      * Creates a new TimeClassBreaksAgerObject with the specified time breaks inforamtion.
-     * @param params Each element in the array is an object that describes the class breaks information.
+     * @param infos Each element in the array is an object that describes the class breaks information.
      * @param timeesri.Units The unit in which the minimum and maximum break values are measured.
      */
-    constructor(params: esri.TimeClassBreaksAgerOptions[], timeUnits?: string);
+    constructor(infos: any[], timeUnits?: string);
     /**
      * Calculates aging and returns the appropriate symbol.
      * @param symbol The symbol to age.
@@ -11578,7 +11168,16 @@ declare namespace esri.renderers {
      * @param attributeField3 If needed, specify an additional attribute field the renderer uses to match values.
      * @param fieldDelimeter String inserted between the values of different fields.
      */
-    constructor(defaultSymbol: esri.symbols.Symbol, attributeField: string | Function, attributeField2?: string, attributeField3?: string, fieldDelimeter?: string);
+    constructor(defaultSymbol: esri.symbols.Symbol, attributeField: string, attributeField2?: string, attributeField3?: string, fieldDelimeter?: string);
+    /**
+     * Creates a new UniqueValueesri.renderers.Renderer object.
+     * @param defaultesri.symbols.Symbol Default symbol for the renderer.
+     * @param attributeesri.layers.Field Specify either the attribute field the renderer uses to match values or starting at version 3.3, a function that returns a value to be compared against unique values.
+     * @param attributeField2 If needed, specify an additional attribute field the renderer uses to match values.
+     * @param attributeField3 If needed, specify an additional attribute field the renderer uses to match values.
+     * @param fieldDelimeter String inserted between the values of different fields.
+     */
+    constructor(defaultSymbol: esri.symbols.Symbol, attributeField: Function, attributeField2?: string, attributeField3?: string, fieldDelimeter?: string);
     /**
      * Creates a new Unique Value Renderer.
      * @param json JSON object representing the UniqueValueRenderer.
@@ -11589,7 +11188,13 @@ declare namespace esri.renderers {
      * @param valueOrInfo Value to match with.
      * @param symbol esri.symbols.Symbol used for the value.
      */
-    addValue(valueOrInfo: string | any, symbol?: Symbol): void;
+    addValue(valueOrInfo: string, symbol?: Symbol): void;
+    /**
+     * Adds a unique value and symbol.
+     * @param valueOrInfo Value to match with.
+     * @param symbol esri.symbols.Symbol used for the value.
+     */
+    addValue(valueOrInfo: any, symbol?: Symbol): void;
     /**
      * Returns rendering and legend information (as defined by the renderer) associated with the given graphic.
      * @param graphic The graphic whose rendering and legend information will be returned.
@@ -11660,11 +11265,6 @@ declare namespace esri.renderers {
      */
     createClassedSizeRenderer(params: any): any;
     /**
-     * Creates an object defining a color ramp used to render a layer.
-     * @param params See the object specifications table below for the structure of the params object.
-     */
-    createColorInfo(params: any): any;
-    /**
      * Creates a renderer for visualizing features using colors.
      * @param params See the object specifications table below for the structure of the params object.
      */
@@ -11675,21 +11275,6 @@ declare namespace esri.renderers {
      */
     createHeatmapRenderer(params: any): any;
     /**
-     * Creates an object that describes how opacity of features is calculated.
-     * @param params See the object specifications table below for the structure of the params object.
-     */
-    createOpacityInfo(params: any): any;
-    /**
-     * Creates a renderer for identifying features by their color.
-     * @param params See the Object Specifications table below for the structure of the params object.
-     */
-    createPredominanceRenderer(params: any): any;
-    /**
-     * Defines the size of the symbol where feature size is proportional to data value.
-     * @param params See the object specifications table below for the structure of the params object.
-     */
-    createSizeInfo(params: any): any;
-    /**
      * Creates a renderer for visualizing features by varying their size based on data.
      * @param params See the object specifications table below for the structure of the params object.
      */
@@ -11699,17 +11284,12 @@ declare namespace esri.renderers {
      * @param params See the object specifications table below for the structure of the params object.
      */
     createTypeRenderer(params: any): any;
-    /**
-     * Searches the fields of an input layer or array of field objects for field names commonly used in rendering based on usage (e.g.
-     * @param params See the object specifications table below for details about the params object.
-     */
-    getSuggestedField(params: any): any;
   };
 }
 declare namespace esri.symbols {
 
   /** Line symbols are used to draw linear features on the graphics layer. */
-  class CartographicLineesri.symbols.Symbol extends SimpleLineesri.symbols.Symbol {
+  class Cartographicesri.symbols.Lineesri.symbols.Symbol extends esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol {
     /** Line ends square at the end point. */
     static CAP_BUTT: any;
     /** Line is rounded just beyond the end point. */
@@ -11752,10 +11332,10 @@ declare namespace esri.symbols {
     join: string;
     /** Size threshold for showing mitered line joins. */
     miterLimit: string;
-    /** Creates a new empty CartographicLineesri.symbols.Symbol object. */
+    /** Creates a new empty Cartographicesri.symbols.Lineesri.symbols.Symbol object. */
     constructor();
     /**
-     * Creates a new CartographicLineesri.symbols.Symbol object with parameters.
+     * Creates a new Cartographicesri.symbols.Lineesri.symbols.Symbol object with parameters.
      * @param style See Constants table for values.
      * @param color esri.symbols.Symbol color.
      * @param width Width of the line in pixels.
@@ -11765,7 +11345,7 @@ declare namespace esri.symbols {
      */
     constructor(style?: string, color?: esri.Color, width?: number, cap?: string, join?: string, miterLimit?: string);
     /**
-     * Creates a new CartographicLineesri.symbols.Symbol object using a JSON object.
+     * Creates a new Cartographicesri.symbols.Lineesri.symbols.Symbol object using a JSON object.
      * @param json JSON object representing the CartographicLineSymbol.
      */
     constructor(json: Object);
@@ -11773,24 +11353,24 @@ declare namespace esri.symbols {
      * Sets the cap style.
      * @param cap Cap style.
      */
-    setCap(cap: string): CartographicLineesri.symbols.Symbol;
+    setCap(cap: string): Cartographicesri.symbols.Lineesri.symbols.Symbol;
     /**
      * Sets the join style.
      * @param join Join style.
      */
-    setJoin(join: string): CartographicLineesri.symbols.Symbol;
+    setJoin(join: string): Cartographicesri.symbols.Lineesri.symbols.Symbol;
     /**
      * Sets the size threshold for showing mitered line joins.
      * @param miterLimit Miter limit.
      */
-    setMiterLimit(miterLimit: string): CartographicLineesri.symbols.Symbol;
+    setMiterLimit(miterLimit: string): Cartographicesri.symbols.Lineesri.symbols.Symbol;
   }
-  export = CartographicLineesri.symbols.Symbol;
+  export = Cartographicesri.symbols.Lineesri.symbols.Symbol;
 
   /** Fill symbols are used to draw polygon features on the graphics layer. */
   class Fillesri.symbols.Symbol extends esri.symbols.Symbol {
     /** Outline of the polygon. */
-    outline: SimpleLineesri.symbols.Symbol;
+    outline: esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol;
     /**
      * Sets the outline of the fill symbol.
      * @param outline esri.symbols.Symbol used for outline.
@@ -11840,7 +11420,16 @@ declare namespace esri.symbols {
      * @param weight esri.symbols.Font weight.
      * @param family esri.symbols.Font family.
      */
-    constructor(size?: number | string, style?: string, variant?: string, weight?: string, family?: string);
+    constructor(size?: number, style?: string, variant?: string, weight?: string, family?: string);
+    /**
+     * Creates a new esri.symbols.Font object.
+     * @param size esri.symbols.Font size.
+     * @param style esri.symbols.Font style.
+     * @param variant esri.symbols.Font variant.
+     * @param weight esri.symbols.Font weight.
+     * @param family esri.symbols.Font family.
+     */
+    constructor(size?: string, style?: string, variant?: string, weight?: string, family?: string);
     /**
      * Creates a new esri.symbols.Font object using a JSON object.
      * @param json JSON object representing the font.
@@ -11860,7 +11449,12 @@ declare namespace esri.symbols {
      * Sets the font size.
      * @param size esri.symbols.Font size.
      */
-    setSize(size: number | string): esri.symbols.Font;
+    setSize(size: number): esri.symbols.Font;
+    /**
+     * Sets the font size.
+     * @param size esri.symbols.Font size.
+     */
+    setSize(size: string): esri.symbols.Font;
     /**
      * Sets the font style.
      * @param style esri.symbols.Font style.
@@ -11880,19 +11474,19 @@ declare namespace esri.symbols {
   export = esri.symbols.Font;
 
   /** Line symbols are used to draw linear features on the graphics layer. */
-  class Lineesri.symbols.Symbol extends esri.symbols.Symbol {
+  class esri.symbols.Lineesri.symbols.Symbol extends esri.symbols.Symbol {
     /** Width of line symbol in pixels. */
     width: number;
     /**
-     * Sets the Lineesri.symbols.Symbol width.
+     * Sets the esri.symbols.Lineesri.symbols.Symbol width.
      * @param width Width of line symbol in pixels.
      */
-    setWidth(width: number): Lineesri.symbols.Symbol;
+    setWidth(width: number): esri.symbols.Lineesri.symbols.Symbol;
   }
-  export = Lineesri.symbols.Symbol;
+  export = esri.symbols.Lineesri.symbols.Symbol;
 
   /** Marker symbols are used to draw points and multipoints on the graphics layer. */
-  class Markeresri.symbols.Symbol extends esri.symbols.Symbol {
+  class esri.symbols.Markeresri.symbols.Symbol extends esri.symbols.Symbol {
     /** The angle of the marker. */
     angle: number;
     /** Size of the marker in pixels. */
@@ -11905,22 +11499,22 @@ declare namespace esri.symbols {
      * Rotates the symbol clockwise around its center by the specified angle.
      * @param angle The angle value.
      */
-    setAngle(angle: number): Markeresri.symbols.Symbol;
+    setAngle(angle: number): esri.symbols.Markeresri.symbols.Symbol;
     /**
      * Sets the x and y offset of a marker in screen units.
      * @param x The X offset value in pixels.
      * @param y The Y offset value in pixels.
      */
-    setOffset(x: number, y: number): Markeresri.symbols.Symbol;
+    setOffset(x: number, y: number): esri.symbols.Markeresri.symbols.Symbol;
     /**
      * Sets the size of a marker in pixels.
      * @param size The width of the symbol in pixels.
      */
-    setSize(size: number): Markeresri.symbols.Symbol;
+    setSize(size: number): esri.symbols.Markeresri.symbols.Symbol;
     /** Converts object to its ArcGIS Server JSON representation. */
     toJson(): any;
   }
-  export = Markeresri.symbols.Symbol;
+  export = esri.symbols.Markeresri.symbols.Symbol;
 
   /** Fill symbols are used to draw polygon features on the graphics layer. */
   class PictureFillesri.symbols.Symbol extends Fillesri.symbols.Symbol {
@@ -11945,7 +11539,7 @@ declare namespace esri.symbols {
      * @param width Width of the image in pixels.
      * @param height Height of the image in pixels.
      */
-    constructor(url: string, outline: SimpleLineesri.symbols.Symbol, width: number, height: number);
+    constructor(url: string, outline: esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol, width: number, height: number);
     /**
      * Creates a new PictureFillesri.symbols.Symbol object using a JSON object.
      * @param json JSON object representing the PictureFillSymbol.
@@ -11986,7 +11580,7 @@ declare namespace esri.symbols {
   export = PictureFillesri.symbols.Symbol;
 
   /** Marker symbols are used to draw points and multipoints on the graphics layer. */
-  class PictureMarkeresri.symbols.Symbol extends Markeresri.symbols.Symbol {
+  class esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol extends esri.symbols.Markeresri.symbols.Symbol {
     /** Height of the image in pixels. */
     height: number;
     /** URL of the image. */
@@ -11994,14 +11588,14 @@ declare namespace esri.symbols {
     /** Width of the image in pixels. */
     width: number;
     /**
-     * Creates a new PictureMarkeresri.symbols.Symbol object.
+     * Creates a new esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol object.
      * @param url URL of the image.
      * @param width Width of the image in pixels.
      * @param height Height of the image in pixels.
      */
     constructor(url: string, width: number, height: number);
     /**
-     * Creates a new PictureMarkeresri.symbols.Symbol object using a JSON object.
+     * Creates a new esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol object using a JSON object.
      * @param json JSON object representing the PictureMarkerSymbol.
      */
     constructor(json: Object);
@@ -12009,19 +11603,19 @@ declare namespace esri.symbols {
      * Sets the height of the image for display.
      * @param height Height of marker in pixels.
      */
-    setHeight(height: number): PictureMarkeresri.symbols.Symbol;
+    setHeight(height: number): esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol;
     /**
      * Sets the URL where the image is located.
      * @param url URL location of marker image.
      */
-    setUrl(url: string): PictureMarkeresri.symbols.Symbol;
+    setUrl(url: string): esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol;
     /**
      * Sets the width of the image for display.
      * @param width Width of marker in pixels.
      */
-    setWidth(width: number): PictureMarkeresri.symbols.Symbol;
+    setWidth(width: number): esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol;
   }
-  export = PictureMarkeresri.symbols.Symbol;
+  export = esri.symbols.Pictureesri.symbols.Markeresri.symbols.Symbol;
 
   /** Fill symbols are used to draw polygon features on the graphics layer. */
   class SimpleFillesri.symbols.Symbol extends Fillesri.symbols.Symbol {
@@ -12041,8 +11635,6 @@ declare namespace esri.symbols {
     static STYLE_SOLID: any;
     /** The fill is vertical lines. */
     static STYLE_VERTICAL: any;
-    /** esri.symbols.Symbol color - only applies when SimpleFillSymbol.style = 'STYLE_SOLID'. */
-    color: esri.Color;
     /** The fill style. */
     style: string;
     /** Creates a new empty SimpleFillesri.symbols.Symbol object. */
@@ -12053,17 +11645,12 @@ declare namespace esri.symbols {
      * @param outline See SimpleLineSymbol.
      * @param color esri.symbols.Symbol color.
      */
-    constructor(style: string, outline: SimpleLineesri.symbols.Symbol, color: Color);
+    constructor(style: string, outline: esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol, color: Color);
     /**
      * Creates a new SimpleFillesri.symbols.Symbol object using a JSON object.
      * @param json JSON object representing the SimpleFillSymbol.
      */
     constructor(json: Object);
-    /**
-     * Sets the symbol color - only applies when style is STYLE_SOLID.
-     * @param color esri.symbols.Symbol color.
-     */
-    setColor(color: Color): SimpleFillesri.symbols.Symbol;
     /**
      * Sets the fill symbol style.
      * @param style Fill style.
@@ -12073,7 +11660,7 @@ declare namespace esri.symbols {
   export = SimpleFillesri.symbols.Symbol;
 
   /** Line symbols are used to draw linear features on the graphics layer. */
-  class SimpleLineesri.symbols.Symbol extends Lineesri.symbols.Symbol {
+  class esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol extends esri.symbols.Lineesri.symbols.Symbol {
     /** The line is made of dashes. */
     static STYLE_DASH: any;
     /** The line is made of a dash-dot pattern. */
@@ -12100,17 +11687,17 @@ declare namespace esri.symbols {
     static STYLE_SOLID: any;
     /** The line style. */
     style: string;
-    /** Creates a new empty SimpleLineesri.symbols.Symbol object. */
+    /** Creates a new empty esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol object. */
     constructor();
     /**
-     * Creates a new SimpleLineesri.symbols.Symbol object with parameters.
+     * Creates a new esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol object with parameters.
      * @param style See Constants table for values.
      * @param color esri.symbols.Symbol color.
      * @param width Width of the line in pixels.
      */
     constructor(style: string, color: esri.Color, width: number);
     /**
-     * Creates a new SimpleLineesri.symbols.Symbol object using a JSON object.
+     * Creates a new esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol object using a JSON object.
      * @param json JSON object representing the SimpleLineSymbol.
      */
     constructor(json: Object);
@@ -12118,12 +11705,12 @@ declare namespace esri.symbols {
      * Sets the line symbol style.
      * @param style Line style.
      */
-    setStyle(style: string): SimpleLineesri.symbols.Symbol;
+    setStyle(style: string): esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol;
   }
-  export = SimpleLineesri.symbols.Symbol;
+  export = esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol;
 
   /** Marker symbols are used to draw points and multipoints on the graphics layer. */
-  class SimpleMarkeresri.symbols.Symbol extends Markeresri.symbols.Symbol {
+  class Simpleesri.symbols.Markeresri.symbols.Symbol extends esri.symbols.Markeresri.symbols.Symbol {
     /** The marker is a circle. */
     static STYLE_CIRCLE: any;
     /** The marker is a cross. */
@@ -12137,23 +11724,23 @@ declare namespace esri.symbols {
     /** The marker is a diagonal cross. */
     static STYLE_X: any;
     /** Outline of the marker. */
-    outline: SimpleLineesri.symbols.Symbol;
+    outline: esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol;
     /** Size of the marker in pixels. */
     size: number;
     /** The marker style. */
     style: string;
-    /** Creates a new empty SimpleMarkeresri.symbols.Symbol object. */
+    /** Creates a new empty Simpleesri.symbols.Markeresri.symbols.Symbol object. */
     constructor();
     /**
-     * Creates a new SimpleMarkeresri.symbols.Symbol object with parameters.
+     * Creates a new Simpleesri.symbols.Markeresri.symbols.Symbol object with parameters.
      * @param style See Constants table for values.
      * @param size Size of the marker in pixels.
      * @param outline See SimpleLineSymbol.
      * @param color esri.symbols.Symbol color.
      */
-    constructor(style: string, size: number, outline: SimpleLineesri.symbols.Symbol, color: Color);
+    constructor(style: string, size: number, outline: esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol, color: Color);
     /**
-     * Creates a new SimpleMarkeresri.symbols.Symbol object using a JSON object.
+     * Creates a new Simpleesri.symbols.Markeresri.symbols.Symbol object using a JSON object.
      * @param json JSON object representing the SimpleMarkerSymbol.
      */
     constructor(json: Object);
@@ -12161,19 +11748,19 @@ declare namespace esri.symbols {
      * Sets the outline of the marker symbol.
      * @param outline esri.symbols.Symbol used for outline.
      */
-    setOutline(outline: SimpleLineSymbol): SimpleMarkeresri.symbols.Symbol;
+    setOutline(outline: SimpleLineSymbol): Simpleesri.symbols.Markeresri.symbols.Symbol;
     /**
      * Sets the marker shape to the given path string and switches the marker style to STYLE_PATH.
      * @param path SVG path of the icon.
      */
-    setPath(path: string): SimpleMarkeresri.symbols.Symbol;
+    setPath(path: string): Simpleesri.symbols.Markeresri.symbols.Symbol;
     /**
      * Sets the marker symbol style.
      * @param style Marker style.
      */
-    setStyle(style: string): SimpleMarkeresri.symbols.Symbol;
+    setStyle(style: string): Simpleesri.symbols.Markeresri.symbols.Symbol;
   }
-  export = SimpleMarkeresri.symbols.Symbol;
+  export = Simpleesri.symbols.Markeresri.symbols.Symbol;
 
   /** Symbols are used to display points, lines, and polygons on the graphics layer. */
   class esri.symbols.Symbol {
@@ -12215,10 +11802,6 @@ declare namespace esri.symbols {
     decoration: string;
     /** esri.symbols.Font for displaying text. */
     font: esri.symbols.Font;
-    /** The halo color used for the text symbol.Known limitations:IE 9 and below not supported.Sub-pixel halo (i.e. */
-    haloColor: esri.Color;
-    /** The size (in pixel units) used if setting a halo on a text symbol.Known limitations:IE 9 and below not supported.Sub-pixel halo (i.e. */
-    haloSize: number;
     /** Horizontal alignment of the text with respect to the graphic. */
     horizontalAlignment: string;
     /** Determines whether to adjust the spacing between characters in the text string. */
@@ -12270,16 +11853,6 @@ declare namespace esri.symbols {
      * @param font Text font.
      */
     setFont(font: Font): Textesri.symbols.Symbol;
-    /**
-     * Sets a halo color for the text symbol.NOTE: Known limitations when working with the text symbol halo:IE 9 and below not supported.Sub-pixel halo (i.e.
-     * @param color The color used for the text symbol halo.
-     */
-    setHaloColor(color: Color): Textesri.symbols.Symbol;
-    /**
-     * Sets the size of the halo (in pixels) used for the text symbol.NOTE: Known limitations when working with the text symbol halo:IE 9 and below not supported.Sub-pixel halo (i.e.
-     * @param size The size (in pixels) of the text symbol halo.
-     */
-    setHaloSize(size: number): Textesri.symbols.Symbol;
     /**
      * Updates the horizontal alignment of the text symbol.
      * @param alignment Horizontal alignment of the text with respect to the graphic.
@@ -12361,13 +11934,13 @@ declare namespace esri.tasks {
   /** Input parameters for the areasAndLengths() method on the esri.geometry.Geometry Service. */
   class esri.tasks.AreasAndesri.tasks.LengthsParameters {
     /** The area unit in which areas of polygons will be calculated. */
-    areaUnit: number | string;
+    areaUnit: any;
     /** Defines the type of calculation for the geometry. */
     calculationType: string;
     /** The length unit in which perimeters of polygons will be calculated. */
-    lengthUnit: number | string;
+    lengthUnit: any;
     /** esri.geometry.Polygon geometries for which to compute areas and lengths */
-    polygons: esri.geometry.Polygon[];
+    polygons: esri.geometry.Geometry[];
     /** Creates a new esri.tasks.AreasAndesri.tasks.LengthsParameters object. */
     constructor();
   }
@@ -12388,7 +11961,7 @@ declare namespace esri.tasks {
     /** If true, all geometries buffered at a given distance are unioned into a single (possibly multipart) polygon, and the unioned geometry is placed in the output array. */
     unionResults: boolean;
     /** The units for calculating each buffer distance. */
-    unit: number;
+    unit: string;
     /** Creates a new esri.tasks.BufferParameters object. */
     constructor();
   }
@@ -12454,7 +12027,7 @@ declare namespace esri.tasks {
     /** The set of facilities loaded as network locations during analysis. */
     facilities: any;
     /** The network attribute field name used as the impedance attribute during analysis. */
-    impedanceAttribute: string;
+    impedenceAttribute: string;
     /** The set of incidents loaded as network locations during analysis. */
     incidents: any;
     /** The output geometry precision. */
@@ -12495,8 +12068,6 @@ declare namespace esri.tasks {
     timeOfDayUsage: string;
     /** Options for traveling to or from the facility. */
     travelDirection: string;
-    /** Travel modes define how a pedestrian, car, truck or other medium of transportation moves through the street network. */
-    travelMode: any;
     /** If true, the hierarchy attribute for the network will be used in analysis. */
     useHierarchy: boolean;
     /** Creates a new esri.tasks.ClosestFacilityParameters object */
@@ -12532,8 +12103,6 @@ declare namespace esri.tasks {
      * @param url URL to the ArcGIS Server REST resource that represents a network analysis service.
      */
     constructor(url: string);
-    /** Returns an object describing a Closest Facility service endpoint (URL of the endpoint is specified in the constructor). */
-    getServiceDescription(): any;
     /**
      * Solve the closest facility.
      * @param params The esri.tasks.ClosestFacilityParameters object.
@@ -12608,7 +12177,7 @@ declare namespace esri.tasks {
     /** The array of geometries to be densified. */
     geometries: esri.geometry.Geometry[];
     /** The length unit of maxSegmentLength, can be any esriesri.Units constant. */
-    lengthUnit: number | string;
+    lengthUnit: any;
     /** All segments longer than maxSegmentLength are replaced with sequences of lines no longer than maxSegmentLength. */
     maxSegmentLength: number;
     /** Converts object to its JSON representation. */
@@ -12640,10 +12209,10 @@ declare namespace esri.tasks {
   /** Input parameters for the distance  method on the GeometryService. */
   class esri.tasks.DistanceParameters {
     /** Specifies the units for measuring distance between geometry1 and geometry2. */
-    distanceUnit: number | string;
+    distanceUnit: any;
     /** When true, the geodesic distance between geometry1 and geometry2 is measured. */
     geodesic: boolean;
-    /** The geometry from which the distance is to be measured. */
+    /** The geometry from which the distance is to measured. */
     geometry1: esri.geometry.Geometry;
     /** The geometry to which the distance is measured. */
     geometry2: esri.geometry.Geometry;
@@ -12682,8 +12251,6 @@ declare namespace esri.tasks {
     contains: boolean;
     /** An array of DynamicLayerInfos used to change the layer ordering or redefine the map. */
     dynamicLayerInfos: esri.layers.Dynamicesri.layers.LayerInfo[];
-    /** Specifies the number of decimal places for the geometries returned by the query operation. */
-    geometryPrecision: number;
     /** Array of layer definition expressions that allows you to filter the features of individual layers. */
     layerDefinitions: string[];
     /** The layers to perform the find operation on. */
@@ -12743,33 +12310,33 @@ declare namespace esri.tasks {
   }
   /** Represents a message generated during the execution of a geoprocessing task. */
   class esri.tasks.GPMessage {
-    /** esriJobMessageTypeAbort - Indicates the job has aborted. */
+    /** esriJobMessageTypeAbort */
     static TYPE_ABORT: any;
-    /** esriJobMessageTypeEmpty - Indicates the task returned an empty result. */
+    /** esriGPMessageTypeEmpty */
     static TYPE_EMPTY: any;
-    /** esriJobMessageTypeError - Indicates an error was returned during the execution of the job. */
+    /** esriGPMessageTypeError */
     static TYPE_ERROR: any;
-    /** esriJobMessageTypeInformative - Indicates the message is informative. */
+    /** esriGPMessageTypeInformative */
     static TYPE_INFORMATIVE: any;
-    /** esriJobMessageTypeProcessDefinition */
+    /** TBA */
     static TYPE_PROCESS_DEFINITION: any;
-    /** esriJobMessageTypeProcessStart - Indicates the GP process has started. */
+    /** TBA */
     static TYPE_PROCESS_START: any;
-    /** esriJobMessageTypeProcessStop - Indicates the GP process has stopped. */
+    /** TBA */
     static TYPE_PROCESS_STOP: any;
-    /** esriJobMessageTypeWarning - Indicates the message is a warning. */
+    /** esriGPMessageTypeWarning */
     static TYPE_WARNING: any;
     /** A description of the geoprocessing message. */
     description: string;
     /** The geoprocessing message type. */
-    type: string;
+    type: number;
   }
   export = esri.tasks.GPMessage;
 
   /** Sets the geometries, maximum deviation and units for the generalize operation. */
   class esri.tasks.GeneralizeParameters {
     /** The maximum deviation unit. */
-    deviationUnit: number | string;
+    deviationUnit: any;
     /** The array of input geometries to generalize. */
     geometries: esri.geometry.Geometry[];
     /** The maximum deviation for constructing a generalized geometry based on the input geometries. */
@@ -12952,7 +12519,7 @@ declare namespace esri.tasks {
      * @param callback The function to call when the method has completed.
      * @param errback An error object is returned if an error occurs on the Server during task execution.
      */
-    labelPoints(polygons: esri.geometry.Polygon[], callback?: Function, errback?: Function): any;
+    labelPoints(polygons: esri.geometry.Geometry[], callback?: Function, errback?: Function): any;
     /**
      * Gets the lengths for a esri.geometry.Geometry[] when the geometry type is Polyline.
      * @param lengthsParameter Specify the polylines and optionally the length unit and the geodesic length option.
@@ -13022,7 +12589,7 @@ declare namespace esri.tasks {
     /** Fires when the autoComplete operation is complete. */
     on(type: "auto-complete-complete", listener: (event: { geometries: esri.geometry.Polygon[]; target: esri.tasks.GeometryService }) => void): esri.Handle;
     /** Fires when the buffer operation is complete. */
-    on(type: "buffer-complete", listener: (event: { geometries: esri.geometry.Polygon[]; target: esri.tasks.GeometryService }) => void): esri.Handle;
+    on(type: "buffer-complete", listener: (event: { geometries: esri.geometry.Geometry[]; target: esri.tasks.GeometryService }) => void): esri.Handle;
     /** Fires when the convexHull operation is complete. */
     on(type: "convex-hull-complete", listener: (event: { geometry: esri.geometry.Geometry; target: esri.tasks.GeometryService }) => void): esri.Handle;
     /** Fires when the cut operation is complete. */
@@ -13040,7 +12607,7 @@ declare namespace esri.tasks {
     /** Fires when the intersect operation is complete. */
     on(type: "intersect-complete", listener: (event: { geometries: esri.geometry.Geometry[]; target: esri.tasks.GeometryService }) => void): esri.Handle;
     /** Fires when the labelPoints operation is complete. */
-    on(type: "label-points-complete ", listener: (event: { geometries: esri.geometry.Point[]; target: esri.tasks.GeometryService }) => void): esri.Handle;
+    on(type: "label-points-complete ", listener: (event: { geometries: esri.geometry.Geometry[]; target: esri.tasks.GeometryService }) => void): esri.Handle;
     /** Fires when the lengths operation is complete. */
     on(type: "lengths-complete", listener: (event: { result: any; target: esri.tasks.GeometryService }) => void): esri.Handle;
     /** Fires when the offset operation is complete. */
@@ -13096,7 +12663,7 @@ declare namespace esri.tasks {
      * @param callback The function to call when the method has completed.
      * @param errback An error object is returned if an error occurs on the Server during task execution.
      */
-    checkJobStatus(jobId: string, callback?: Function, errback?: Function): any;
+    checkJobStatus(jobId: string, callback?: Function, errback?: Function): void;
     /**
      * Sends a request to the server to execute a synchronous GP task.
      * @param inputParameters The inputParameters argument specifies the input parameters accepted by the task and their corresponding values.
@@ -13156,7 +12723,7 @@ declare namespace esri.tasks {
      * @param statusCallback Checks the current status of the job.
      * @param errback An error object is returned if an error occurs on the Server during task execution.
      */
-    submitJob(inputParameters: any, callback?: Function, statusCallback?: Function, errback?: Function): any;
+    submitJob(inputParameters: any, callback?: Function, statusCallback?: Function, errback?: Function): void;
     /** Fires when an error occurs when executing the task. */
     on(type: "error", listener: (event: { error: Error; target: Geoprocessor }) => void): esri.Handle;
     /** Fires when a synchronous GP task is completed. */
@@ -13190,8 +12757,6 @@ declare namespace esri.tasks {
     dynamicLayerInfos: esri.layers.Dynamicesri.layers.LayerInfo[];
     /** The geometry used to select features during Identify. */
     geometry: esri.geometry.Geometry;
-    /** Specifies the number of decimal places for the geometries returned by the query operation. */
-    geometryPrecision: number;
     /** Height of the map currently being viewed in pixels. */
     height: number;
     /** Array of layer definition expressions that allows you to filter the features of individual layers. */
@@ -13265,7 +12830,7 @@ declare namespace esri.tasks {
     /** Specifies the mosaic rules defining the image sorting order. */
     mosaicRule: esri.layers.MosaicRule;
     /** The pixel or RGB color value representing no information. */
-    noData: string | number;
+    noData: any;
     /** Used along with the noData property. */
     noDataInterpretation: string;
     /** Specify the pixel level being identified on the x and y axis. */
@@ -13306,7 +12871,7 @@ declare namespace esri.tasks {
   }
   export = ImageServiceesri.tasks.IdentifyResult;
 
-  /** Performs an identify operation on an image service resource. */
+  /** Performs an identify operation on an image service resource . */
   export class ImageServiceIdentifyTask {
     /**
      * Creates a new ImageServiceIdentifyTask object.
@@ -13322,70 +12887,6 @@ declare namespace esri.tasks {
     execute(params: ImageServiceesri.tasks.IdentifyParameters, callback?: Function, errback?: Function): any;
     /** Fires when the identify operation is complete. */
     on(type: "complete", listener: (event: { result: ImageServiceesri.tasks.IdentifyResult; target: ImageServiceIdentifyTask }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-
-  /** Defines parameters for the ImageServiceMeasureTask. */
-  class esri.tasks.ImageServiceMeasureParameters {
-    /** Calculates the area and perimeter of given geometry. */
-    static OPERATION_AREA_PERIMETER: any;
-    /** Calculates the area and perimeter of the given geometry using the DEM defined by the service to refine the calculation. */
-    static OPERATION_AREA_PERIMETER_3D: any;
-    /** Calculates the height of a structure by measuring from the base of the structure to the top of the structure. */
-    static OPERATION_BASE_TOP: any;
-    /** Calculates the height of a structure by measuring from the base of the structure to the top of the structure's shadow on the ground. */
-    static OPERATION_BASE_TOP_SHADOW: any;
-    /** Calculates the centroid of a given area. */
-    static OPERATION_CENTROID: any;
-    /** Calculates the centroid of a given area, using the DEM defined by the service to refine the calculation. */
-    static OPERATION_CENTROID_3D: any;
-    /** Calculates the distance and azimuth angle between two points. */
-    static OPERATION_DISTANCE_ANGLE: any;
-    /** Calculates the distance and azimuth angle between two points using the DEM defined by the service to refine the calculation. */
-    static OPERATION_DISTANCE_ANGLE_3D: any;
-    /** Measures the location of a given point. */
-    static OPERATION_POINT: any;
-    /** Measures the location of a given point, using the DEM defined by the service to refine the calculation. */
-    static OPERATION_POINT_3D: any;
-    /** Calculates the height of a structure by measuring from the top of the structure to the top of the structure's shadow on the ground. */
-    static OPERATION_TOP_TOP_SHADOW: any;
-    /** The angular unit in which directions of line segments will be calculated. */
-    angularUnit: string;
-    /** The area unit in which areas of polygons will be calculated. */
-    areaUnit: string;
-    /** A geometry that defines the "from" location of the measurement. */
-    fromGeometry: esri.geometry.Geometry;
-    /** The linear unit in which height, length, or perimeters will be calculated. */
-    linearUnit: string;
-    /** Specifies the mosaic rule when defining how individual images should be mosaicked. */
-    mosaicRule: esri.layers.MosaicRule;
-    /** The mensuration rule to apply to the measure operation. */
-    operation: string;
-    /** The pixel resolution being measured. */
-    pixelSize: esri.geometry.Point;
-    /** A geometry that defines the "to" location of the measurement. */
-    toGeometry: esri.geometry.Geometry;
-    /** Converts the esri.tasks.ImageServiceMeasureParameters instance to a JSON object. */
-    toJson(): any;
-  }
-  export = esri.tasks.ImageServiceMeasureParameters;
-
-  /** Performs a measure operation on an Image Service. */
-  export class ImageServiceMeasureTask {
-    /**
-     * Creates a new instance of ImageServiceMeasureTask
-     * @param url URL to the ArcGIS Server REST resource that represents an image service.
-     */
-    constructor(url: string);
-    /**
-     * Sends a request to an image service to perform the designated measure operation.
-     * @param params Parameters to pass to the server to execute the task.
-     * @param callback The function to call when the method has completed.
-     * @param errback An error object is returned if an error occurs on the Server during task execution.
-     */
-    execute(params: esri.tasks.ImageServiceMeasureParameters, callback?: Function, errback?: Function): any;
-    /** Fires when measure completes. */
-    on(type: "complete", listener: (event: { target: ImageServiceMeasureTask }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 
@@ -13438,7 +12939,7 @@ declare namespace esri.tasks {
     /** If polylines are in geographic coordinate system, then geodesic needs to be set to true in order to calculate the ellipsoidal shortest path distance between each pair of the vertices in the polylines. */
     geodesic: boolean;
     /** The length unit in which perimeters of polygons will be calculated. */
-    lengthUnit: number | string;
+    lengthUnit: any;
     /** The array of polylines whose lengths are to be computed. */
     polylines: esri.geometry.Geometry[];
     /** Creates a new LengthsParameter object. */
@@ -13517,8 +13018,6 @@ declare namespace esri.tasks {
   class esri.tasks.ParameterValue {
     /** Specifies the type of data for the parameter. */
     dataType: string;
-    /** The name of the output parameter as defined by the geoprocessing task in the Services Directory. */
-    paramName: string;
     /** The value of the parameter. */
     value: any;
   }
@@ -13568,7 +13067,7 @@ declare namespace esri.tasks {
     exportOptions: any;
     /** The print output format. */
     format: string;
-    /** The text that appears on the Print widget's print button. */
+    /** The text that appears on the PrintWidget's print button. */
     label: string;
     /** The layout used for the print output. */
     layout: string;
@@ -13580,8 +13079,6 @@ declare namespace esri.tasks {
     preserveScale: boolean;
     /** When false, attribution is not displayed on the printout. */
     showAttribution: boolean;
-    /** Indicates whether visible LabelLayers in the map are displayed or not. */
-    showLabels: boolean;
     /** Creates a new esri.tasks.PrintTemplate object. */
     constructor();
   }
@@ -13593,7 +13090,7 @@ declare namespace esri.tasks {
     geometries: esri.geometry.Geometry[];
     /** The spatial reference to which you are projecting the geometries. */
     outSR: esri.SpatialReference;
-    /** The well-known id {wkid:number} or well-known text {wkt:string} or  for the datum transformation to be applied on the projected geometries. */
+    /** The well-known id {wkid:number} or well-known text {wkt:string} or  for the datum transfomation to be applied on the projected geometries. */
     transformation: any;
     /** Indicates whether to transform forward or not. */
     transformForward: boolean;
@@ -13800,8 +13297,6 @@ declare namespace esri.tasks {
     startTimeIsUTC: boolean;
     /** The set of stops loaded as network locations during analysis. */
     stops: any;
-    /** Travel modes define how a pedestrian, car, truck or other medium of transportation moves through the street network. */
-    travelMode: any;
     /** If true, the hierarchy attribute for the network should be used in analysis. */
     useHierarchy: boolean;
     /** A useful feature of the esri.tasks.RouteTask is the ability to constrain stop visits to certain times of day, or "time windows". */
@@ -13824,7 +13319,7 @@ declare namespace esri.tasks {
   }
   export = esri.tasks.RouteResult;
 
-  /** The ArcGIS JavaScript API's esri.tasks.RouteTask allows you to find routes between two or more locations and optionally get driving directions. */
+  /** The ArcGIS JavaScript API's routeTask allows you to find routes between two or more locations and optionally get driving directions. */
   class esri.tasks.RouteTask {
     /** URL to the ArcGIS Server REST resource that represents a network analysis service. */
     url: string;
@@ -13833,8 +13328,6 @@ declare namespace esri.tasks {
      * @param url URL to the ArcGIS Server REST resource that represents a network analysis service.
      */
     constructor(url: string);
-    /** Returns an object describing a Route service endpoint (URL of the endpoint is specified in the constructor). */
-    getServiceDescription(): any;
     /**
      * Solves the route against the route layer with the route parameters.
      * @param params Route parameters used as input to generate the route.
@@ -13908,8 +13401,6 @@ declare namespace esri.tasks {
     timeOfDay: Date;
     /** Options for traveling to or from the facility. */
     travelDirection: string;
-    /** Travel modes define how a pedestrian, car, truck or other medium of transportation moves through the street network. */
-    travelMode: any;
     /** If true, the outermost polygon (at the maximum break value) will be trimmed. */
     trimOuterPolygon: boolean;
     /** If polygons are being trimmed, provides the distance to trim. */
@@ -13949,8 +13440,6 @@ declare namespace esri.tasks {
      * @param url URL to the ArcGIS Server REST resource that represents a network analysis service.
      */
     constructor(url: string);
-    /** Returns an object describing a Service Area service endpoint (URL of the endpoint is specified in the constructor). */
-    getServiceDescription(): any;
     /**
      * Solve the service area.
      * @param params The esri.tasks.ServiceAreaParameters object.
@@ -13964,7 +13453,7 @@ declare namespace esri.tasks {
   }
   /** The esri.tasks.StatisticDefinition class defines the type of statistics, the field used to calculate the statistics and the resulting output field name. */
   class esri.tasks.StatisticDefinition {
-    /** The field name or standard SQL expression on which statistics will be calculated. */
+    /** Define the field on which statistics will be calculated. */
     onStatisticField: string;
     /** Specify the output field name. */
     outStatisticFieldName: string;
@@ -13977,20 +13466,8 @@ declare namespace esri.tasks {
 
   /** Sets the polylines and other parameters for the trimExtend operation. */
   class esri.tasks.TrimExtendParameters {
-    /** Default value. */
-    static DEFAULT_CURVE_EXTENSION: any;
-    /** When an extension is performed at an end, do not extrapolate the end segments attributes for the new point. */
-    static KEEP_END_ATTRIBUTES: any;
-    /** When an extension is performed at an end, do not extrapolate the end segment's attributes for the new point. */
-    static NO_END_ATTRIBUTES: any;
-    /** Do not extend the 'from' end of any path. */
-    static NO_EXTEND_AT_FROM: any;
-    /** Do not extend the 'to' end of any path. */
-    static NO_EXTEND_AT_TO: any;
-    /** When an extension is performed at an end, relocate the end point to the new position. */
-    static RELOCATE_ENDS: any;
     /** A flag used along with the trimExtend operation. */
-    extendHow: number;
+    extendHow: string;
     /** The array of polylines to trim or extend. */
     polylines: esri.geometry.Polyline[];
     /** A polyline used as a guide for trimming or extending input polylines. */
@@ -14020,6 +13497,8 @@ declare namespace esri.tasks {
 
   /** Represents a geocode service resource exposed by the ArcGIS Server REST API. */
   class esri.tasks.Locator {
+    /** Limit the results to one or more categories. */
+    categories: string[];
     /** The country to limit results to for example "US" for United States or "SE" for Sweden. */
     countryCode: string;
     /** The spatial reference of the output geometries. */
@@ -14148,498 +13627,6 @@ declare namespace esri.tasks {
   }
   export = esri.tasks.Query;
 }
-declare namespace esri.tasks.datareviewer {
-
-  /** Encapsulates a Batch Validation Job. */
-  class esri.tasks.datareviewer.BatchValidationJob {
-    /** Contains a list of batch run IDs, one for each batch validation execution associated with this batch validation job. */
-    batchRunIds : string[];
-    /** Gets job creation date. */
-    creationDate: Date;
-    /** Gets the Job Id. */
-    jobId: string;
-    /** Gets batch job execution details. */
-    jobInfo: esri.tasks.datareviewer.BatchValidationJobInfo;
-    /** Gets batch job parameters. */
-    parameters: esri.tasks.datareviewer.BatchValidationParameters;
-    /** Gets the job status. */
-    status: string;
-    /** Gets the job type. */
-    type: string;
-  }
-  export = esri.tasks.datareviewer.BatchValidationJob;
-  /** Encapsulates batch validation job execution details. */
-  class esri.tasks.datareviewer.BatchValidationJobInfo {
-    /** Gets the batch run Id of the job execution. */
-    batchRunId: string;
-    /** Gets the finish time of the job execution. */
-    finishTimeUTC: Date;
-    /** Gets the job's geoprocessing Job Id. */
-    gpJobId: string;
-    /** Gets the URL of the geoprocessing service that executed the batch validation. */
-    gpUrl: string;
-    /** Gets batch validation messages. */
-    messages: string;
-    /** Gets the start time of the job execution. */
-    startTimeUTC: Date;
-    /** Gets the batch validation status. */
-    status: string;
-  }
-  export = esri.tasks.datareviewer.BatchValidationJobInfo;
-
-  /** Encapsulates batch job parameters including session Id, production workspace and analysis area. */
-  class esri.tasks.datareviewer.BatchValidationParameters {
-    /** A geometry that defines the validation extent. */
-    analysisArea: esri.geometry.Polygon;
-    /** Read-only: Gets the uploaded batch job name. */
-    batchJobFileName: string;
-    /** Controls validation type on enterprise geodatabases. */
-    changedFeaturesOnly: boolean;
-    /** Read-only: Gets the name of the web user that created the batch job schedule. */
-    createdBy: string;
-    /** Gets or sets the batch validation execution schedule. */
-    cronExpression: string;
-    /** Gets or sets the ending date for a batch validation schedule. */
-    executionsEndDate: Date;
-    /** Gets or sets the ID of the uploaded batch job. */
-    fileItemId: string;
-    /** Gets or sets the maximum number of batch validation executions that can run. */
-    maxNumberOfExecutions: number;
-    /** Gets or sets the production workspace path. */
-    productionWorkspace: string;
-    /** Gets or sets the ArcGIS Data Reviewer session. */
-    sessionString: string;
-    /** Gets or sets the batch validation title. */
-    title: string;
-    /** Gets or sets the user name under which records are written to the reviewer workspace. */
-    userName: string;
-  }
-  export = esri.tasks.datareviewer.BatchValidationParameters;
-
-  /** Exposes functions for executing and scheduling Batch Validation in ArcGIS Data Reviewer for Server. */
-  export class BatchValidationTask {
-    /**
-     * Creates a new BatchValidationTask object.
-     * @param url The DataReviewerServer Server Object Extension (SOE) URL.
-     */
-    constructor(url: string);
-    /**
-     * Cancels an executing job.
-     * @param jobId Job Id of the batch validation job to cancel.
-     */
-    cancelJobExecution(jobId: string): any;
-    /**
-     * Creates a new Reviewer session.
-     * @param sessionName Name of the session to be created.
-     * @param sessionOptions Session properties to be used to create the session.
-     */
-    createReviewerSession(sessionName: string, sessionOptions: SessionOptions): any;
-    /**
-     * Deletes an existing scheduled Batch Validation Job.
-     * @param jobId Job Id of the batch validation job to delete.
-     */
-    deleteJob(jobId: string): any;
-    /**
-     * Pauses an existing Batch Validation Job's schedule.
-     * @param jobId Job Id of the batch validation job to be disabled.
-     */
-    disableJob(jobId: string): any;
-    /**
-     * Edits the schedule, settings and title of an existing Batch Validation Job.
-     * @param jobId Job Id of the batch validation job to edit.
-     * @param parameters Parameters to change in an existing batch job.
-     */
-    editJob(jobId: string, parameters: BatchValidationParameters): any;
-    /**
-     * Restarts an existing Batch Validation Job's schedule.
-     * @param jobId Job Id of the batch validation job to enable.
-     */
-    enableJob(jobId: string): any;
-    /**
-     * Executes an adhoc job.
-     * @param parameters Parameters specifying the details of a job to execute.
-     */
-    executeJob(parameters: BatchValidationParameters): any;
-    /** Retrieves all adhoc jobs from the server and returns an array of esri.tasks.datareviewer.BatchValidationJob with the information. */
-    getAdhocJobsList(): any;
-    /** Returns an array of custom field names defined in a Reviewer workspace. */
-    getCustomFieldNames(): any;
-    /**
-     * Fetches Batch Validation Job details.
-     * @param jobId Job Id of the batch validation job.
-     */
-    getJobDetails(jobId: string): any;
-    /**
-     * Fetches the Job Execution details of a Batch Validation Job.
-     * @param jobId Job Id of the batch validation job.
-     */
-    getJobExecutionDetails(jobId: string): any;
-    /** Returns an object that contains Scheduled and AdhocJob IDs in two separate arrays. */
-    getJobIds(): any;
-    /** Retrieves a list of localized life cycle status strings from the Reviewer workspace. */
-    getLifecycleStatusStrings(): any;
-    /** Extracts the MapServer url from the full ArcGIS Data Reviewer for Server SOE url. */
-    getReviewerMapServerUrl(): string;
-    /** Returns an array of sessions in a Reviewer workspace. */
-    getReviewerSessions(): any;
-    /** Retrieves all scheduled jobs from the server and returns an array of esri.tasks.datareviewer.BatchValidationJob with the information. */
-    getScheduledJobsList(): any;
-    /**
-     * Schedules a new Batch Validation.
-     * @param parameters Parameters for scheduling a batch job.
-     */
-    scheduleJob(parameters: BatchValidationParameters): any;
-    /** Fires when the cancelJobExecution method is complete. */
-    on(type: "cancel-job-execution", listener: (event: { canceled: boolean; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the createReviewerSessions method is complete. */
-    on(type: "create-reviewer-sessions", listener: (event: { reviewerSession: esri.tasks.datareviewer.ReviewerSession; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the deleteJob method is complete. */
-    on(type: "delete-job", listener: (event: { deleted: boolean; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the disableJob method is complete. */
-    on(type: "disable-job", listener: (event: { disabled: boolean; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the editJob method is complete. */
-    on(type: "edit-job", listener: (event: { edited: boolean; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the enableJob method is complete. */
-    on(type: "enable-job", listener: (event: { enabled: boolean; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when an error occurs during a BatchValidationTask method execution. */
-    on(type: "error", listener: (event: { error: Error; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the executeJob method is complete. */
-    on(type: "execute-job", listener: (event: { jobId: string; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the getAdhocJobsList method is complete. */
-    on(type: "get-adhoc-jobs-list", listener: (event: { adhocJobs: esri.tasks.datareviewer.BatchValidationJob[]; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the getCustomFieldNames method is complete. */
-    on(type: "get-custom-field-names", listener: (event: { customFieldNames: string[]; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the getJobDetails method is complete. */
-    on(type: "get-job-details", listener: (event: { jobDetails: esri.tasks.datareviewer.BatchValidationJob; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the getJobExecutionDetails method is complete. */
-    on(type: "get-job-execution-details", listener: (event: { jobInfo: esri.tasks.datareviewer.BatchValidationJobInfo; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the getJobIds method is complete. */
-    on(type: "get-job-ids", listener: (event: { adhocJobs: string[]; scheduledJobs: string[]; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the getLifecycleStatusStrings method is complete. */
-    on(type: "get-lifecycle-status-strings", listener: (event: { lifecycleStatusStrings: string[]; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the getReviewerSessions method is complete. */
-    on(type: "get-reviewer-sessions", listener: (event: { reviewerSessions: esri.tasks.datareviewer.ReviewerSession[]; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the getScheduledJobsList method is complete. */
-    on(type: "get-scheduled-jobs-list", listener: (event: { scheduledJobs: esri.tasks.datareviewer.BatchValidationJob[]; target: BatchValidationTask }) => void): esri.Handle;
-    /** Fires when the scheduleJob method is complete. */
-    on(type: "schedule-job", listener: (event: { jobId: string; target: BatchValidationTask }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-
-  /** Encapsulates data describing a Dashboard Result. */
-  class esri.tasks.datareviewer.DashboardResult {
-    /** Array of reviewer result field value counts. */
-    counts: any[];
-    /** Name of the reviewer results field. */
-    fieldName: string;
-    /** Array of reviewer results field values. */
-    fieldValues: any[];
-    /** An instance of esri.tasks.datareviewer.ReviewerFilters class. */
-    filters: esri.tasks.datareviewer.ReviewerFilters;
-    /**
-     * Gets the result count for a field value.
-     * @param fieldValue Unique field value from the fieldValues array.
-     */
-    getCount(fieldValue: string | number): number;
-  }
-  export = esri.tasks.datareviewer.DashboardResult;
-
-  /** Provides functionality to retrieve dashboard results from an ArcGIS Data Reviewer for Server Dashboard REST resource. */
-  export class DashboardTask {
-    /**
-     * Creates a new DashboardTask object.
-     * @param url The DataReviewerServer Server Object Extension (SOE) URL.
-     */
-    constructor(url: string);
-    /**
-     * Creates a new Reviewer session.
-     * @param sessionName Name of the session to be created.
-     * @param sessionOptions Session properties to be used to create the session.
-     */
-    createReviewerSession(sessionName: string, sessionOptions: SessionOptions): any;
-    /** Returns an array of custom field names defined in a Reviewer workspace. */
-    getCustomFieldNames(): any;
-    /** Requests Dashboard results field names. */
-    getDashboardFieldNames(): any;
-    /**
-     * Requests dashboard results by fieldName.
-     * @param fieldName esri.layers.Field name for dashboard results.
-     * @param filters Instance of esri.tasks.datareviewer.ReviewerFilters containing one or more filters used to narrow down dashboard results.
-     */
-    getDashboardResults(fieldName: string, filters?: ReviewerFilters): any;
-    /** Retrieves a list of localized life cycle status strings from the Reviewer workspace. */
-    getLifecycleStatusStrings(): any;
-    /** Extracts the MapServer url from the full ArcGIS Data Reviewer for Server SOE url. */
-    getReviewerMapServerUrl(): string;
-    /** Returns an array of sessions in a Reviewer workspace. */
-    getReviewerSessions(): any;
-    /** Fires when the createReviewerSessions method is complete. */
-    on(type: "create-reviewer-sessions", listener: (event: { reviewerSession: esri.tasks.datareviewer.ReviewerSession; target: DashboardTask }) => void): esri.Handle;
-    /** Fires when an error occurs during a DashboardTask method execution. */
-    on(type: "error", listener: (event: { error: Error; target: DashboardTask }) => void): esri.Handle;
-    /** Fires when the getCustomFieldNames method is complete. */
-    on(type: "get-custom-field-names", listener: (event: { customFieldNames: string[]; target: DashboardTask }) => void): esri.Handle;
-    /** Fires when the getDashboardFieldNames method is complete. */
-    on(type: "get-dashboard-field-names", listener: (event: { fieldNames: string[]; target: DashboardTask }) => void): esri.Handle;
-    /** Fires when the getDashboardResults method is complete. */
-    on(type: "get-dashboard-results", listener: (event: { dashboardResult: esri.tasks.datareviewer.DashboardResult; target: DashboardTask }) => void): esri.Handle;
-    /** Fires when the getLifecycleStatusStrings method is complete. */
-    on(type: "get-lifecycle-status-strings", listener: (event: { lifecycleStatusStrings: string[]; target: DashboardTask }) => void): esri.Handle;
-    /** Fires when the getReviewerSessions method is complete. */
-    on(type: "get-reviewer-sessions", listener: (event: { reviewerSessions: esri.tasks.datareviewer.ReviewerSession[]; target: DashboardTask }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-  /** Encapsulates data used for retrieving results from the reviewer workspace. */
-  class esri.tasks.datareviewer.GetResultsQueryParameters {
-    /** The page number, zero based index, of the results to return. */
-    pageNumber: number;
-    /** The number of items to list on a page. */
-    pageSize: number;
-    /** Array of field names. */
-    returnFields: any[];
-    /** Indicates a field name by which to sort. */
-    sortBy: string;
-    /** Controls sort order. */
-    sortDescending: boolean;
-    /** Returns a JSON representation of an instance of GetResultsQueryParameters. */
-    toJSON(): any;
-  }
-  export = esri.tasks.datareviewer.GetResultsQueryParameters;
-  /** Encapsulates data used by the writeFeatureAsResult and writeResult methods of the ReviewerResults class. */
-  class esri.tasks.datareviewer.ReviewerAttributes {
-    /** Represents the state of a reviewer result. */
-    lifecycleStatus: number;
-    /** Extra information describing a result or feature. */
-    notes: string;
-    /** Represents an ArcGIS Data Reviewer resource name. */
-    resourceName: string;
-    /** A status value (any string) to write to the ReviewStatus field for the result or feature written to the reviewer workspace. */
-    reviewStatus: string;
-    /** The user name under which results or features are written to the reviewer workspace. */
-    reviewTechnician: string;
-    /** Represents an ArcGIS Data Reviewer session ID, the numeric identifier of the session. */
-    sessionId: number;
-    /** Represents an ArcGIS Data Reviewer severity value. */
-    severity: number;
-    /** Subtype from the original feature that was checked and caused an error. */
-    subtype: string;
-    /** Returns a JSON representation of an instance of ReviewerAttributes. */
-    toJSON(): any;
-  }
-  export = esri.tasks.datareviewer.ReviewerAttributes;
-
-  /** esri.tasks.datareviewer.ReviewerFilters limit or precisely define which results to generate by applying conditions to a query for dashboard results. */
-  class esri.tasks.datareviewer.ReviewerFilters {
-    /**
-     * Queries an attribute by a value.
-     * @param fieldName The field used to perform the filter.
-     * @param fieldValues A value or an Array of values in fieldName to filter.
-     */
-    addAttributeFilter(fieldName: string, fieldValues: string | number | any[]): void;
-    /**
-     * Queries an attribute by a range of values.
-     * @param fieldName The field used to perform the filter.
-     * @param min Minimum value range.
-     * @param max Maximum value range.
-     */
-    addRangeFilter(fieldName: string, min: string | number, max: string | number): void;
-    /**
-     * Queries by a polygon.
-     * @param geometry The geometry used to perform the filter.
-     */
-    addSpatialFilter(geometry: Polygon): void;
-    /** Returns the count of esri.tasks.datareviewer.ReviewerFilters added. */
-    getCount(): number;
-    /** Returns a JSON representation of a filter object. */
-    toJSON(): any;
-  }
-  export = esri.tasks.datareviewer.ReviewerFilters;
-  /** The ReviewerLifecycle object specifies constant values for all lifecycle status and lifecycle phase strings within the Reviewer quality control workflow. */
-  export var ReviewerLifecycle: {
-    /** Acceptable lifecycleStatus code = 4 belongs to Verification Phase. */
-    ACCEPTABLE: number;
-    /** Code for Correction Phase. */
-    CORRECTION: number;
-    /** Exception lifecycleStatus code = 9 belongs to Verification Phase. */
-    EXCEPTION: number;
-    /** Failed lifecycleStatus code = 12 belongs to Verification Phase. */
-    FAILED: number;
-    /** Object containing lifecycle phase codes and their associated descriptions. */
-    LIFECYCLEPHASE_DESCRIPTIONS: any;
-    /** Object containing lifecycle status codes and their associated descriptions. */
-    LIFECYCLESTATUS_DESCRIPTIONS: any;
-    /** Mark As Exception lifecycleStatus code = 3 belongs to Correction Phase. */
-    MARK_AS_EXCEPTION: number;
-    /** New lifecycleStatus code = 10 belongs to Review Phase. */
-    NEW: number;
-    /** Passed lifecycleStatus code = 11 belongs to Verification Phase. */
-    PASSED: number;
-    /** Resolved lifecycleStatus code = 2 belongs to Correction Phase. */
-    RESOLVED: number;
-    /** Code for Review Phase. */
-    REVIEW: number;
-    /** Reviewed lifecycleStatus code = 1 belongs to Review Phase. */
-    REVIEWED: number;
-    /** Unacceptable lifecycleStatus code = 6 belongs to Review Phase. */
-    UNACCEPTABLE: number;
-    /** Unknown lifecycleStatus code = 0 belongs to Review Phase. */
-    UNKNOWN: number;
-    /** Unresolved Acceptable lifecycleStatus code = 8 belongs to Verification Phase. */
-    UNRESOLVED_ACCEPTABLE: number;
-    /** Unresolved Exception lifecycleStatus code = 5 belongs to Verification Phase. */
-    UNRESOLVED_EXCEPTION: number;
-    /** Unresolved Unacceptable lifecycleStatus code = 7 belongs to Review Phase. */
-    UNRESOLVED_UNACCEPTABLE: number;
-    /** Code for Verififcation Phase. */
-    VERIFICATION: number;
-    /**
-     * This function returns the the associated lifecycle phase of the input lifecycle status.
-     * @param lifecycleStatus The lifecycle status code.
-     */
-    getCurrentLifecyclePhase(lifecycleStatus: number): string;
-    /**
-     * This function accepts an array of lifecycle statuses and returns an object containing the next appropriate lifecycle status and phase that the record will advance to.
-     * @param lifecycleStatus An Array of lifecycle statuses.
-     */
-    getLifecycleInfo(lifecycleStatus: any[]): any;
-    /**
-     * This function returns lifecycle phase string associated with the input lifecycle phase code.
-     * @param lifecyclePhase The lifecycle phase code.
-     */
-    toLifecyclePhaseString(lifecyclePhase: number): string;
-    /**
-     * This function returns lifecycle status string associated with the input lifecycle status code.
-     * @param lifecycleStatus The lifecycle status code.
-     */
-    toLifecycleStatusString(lifecycleStatus: number): string;
-  };
-
-  /** ReviewerResults allows access to the reviewer workspace. */
-  export class ReviewerResultsTask {
-    /**
-     * Creates a new ReviewerResultsTask object.
-     * @param url The DataReviewerServer Server Object Extension (SOE) URL.
-     */
-    constructor(url: string);
-    /**
-     * Creates a new Reviewer session.
-     * @param sessionName Name of the session to be created.
-     * @param sessionOptions Session properties to be used to create the session.
-     */
-    createReviewerSession(sessionName: string, sessionOptions: SessionOptions): any;
-    /**
-     * Fetches batch run information from REVBATCHRUNTABLE and REVCHECKRUNTABLE.
-     * @param batchRunIds Array of batchRunIds used to get batch run details.
-     */
-    getBatchRunDetails(batchRunIds: any[]): any;
-    /** Returns an array of custom field names defined in a Reviewer workspace. */
-    getCustomFieldNames(): any;
-    /**
-     * Utility operation that returns a where clause given a set of input filters.
-     * @param filters An instance of esri.tasks.datareviewer.ReviewerFilters used to create a layer definition.
-     */
-    getLayerDefinition(filters: ReviewerFilters): any;
-    /** Retrieves a list of localized life cycle status strings from the Reviewer workspace. */
-    getLifecycleStatusStrings(): any;
-    /**
-     * Queries records from REVTABLEMAIN, REVBATCHRUNTABLE and REVCHECKRUNTABLE.
-     * @param getResultsQueryParameters Defines the size and scope of the esri.tasks.FeatureSet returned to the callback function.
-     * @param filters Instance of esri.tasks.datareviewer.ReviewerFilters used to query reviewer results.
-     */
-    getResults(getResultsQueryParameters: esri.tasks.datareviewer.GetResultsQueryParameters, filters?: ReviewerFilters): any;
-    /** Retrieves a list of field names that can be used to fetch or query results from reviewer workspace. */
-    getResultsFieldNames(): string[];
-    /** Extracts the MapServer url from the full ArcGIS Data Reviewer for Server SOE url. */
-    getReviewerMapServerUrl(): string;
-    /** Returns an array of sessions in a Reviewer workspace. */
-    getReviewerSessions(): any;
-    /**
-     * Updates lifecycle status of the Reviewer results.
-     * @param sessionId Session that contains results to update.
-     * @param lifecycleStatus Lifecycle status to which the Reviewer results will get updated.
-     * @param technicianName Name of the technician performing the update.
-     * @param filters Instance of esri.tasks.datareviewer.ReviewerFilters used to query Reviewer results.
-     */
-    updateLifecycleStatus(sessionId: number, lifecycleStatus: number, technicianName: string, filters: ReviewerFilters): any;
-    /**
-     * Writes a feature to the reviewer workspace.
-     * @param reviewerAttributes Class used to encapsulate all fields to be written to the reviewer workspace.
-     * @param feature esri.Graphic to write to the reviewer workspace.
-     */
-    writeFeatureAsResult(reviewerAttributes: esri.tasks.datareviewer.ReviewerAttributes, feature: Graphic): any;
-    /**
-     * Writes a geometry and associated reviewer attributes to the reviewer workspace.
-     * @param reviewerAttributes Class used to encapsulate all fields to be written to the reviewer workspace.
-     * @param geometry A esri.geometry.Geometry (point, polyline or polygon) to write to the reviewer workspace.
-     */
-    writeResult(reviewerAttributes: esri.tasks.datareviewer.ReviewerAttributes, geometry: Geometry): any;
-    /** Fires when the createesri.tasks.datareviewer.ReviewerSession method is complete. */
-    on(type: "create-reviewer-sessions", listener: (event: { reviewerSession: esri.tasks.datareviewer.ReviewerSession; target: ReviewerResultsTask }) => void): esri.Handle;
-    /** Fires when an error occurs during a ReviewerResultsTask method execution. */
-    on(type: "error", listener: (event: { error: Error; target: ReviewerResultsTask }) => void): esri.Handle;
-    /** Fires when the getBatchRunDetails method is complete. */
-    on(type: "get-batch-run-details", listener: (event: { featureSet: esri.tasks.FeatureSet; target: ReviewerResultsTask }) => void): esri.Handle;
-    /** Fires when the getCustomFieldNames method is complete. */
-    on(type: "get-custom-field-names", listener: (event: { customFieldNames: string[]; target: ReviewerResultsTask }) => void): esri.Handle;
-    /** Fires when the getLayerDefinition method is complete. */
-    on(type: "get-layer-definition", listener: (event: { whereClause: string; target: ReviewerResultsTask }) => void): esri.Handle;
-    /** Fires when the getLifecycleStatusStrings method is complete. */
-    on(type: "get-lifecycle-status-strings", listener: (event: { lifecycleStatusStrings: string[]; target: ReviewerResultsTask }) => void): esri.Handle;
-    /** Fires when the getResults method is complete. */
-    on(type: "get-results", listener: (event: { featureSet: esri.tasks.FeatureSet; target: ReviewerResultsTask }) => void): esri.Handle;
-    /** Fires when the getReviewerSessions method is complete. */
-    on(type: "get-reviewer-sessions", listener: (event: { reviewerSessions: esri.tasks.datareviewer.ReviewerSession[]; target: ReviewerResultsTask }) => void): esri.Handle;
-    /** Fires when the updateLifecycleStatus method is complete. */
-    on(type: "update-lifecycle-status", listener: (event: { featureEditResults: esri.layers.FeatureEditResult[]; target: ReviewerResultsTask }) => void): esri.Handle;
-    /** Fires when the writeFeatureAsResult method is complete. */
-    on(type: "write-feature-as-result", listener: (event: { success: boolean; target: ReviewerResultsTask }) => void): esri.Handle;
-    /** Fires when the writeResult method is complete. */
-    on(type: "write-result", listener: (event: { success: boolean; target: ReviewerResultsTask }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-  /** Represents an ArcGIS Data Reviewer session in which validation and manual quality control results are written to the reviewer workspace. */
-  class esri.tasks.datareviewer.ReviewerSession {
-    /** Numeric identifier of the session. */
-    sessionId: number;
-    /** Session name. */
-    sessionName: string;
-    /** Name under which records are written to the reviewer workspace. */
-    userName: string;
-    /** Enterprise geodatabase version in which records are validated. */
-    versionName: string;
-    /**
-     * Creates a new esri.tasks.datareviewer.ReviewerSession object.
-     * @param sessionId Numeric identifier of the session.
-     * @param sessionName Name of the session.
-     * @param userName User name under which records are written to the reviewer workspace.
-     * @param versionName The enterprise geodatabase version in which records are validated.
-     */
-    constructor(sessionId: string, sessionName: string, userName: string, versionName: string);
-    /** The Session ID and name in format Session 10 : Parcels. */
-    toString(): string;
-  }
-  export = esri.tasks.datareviewer.ReviewerSession;
-  /** Represents an ArcGIS Data Reviewer session properties in which validation and manual quality control results are written to the reviewer workspace. */
-  class esri.tasks.datareviewer.SessionOptions {
-    /** Indicates how to handle duplicate results when writing the results to the Reviewer workspace. */
-    duplicateFilter: string;
-    /** Indicates if validation result geometries are stored in the Reviewer workspace. */
-    storeGeometry: boolean;
-    /** The user account to associate with a session. */
-    userName: string;
-    /** Indicates an enterprise geodatabase version to associate with the session. */
-    versionName: string;
-    /**
-     * Creates a new esri.tasks.datareviewer.SessionOptions object.
-     * @param userName The username under which records are written to the reviewer workspace.
-     * @param versionName The enterprise geodatabase version under which records are written to the reviewer workspace.
-     * @param duplicateFilter Handle duplicate results when writing the results to the Reviewer workspace.
-     * @param storeesri.geometry.Geometry Controls if validation result geometries are stored in the Reviewer workspace.
-     */
-    constructor(userName: string, versionName: string, duplicateFilter: string, storeGeometry: boolean);
-  }
-  export = esri.tasks.datareviewer.SessionOptions;
-}
 declare namespace esri.tasks.geoenrichment {
 
   /** The study area that is based on an address. */
@@ -14650,7 +13637,7 @@ declare namespace esri.tasks.geoenrichment {
   export = Addressesri.tasks.geoenrichment.StudyArea;
 
   /** The study area is created with a drive time or drive distance buffer. */
-  class esri.tasks.geoenrichment.DriveBuffer {
+  export class DriveBuffer {
     /** The radii to use to create ring buffers. */
     radius: number[];
     /** The units of the radii. */
@@ -14661,7 +13648,6 @@ declare namespace esri.tasks.geoenrichment {
      */
     constructor(params: esri.DriveBufferOptions);
   }
-  export = esri.tasks.geoenrichment.DriveBuffer;
   /** Driveesri.Units provides various length units that can be passed as the units in the DriveBuffer. */
   class Driveesri.Units {
     /** Acres (esriAcres). */
@@ -14720,7 +13706,7 @@ declare namespace esri.tasks.geoenrichment {
     static YARDS: any;
   }
   export = Driveesri.Units;
-  /** GeographicLevel works with esri.tasks.geoenrichment.IntersectingGeographies to define a study area of Infoesri.Graphic with a feature from a standard geography layer. */
+  /** GeographicLevel works with IntersectingGeographies to define a study area of Infoesri.Graphic with a feature from a standard geography layer. */
   class esri.tasks.geoenrichment.GeographyLevel {
     /** The ID of the country for which data is retrieved. */
     countryID: string;
@@ -14736,7 +13722,7 @@ declare namespace esri.tasks.geoenrichment {
   }
   export = esri.tasks.geoenrichment.GeographyLevel;
 
-  /** (Currently in beta) Represents StandardGeographyesri.tasks.Query parameters to search for geographies by ID or Name. */
+  /** (Beta at v3.12) Represents StandardGeographyesri.tasks.Query parameters to search for geographies by ID or Name. */
   class Geographyesri.tasks.Query extends esri.tasks.geoenrichment.GeographyQueryBase {
     /** Array of geography IDs. */
     geographyIDs: string[];
@@ -14749,7 +13735,7 @@ declare namespace esri.tasks.geoenrichment {
   }
   export = Geographyesri.tasks.Query;
 
-  /** (Currently in beta) Base class for all Geographyesri.tasks.Query objects. */
+  /** (Beta at v3.12) Base class for all Geographyesri.tasks.Query objects. */
   class esri.tasks.geoenrichment.GeographyQueryBase {
     /** Two-digit country code. */
     countryID: string;
@@ -14787,14 +13773,13 @@ declare namespace esri.tasks.geoenrichment {
   export = esri.tasks.geoenrichment.Geometryesri.tasks.geoenrichment.StudyArea;
 
   /** The study area is created with the geometries intersecting the passed in geometry from specified layers. */
-  class esri.tasks.geoenrichment.IntersectingGeographies {
+  export class IntersectingGeographies {
     /** The layers from which intersecting geographies should be used as study areas. */
     levels: esri.tasks.geoenrichment.GeographyLevel[];
   }
-  export = esri.tasks.geoenrichment.IntersectingGeographies;
 
   /** The study area is created with a simple ring buffer with a radius. */
-  class esri.tasks.geoenrichment.RingBuffer {
+  export class RingBuffer {
     /** The radii to use to create ring buffers. */
     radii: number[];
     /** The units of the radii. */
@@ -14805,9 +13790,8 @@ declare namespace esri.tasks.geoenrichment {
      */
     constructor(params: esri.RingBufferOptions);
   }
-  export = esri.tasks.geoenrichment.RingBuffer;
 
-  /** (Currently in beta) Geoenrichment helper task that returns standard geography IDs and features for the supported geographic levels in Canada, the United States and a number of European countries. */
+  /** (Beta at v3.12) Geoenrichment helper task that returns standard geography IDs and features for the supported geographic levels in Canada, the United States and a number of European countries. */
   class StandardGeographyesri.tasks.QueryTask {
     /**
      * Creates a new instance of the StandardGeographyesri.tasks.QueryTask class.
@@ -14845,7 +13829,7 @@ declare namespace esri.tasks.geoenrichment {
     /** The identifiers for layers used to find comparison geographies. */
     comparisonGeographyLevels: esri.tasks.geoenrichment.GeographyLevel[];
     /** The options to apply to the study area. */
-    options: esri.tasks.geoenrichment.RingBuffer | esri.tasks.geoenrichment.DriveBuffer | esri.tasks.geoenrichment.IntersectingGeographies;
+    options: any;
     /** If true, geometry will be returned. */
     returnGeometry: boolean;
     /** Converts object to its JSON representation. */
@@ -14853,7 +13837,7 @@ declare namespace esri.tasks.geoenrichment {
   }
   export = esri.tasks.geoenrichment.StudyArea;
 
-  /** (Currently in beta) Represents StandardGeographyesri.tasks.Query parameters to search subgeographic areas that are within a parent geography. */
+  /** (Beta at v3.12) Represents StandardGeographyesri.tasks.Query parameters to search subgeographic areas that are within a parent geography. */
   class SubGeographyesri.tasks.Query extends esri.tasks.geoenrichment.GeographyQueryBase {
     /** Parent layer geography IDs. */
     filterGeographyIDs: string;
@@ -14875,7 +13859,7 @@ declare namespace esri.tasks.geoenrichment {
 }
 declare namespace esri.tasks.locationproviders {
 
-  /** (Currently in beta) The CoordinatesLocationProvider class uses the fields that contain Latitude and Longitude values to generate or locate geometries. */
+  /** (Beta at v3.12) The CoordinatesLocationProvider class uses the fields that contain Latitude and Longitude values to generate or locate geometries. */
   export class CoordinatesLocationProvider extends esri.tasks.locationproviders.LocationProviderClientBase {
     /** The attribute field in the graphic object that has the longitude (X) values. */
     xField: string;
@@ -14888,7 +13872,7 @@ declare namespace esri.tasks.locationproviders {
     constructor(options: esri.CoordinatesLocationProviderOptions);
   }
 
-  /** (Currently in beta) The GeometryLocationProvider class uses the field in the data that has geometry as a JSON to generate the corresponding geometry. */
+  /** (Beta at v3.12) The GeometryLocationProvider class uses the field in the data that has geometry as a JSON to generate the corresponding geometry. */
   export class GeometryLocationProvider extends esri.tasks.locationproviders.LocationProviderClientBase {
     /** The attribute field in the graphic object that contains the JSON string representing the geometry. */
     geometryField: string;
@@ -14899,7 +13883,7 @@ declare namespace esri.tasks.locationproviders {
     constructor(options: esri.GeometryLocationProviderOptions);
   }
 
-  /** (Currently in beta) The base class for all LocationProviders. */
+  /** (Beta at v3.12) The base class for all LocationProviders. */
   class esri.tasks.locationproviders.LocationProviderBase {
     /** The geometry type of the returned features. */
     geometryType: string;
@@ -14923,19 +13907,19 @@ declare namespace esri.tasks.locationproviders {
   }
   export = esri.tasks.locationproviders.LocationProviderBase;
 
-  /** (Currently in beta) The base class for CoordinatesLocationProvider and GeometryLocationProvider. */
+  /** (Beta at v3.12) The base class for CoordinatesLocationProvider and GeometryLocationProvider. */
   class esri.tasks.locationproviders.LocationProviderClientBase extends esri.tasks.locationproviders.LocationProviderBase {
     /** The Spatial Reference of the input geometries. */
     inSpatialReference: esri.SpatialReference;
   }
   export = esri.tasks.locationproviders.LocationProviderClientBase;
 
-  /** (Currently in beta) The base class for Location Providers that use a remote service to locate geometries. */
+  /** (Beta at v3.12) The base class for Location Providers that use a remote service to locate geometries. */
   class esri.tasks.locationproviders.LocationProviderRemoteBase extends esri.tasks.locationproviders.LocationProviderBase {
   }
   export = esri.tasks.locationproviders.LocationProviderRemoteBase;
 
-  /** (Currently in beta) The LocatorLocationProvider class uses a geocode service through the esri.tasks.Locator object to generate or locate geometries using fields in the graphics that contain Street address information */
+  /** (Beta at v3.12) The LocatorLocationProvider class uses a geocode service through the esri.tasks.Locator object to generate or locate geometries using fields in the graphics that contain Street address information */
   export class LocatorLocationProvider extends esri.tasks.locationproviders.LocationProviderRemoteBase {
     /** Object that matches the esri.tasks.Locator address fields to corresponding attribute names in the esri.Graphic object. */
     addressFields: any;
@@ -14948,7 +13932,7 @@ declare namespace esri.tasks.locationproviders {
     constructor(options: esri.LocatorLocationProviderOptions);
   }
 
-  /** (Currently in beta) The QueryTaskLocationProvider performs a query against a ArcGIS Feature service or esri.Map service layer based on common fields that are present in both the data and the ArcGIS layer. */
+  /** (Beta at v3.12) The QueryTaskLocationProvider performs a query against a ArcGIS Feature service or esri.Map service layer based on common fields that are present in both the data and the ArcGIS layer. */
   export class QueryTaskLocationProvider extends esri.tasks.locationproviders.LocationProviderRemoteBase {
     /** A query parameter object that will be used to query the ArcGIS layer. */
     queryParameters: any;
@@ -14965,7 +13949,7 @@ declare namespace esri.tasks.locationproviders {
     constructor(options?: esri.QueryTaskLocationProviderOptions);
   }
 
-  /** (Currently in beta) The StandardGeographyQueryLocationProvider class uses the Geoenrichment service to generate geometries by querying the standard geography layers. */
+  /** (Beta at v3.12) The StandardGeographyQueryLocationProvider class uses the Geoenrichment service to generate geometries by querying the standard geography layers. */
   export class StandardGeographyQueryLocationProvider extends esri.tasks.locationproviders.LocationProviderRemoteBase {
     /** A template to be used to build the query for Standard Geography query. */
     geographyQueryTemplate: string;
@@ -14981,82 +13965,6 @@ declare namespace esri.tasks.locationproviders {
   }
 }
 declare namespace esri.toolbars {
-
-  /** A toolbar that provides support for measuring image services. */
-  class esri.toolbars.ImageServiceMeasureTool {
-    /** The angular unit in which directions of line segments will be calculated. */
-    angularUnit: string;
-    /** The area unit in which areas of polygons will be calculated. */
-    areaUnit: string;
-    /** esri.symbols.Symbol to be used when drawing a polygon or extent. */
-    fillSymbol: SimpleFillesri.symbols.Symbol;
-    /** The linear unit in which height, length, or perimeters will be calculated. */
-    linearUnit: string;
-    /** esri.symbols.Symbol to be used when drawing a line. */
-    lineSymbol: SimpleLineesri.symbols.Symbol;
-    /** esri.symbols.Symbol to be used when drawing a point. */
-    markerSymbol: SimpleMarkeresri.symbols.Symbol;
-    /**
-     * Creates a new instance of ImageServiceMeasureTool.
-     * @param params Constructor options.
-     */
-    constructor(params: esri.ImageServiceMeasureToolOptions);
-    /**
-     * Activates the toolbar for performing the measure operation.
-     * @param operation The mensuration rule to apply to the measure operation.
-     */
-    activate(operation: string): void;
-    /** Deactivates the toolbar. */
-    deactivate(): void;
-    /** Returns a list of measure operations supported by the image service. */
-    getSupportedMeasureOperations(): string[];
-    /** Returns a list of supported linear, angular and area units. */
-    getSupportedUnits(): string[];
-    /** Disables the tooltip message for performing a draw. */
-    hideDrawTooltip(): void;
-    /**
-     * Sets the angularUnit.
-     * @param unit The angular unit to set.
-     */
-    setAngularUnit(unit: string): void;
-    /**
-     * Sets the areaUnit.
-     * @param unit  Possible Values: esriSquareInches | esriSqudareFeet | esriSquareYards | esriAcres | esriSquareMiles | esriSquareMillimeters | esriSquareCentimeters | esriSquareDecimeters | esriSquareMeters | esriAres | esriHectares | esriSquareKilometers
-     */
-    setAreaUnit(unit: string): void;
-    /**
-     * Sets the fillSymbol.
-     * @param fillesri.symbols.Symbol The fill symbol to set.
-     */
-    setFillSymbol(fillSymbol: SimpleFillSymbol): void;
-    /**
-     * Sets the linearUnit.
-     * @param unit The linear unit to set.
-     */
-    setLinearUnit(unit: string): void;
-    /**
-     * Sets the lineSymbol.
-     * @param lineesri.symbols.Symbol The line symbol to set.
-     */
-    setLineSymbol(lineSymbol: SimpleLineSymbol): void;
-    /**
-     * Sets the markerSymbol.
-     * @param markeresri.symbols.Symbol The marker symbol to set.
-     */
-    setMarkerSymbol(markerSymbol: SimpleMarkerSymbol): void;
-    /** Enables the tooltip message for performing a draw. */
-    showDrawTooltip(): void;
-    /** Fires when the drawing is complete. */
-    on(type: "draw-end", listener: (event: { geometry: esri.geometry.Geometry; target: esri.toolbars.ImageServiceMeasureTool }) => void): esri.Handle;
-    /** Fires when the user starts drawing. */
-    on(type: "draw-start", listener: (event: { target: esri.toolbars.ImageServiceMeasureTool }) => void): esri.Handle;
-    /** Fires when the measure operation has been performed. */
-    on(type: "measure-end", listener: (event: { measureResult: any; target: esri.toolbars.ImageServiceMeasureTool }) => void): esri.Handle;
-    /** Fires when the unit has been changed. */
-    on(type: "unit-change", listener: (event: { measureResult: any; target: esri.toolbars.ImageServiceMeasureTool }) => void): esri.Handle;
-    on(type: string, listener: (event: any) => void): esri.Handle;
-  }
-  export = esri.toolbars.ImageServiceMeasureTool;
 
   /** Toolbar that supports functionality to create new geometries by drawing them: points (POINT or MULTI_POINT), lines (LINE, POLYLINE, or FREEHAND_POLYLINE), polygons (FREEHAND_POLYGON or POLYGON), or rectangles (EXTENT). */
   export class Draw {
@@ -15097,9 +14005,9 @@ declare namespace esri.toolbars {
     /** esri.symbols.Symbol to be used when drawing a esri.geometry.Polygon or Extent. */
     fillSymbol: SimpleFillesri.symbols.Symbol;
     /** esri.symbols.Symbol to be used when drawing a Polyline. */
-    lineSymbol: SimpleLineesri.symbols.Symbol;
+    lineSymbol: esri.symbols.Simpleesri.symbols.Lineesri.symbols.Symbol;
     /** esri.symbols.Symbol to be used when drawing a esri.geometry.Point or Multipoint. */
-    markerSymbol: SimpleMarkeresri.symbols.Symbol;
+    markerSymbol: Simpleesri.symbols.Markeresri.symbols.Symbol;
     /** When set to false, the geometry is modified to be topologically correct. */
     respectDrawingVertexOrder: boolean;
     /**
@@ -15138,15 +14046,15 @@ declare namespace esri.toolbars {
      * @param set When set to false, the geometry is modified to be topologically correct.
      */
     setRespectDrawingVertexOrder(set: boolean): void;
-    /** Fired when the user has completed drawing. */
+    /** Fired when the user has ended drawing. */
     on(type: "draw-complete", listener: (event: { geographicGeometry: esri.geometry.Geometry; geometry: esri.geometry.Geometry; target: Draw }) => void): esri.Handle;
-    /** This event is deprecated. */
+    /** Fires when drawing is complete. */
     on(type: "draw-end", listener: (event: { geometry: esri.geometry.Geometry; target: Draw }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 
-  /** The esri.toolbars.Edit toolbar is a helper class that provides functionality to move graphics or modify individual vertices, i.e., edit the geometry of existing graphics. */
-  class esri.toolbars.Edit {
+  /** The Edit toolbar is a helper class that provides functionality to move graphics or modify individual vertices, i.e., edit the geometry of existing graphics. */
+  export class Edit {
     /** When a textesri.symbols.Symbol point is in edit mode, double-clicking leads to text editing mode, which is a text box where uses can change the text content. */
     static EDIT_TEXT: any;
     /** Display and edit vertices of a esri.geometry.Polyline, esri.geometry.Polygon, or Multipoint. */
@@ -15158,7 +14066,7 @@ declare namespace esri.toolbars {
     /** Scale or resize a graphic. */
     static SCALE: any;
     /**
-     * Creates a new esri.toolbars.Edit object.
+     * Creates a new Edit object.
      * @param map esri.Map the toolbar is associated with.
      * @param options Optional parameters.
      */
@@ -15177,56 +14085,55 @@ declare namespace esri.toolbars {
     /** Refreshes the internal state of the toolbar. */
     refresh(): void;
     /** Activates the toolbar for editing geometries. */
-    on(type: "activate", listener: (event: { graphic: esri.Graphic; tool: string; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "activate", listener: (event: { graphic: esri.Graphic; tool: string; target: Edit }) => void): esri.Handle;
     /** Deactivates the toolbar and reactivates map navigation. */
-    on(type: "deactivate", listener: (event: { graphic: esri.Graphic; info: any; tool: string; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "deactivate", listener: (event: { graphic: esri.Graphic; info: any; tool: string; target: Edit }) => void): esri.Handle;
     /** Fires when a graphic is clicked. */
-    on(type: "graphic-click", listener: (event: { graphic: esri.Graphic; info: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "graphic-click", listener: (event: { graphic: esri.Graphic; info: any; target: Edit }) => void): esri.Handle;
     /** Fires when the user begins to move a graphic. */
-    on(type: "graphic-first-move", listener: (event: { graphic: esri.Graphic; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "graphic-first-move", listener: (event: { graphic: esri.Graphic; target: Edit }) => void): esri.Handle;
     /** Fired continuously as the graphic moves. */
-    on(type: "graphic-move", listener: (event: { graphic: esri.Graphic; transform: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "graphic-move", listener: (event: { graphic: esri.Graphic; transform: any; target: Edit }) => void): esri.Handle;
     /** Fired when the mouse button is pressed down on the graphic, usually while moving a graphic. */
-    on(type: "graphic-move-start", listener: (event: { graphic: esri.Graphic; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "graphic-move-start", listener: (event: { graphic: esri.Graphic; target: Edit }) => void): esri.Handle;
     /** Fired when the mouse button is released, usually after moving the graphic. */
-    on(type: "graphic-move-stop", listener: (event: { graphic: esri.Graphic; transform: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "graphic-move-stop", listener: (event: { graphic: esri.Graphic; transform: any; target: Edit }) => void): esri.Handle;
     /** Fires continuously as a graphic is rotated. */
-    on(type: "rotate", listener: (event: { graphic: esri.Graphic; info: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "rotate", listener: (event: { graphic: esri.Graphic; info: any; target: Edit }) => void): esri.Handle;
     /** Fires when the user begins to drag a handle to rotate the graphic. */
-    on(type: "rotate-first-move", listener: (event: { graphic: esri.Graphic; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "rotate-first-move", listener: (event: { graphic: esri.Graphic; target: Edit }) => void): esri.Handle;
     /** Fires when a user clicks on the handle to begin rotating a graphic. */
-    on(type: "rotate-start", listener: (event: { graphic: esri.Graphic; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "rotate-start", listener: (event: { graphic: esri.Graphic; target: Edit }) => void): esri.Handle;
     /** Fires when the mouse button is released from the rotate handle to finish rotating the graphic. */
-    on(type: "rotate-stop", listener: (event: { graphic: esri.Graphic; info: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "rotate-stop", listener: (event: { graphic: esri.Graphic; info: any; target: Edit }) => void): esri.Handle;
     /** Fires continuously as the graphic is being scaled. */
-    on(type: "scale", listener: (event: { graphic: esri.Graphic; info: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "scale", listener: (event: { graphic: esri.Graphic; info: any; target: Edit }) => void): esri.Handle;
     /** Fires when the user begins to drag a handle to scale the graphic. */
-    on(type: "scale-first-move", listener: (event: { graphic: esri.Graphic; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "scale-first-move", listener: (event: { graphic: esri.Graphic; target: Edit }) => void): esri.Handle;
     /** Fires when a user clicks on the handle to scale or resize a graphic. */
-    on(type: "scale-start", listener: (event: { graphic: esri.Graphic; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "scale-start", listener: (event: { graphic: esri.Graphic; target: Edit }) => void): esri.Handle;
     /** Fires when the mouse button is released from the scale handle to finish scaling the graphic. */
-    on(type: "scale-stop", listener: (event: { graphic: esri.Graphic; info: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "scale-stop", listener: (event: { graphic: esri.Graphic; info: any; target: Edit }) => void): esri.Handle;
     /** Fired after a new vertex is added to a polyline or polygon or a new point is added to a multipoint. */
-    on(type: "vertex-add", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "vertex-add", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: Edit }) => void): esri.Handle;
     /** Fired when the mouse button is clicked on the vertex of a polyline or polygon or a point in a multipoint. */
-    on(type: "vertex-click", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "vertex-click", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: Edit }) => void): esri.Handle;
     /** Fired after a vertex(polyline, polygon) or point(multipoint) is deleted. */
-    on(type: "vertex-delete", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "vertex-delete", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: Edit }) => void): esri.Handle;
     /** Fired when the user begins to move the vertex of a polyline or polygon or a point of a multipoint. */
-    on(type: "vertex-first-move", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "vertex-first-move", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: Edit }) => void): esri.Handle;
     /** Fires as the mouse exits a vertex(polyline, polygon) or a point(multipoint). */
-    on(type: "vertex-mouse-out", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "vertex-mouse-out", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: Edit }) => void): esri.Handle;
     /** Fired when the mouse moves over a vertex (polyline, polygon) or point (multipoint). */
-    on(type: "vertex-mouse-over", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "vertex-mouse-over", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: Edit }) => void): esri.Handle;
     /** Fired continuously as the user is moving a vertex (polyline, polygon) or point (multipoint). */
-    on(type: "vertex-move", listener: (event: { graphic: esri.Graphic; transform: any; vertexinfo: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "vertex-move", listener: (event: { graphic: esri.Graphic; transform: any; vertexinfo: any; target: Edit }) => void): esri.Handle;
     /** Fired when the mouse button is pressed down on a vertex (polyline, polygon) or point (multipoint). */
-    on(type: "vertex-move-start", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "vertex-move-start", listener: (event: { graphic: esri.Graphic; vertexinfo: any; target: Edit }) => void): esri.Handle;
     /** Fired when the mouse button is released from a vertex (polyline, polygon) or point(multipoint). */
-    on(type: "vertex-move-stop", listener: (event: { graphic: esri.Graphic; transform: any; vertexinfo: any; target: esri.toolbars.Edit }) => void): esri.Handle;
+    on(type: "vertex-move-stop", listener: (event: { graphic: esri.Graphic; transform: any; vertexinfo: any; target: Edit }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
-  export = esri.toolbars.Edit;
 
   /** Toolbar that supports basic navigation such as pan and zoom. */
   export class Navigation {
@@ -15312,11 +14219,11 @@ declare namespace esri.virtualearth {
   export = esri.virtualearth.VEGeocodeResult;
 
   /** Bing Maps geocoder. */
-  export class VEGeocoder {
+  class VEesri.dijit.Geocoder {
     /** Specifies the culture in which to return results. */
     culture: string;
     /**
-     * Creates a new VEGeocoder object.
+     * Creates a new VEesri.dijit.Geocoder object.
      * @param options See options list for parameters.
      */
     constructor(options: esri.VEGeocoderOptions);
@@ -15333,11 +14240,12 @@ declare namespace esri.virtualearth {
      */
     setCulture(culture: string): void;
     /** Fires when VEGeocode.addressToLocation() has completed. */
-    on(type: "address-to-locations-complete", listener: (event: { geocodeResults: esri.virtualearth.VEGeocodeResult[]; target: VEGeocoder }) => void): esri.Handle;
+    on(type: "address-to-locations-complete", listener: (event: { geocodeResults: esri.virtualearth.VEGeocodeResult[]; target: VEesri.dijit.Geocoder }) => void): esri.Handle;
     /** Fires when an error occurs when executing the task. */
-    on(type: "error", listener: (event: { error: Error; target: VEGeocoder }) => void): esri.Handle;
+    on(type: "error", listener: (event: { error: Error; target: VEesri.dijit.Geocoder }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
+  export = VEesri.dijit.Geocoder;
 
   /** Bing Maps tiled layer. */
   class VETiledesri.layers.Layer extends TiledMapServiceesri.layers.Layer {
@@ -15397,18 +14305,34 @@ declare namespace esri.workers {
      * Import any script or function into the worker.
      * @param paths An AMD require path to a script file to import.
      */
-    importScripts(paths: string | string[]): any;
+    importScripts(paths: string): any;
+    /**
+     * Import any script or function into the worker.
+     * @param paths An AMD require path to a script file to import.
+     */
+    importScripts(paths: string[]): any;
     /**
      * Posts a message to the worker.
      * @param msg The data to post to the worker.
      * @param transfers An optional array of transferable objects.
      */
-    postMessage(msg: any | any[], transfers?: any[]): any;
+    postMessage(msg: any, transfers?: any[]): any;
+    /**
+     * Posts a message to the worker.
+     * @param msg The data to post to the worker.
+     * @param transfers An optional array of transferable objects.
+     */
+    postMessage(msg: any[], transfers?: any[]): any;
     /**
      * Sets the worker that is used in the Worker Client.
      * @param paths An AMD require path to a script file to import.
      */
-    setWorker(paths: string | string[]): void;
+    setWorker(paths: string): void;
+    /**
+     * Sets the worker that is used in the Worker Client.
+     * @param paths An AMD require path to a script file to import.
+     */
+    setWorker(paths: string[]): void;
     /** Terminates the worker and cancels all unresolved messages. */
     terminate(): void;
   }

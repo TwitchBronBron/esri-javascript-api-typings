@@ -237,68 +237,6 @@ declare namespace esri {
     /** An array of strings which correspond to fields to include in the CSVLayer. */
     outFields?: string[];
   }
-  export interface ChooseBestFacilitiesOptions {
-    /** The URL to the analysis service, for example "http://analysis.arcgis.com/arcgis/rest/services/tasks/GPServer". */
-    analysisGpServer?: string;
-    /** The number of facilities to choose when allocating demand locations. */
-    candidateCount?: number;
-    /** Specify how much demand every facility in the candidateFacilitiesesri.layers.Layer is capable of supplying. */
-    candidateFacilitiesCapacity?: string;
-    /** String value indicating the field name on the candidateFacilitiesesri.layers.Layer  representing how much demand each facility in the candidatesFacilitiesesri.layers.Layer is capable of supplying. */
-    candidateFacilitiesCapacityField?: string;
-    /** A point layer specifying one or more locations that act as facilities by providing some kind of service. */
-    candidateFacilitiesLayer?: esri.layers.Featureesri.layers.Layer;
-    /** The amount of demand available at every demand locations. */
-    demand?: number;
-    /** String value indicating the field name on the demandLocationesri.layers.Layer  representing the amount of demand available at each demand location. */
-    demandField?: string;
-    /** A point layer specifying the locations that have demand for facilities. */
-    demandLocationLayer?: esri.layers.Featureesri.layers.Layer;
-    /** Array of point layers to be used for choosing the demandLocationLayer. */
-    demandLocationLayers: esri.layers.Featureesri.layers.Layer[];
-    /** When true, Travel Modes (Driving Time) is enabled for the inputesri.layers.Layer with the point geometries (esriGeometryPoint). */
-    enableTravelModes?: boolean;
-    /** Array of point layers used for setting the required facilities layer and candidate facilities layer. */
-    featureLayers: esri.layers.Featureesri.layers.Layer[];
-    /** Sets the selected folder of the select folder dropdown. */
-    folderId?: string;
-    /** Sets the selected folder of the select folder dropdown. */
-    folderName?: string;
-    /** Reference to the map. */
-    map?: esri.Map;
-    /** The maximum travel time or distance allowed between a demand location and its allocated facility. */
-    maxTravelRange?: number;
-    /** String value indicating the field name on the demandLocationesri.layers.Layer specifying the maximum travel time or distance allowed between a demand location and its allocated facility. */
-    maxTravelRangeField?: string;
-    /** The name of the output layer to be displayed in the result layer  nameinputbox. */
-    outputLayerName?: string;
-    /** The percentage of the total demand that you want the chosen and required facilities to capture. */
-    percentDemandCoverage?: number;
-    /** The URL to the ArcGIS organization or Portal site where the GP server is hosted. */
-    portalUrl?: string;
-    /** Specify how much demand every facility in the requiredFacilitiesesri.layers.Layer is capable of supplying. */
-    requiredFacilitiesCapacity?: number;
-    /** A field on the requiredFacilitiesesri.layers.Layer representing how much demand each facility in this layer is capable of supplying. */
-    requiredFacilitiesCapacityField?: string;
-    /** A point layer specifying one or more locations that act as facilities by providing some kind of service. */
-    requiredFacilitiesLayer?: esri.layers.Featureesri.layers.Layer;
-    /** Indicates whether to return the result of analysis as a client-side feature collection. */
-    returnFeatureCollection?: boolean;
-    /** Indicates whether the "choose extent checkbox" is displayed. */
-    showChooseExtent?: boolean;
-    /** Indicates whether to show the credit options. */
-    showCredits ?: boolean;
-    /** Indicates whether the help links are displayed. */
-    showHelp?: boolean;
-    /** Indicates whether to add an option to the UI that allows users to choose ready-to-use analysis layers from the Living Atlas Analysis Layers. */
-    showReadyToUseLayers?: boolean;
-    /** Indicates whether to display a dropdown menu listing valid input analysis layers. */
-    showSelectAnalysisLayer?: boolean;
-    /** Indicates whether the select folder dropdown will be displayed. */
-    showSelectFolder?: boolean;
-    /** The default widget title with a custom title. */
-    title?: string;
-  }
   export interface CircleOptions1 {
     /** Applicable when the spatial reference of the center point is either set to Web Mercator or geographic/geodesic as true would apply. */
     geodesic?: boolean;
@@ -540,20 +478,12 @@ declare namespace esri {
     locationProvider: esri.tasks.locationproviders.LocationProviderBase;
   }
   export interface DataBrowserOptions {
-    /** Whether or not to display the hierarchy dropdown for countries with multiple hierarchies (e.g. */
-    allowHierarchies?: boolean;
     /** Show/hide country drop down. */
     countryBox?: boolean;
     /** Two-digit country code selected in the country drop down. */
     countryID?: string;
-    /** The hierarchy to load for a country (e.g. */
-    hierarchyID?: string;
-    /** Text string to display on the back button on the second and third pages of the Data Browser. */
-    pageBackButton?: string;
     /** Selected variables array. */
     selection?: string[];
-    /** Whether to display the "Shopping Cart" of selected variables. */
-    shoppingCart?: boolean;
     /** Title to show in the top left hand corner. */
     title?: string;
   }
@@ -864,36 +794,28 @@ declare namespace esri {
     layer: esri.layers.Featureesri.layers.Layer;
   }
   export interface FeatureTableOptions {
+    /** A dGrid property. */
+    allowSelectAll?: boolean;
+    /** A dGrid property. */
+    cellNavigation?: boolean;
     /** Object defining the date options specifically for formatting date and time editors. */
     dateOptions?: any;
-    /** Sets the editing state for the FeatureTable. */
-    editable?: boolean;
+    /** Allows selection of a table's row via clicking a feature on the map. */
+    enableLayerClick?: boolean;
+    /** Allows selection of a feature on a map via clicking row in the table. */
+    enableLayerSelection?: boolean;
     /** The featureesri.layers.Layer that the table is associated with. */
     featureLayer: esri.layers.Featureesri.layers.Layer;
-    /** An array of objects representing field information. */
-    fieldInfos?: any[];
     /** Reference to the 'Options' drop-down menu. */
     gridMenu?: any;
-    /** Object that can be used to set properties used by the underlying dgrid. */
-    gridOptions?: any;
     /** Columns to hide by default using the dGrid ColumnHider extension. */
     hiddenFields?: string[];
     /** A reference to the Map. */
     map?: esri.Map;
-    /** Adds additional functional menu items for the 'Options' drop-down menu. */
-    menuFunctions?: any[];
-    /** Attribute fields to include in the FeatureTable. */
-    outFields?: string[];
-    /** Displays the data type of the field right under the field label. */
-    showDataTypes?: boolean;
-    /** Displays or hides the FeatureTable header. */
-    showGridHeader?: boolean;
-    /** Displays or hides 'Options' drop-down menu of the FeatureTable. */
-    showGridMenu?: boolean;
-    /** Enables an interaction between the map and the feature table. */
-    syncSelection?: boolean;
-    /** Enables pan/zoom to selected features on the map when the table in 'sync selection' mode. */
-    zoomToSelection?: boolean;
+    /** A dGrid property. */
+    noDataMessage?: string;
+    /** A dGrid property. */
+    selectionMode?: string;
   }
   export interface FindHotSpotsOptions {
     /** An array of feature layer candidates to be selected as the aggregation polygon layer. */
@@ -1450,8 +1372,6 @@ declare namespace esri {
     popupWindowFeatures?: string;
     /** The ArcGIS for Portal URL. */
     portalUrl?: string;
-    /** Indicates whether to display social logins such as Google/Facebook. */
-    showSocialLogins?: boolean;
   }
   export interface ObliqueViewerOptions {
     /** Azimuth angle value for which to display oblique images. */
@@ -2109,7 +2029,7 @@ declare namespace esri {
   }
   export interface VisibleScaleRangeSliderOptions {
     /** esri.layers.Layer used to determine the suggested scale range and set the minScale, maxScale values. */
-    layer?: esri.layers.Layer;
+    layer: esri.layers.Featureesri.layers.Layer;
     /** Reference to the map. */
     map: esri.Map;
     /** Region of preview scale thumbnails. */
@@ -3347,8 +3267,6 @@ declare namespace esri.arcgis {
     popupWindowFeatures: string;
     /** The ArcGIS for Portal URL. */
     portalUrl: string;
-    /** Indicates whether to display social logins like Google/Facebook. */
-    showSocialLogins: boolean;
     /**
      * Creates a new esri.arcgis.OAuthInfo given the specified parameters.
      * @param params Various options to configure the esri.arcgis.OAuthInfo object.
@@ -4345,52 +4263,40 @@ declare namespace esri.dijit {
 
   /** Creates an instance of the FeatureTable widget within the provided DOM node. */
   export class FeatureTable {
-    /** Read-only: A reference to the column objects and their parameters. */
+    /** An optional dGrid property. */
+    allowSelectAll: boolean;
+    /** An optional dGrid property. */
+    cellNavigation: boolean;
+    /** A reference to the column objects and their parameters. */
     columns: any[];
-    /** Read-only: Reference to the dataStore used by the dGrid. */
+    /** Reference to the dataStore used by the dGrid. */
     dataStore: any;
     /** Object defining the date options specifically for formatting date and time editors. */
     dateOptions: any;
-    /** Sets the editing state for the FeatureTable. */
-    editable: boolean;
-    /** Read-only: Number of records displayed in FeatureTable. */
-    featureCount: number;
+    /** Allows selection of a table's row via clicking a feature on the map. */
+    enableLayerClick: boolean;
+    /** Allows selection of a feature on a map via clicking row in the table. */
+    enableLayerSelection: boolean;
     /** The featureesri.layers.Layer that the table is associated with. */
     featureLayer: esri.layers.Featureesri.layers.Layer;
-    /** An array of objects representing field information. */
-    fieldInfos: any[];
     /** Reference to the dGrid. */
     grid: any;
     /** Reference to the 'Options' drop-down menu. */
     gridMenu: any;
-    /** Object that can be used to set properties used by the underlying dgrid. */
-    gridOptions: any;
     /** Optional columns to hide by default using the dGrid ColumnHider extension. */
     hiddenFields: string[];
-    /** Read-only: A reference to the primary key used by the dataStore to differentiate columns. */
+    /** A reference to the primary key used by the dataStore to differentiate columns. */
     idProperty: string;
     /** When true, the FeatureTable widget has successfully loaded. */
     loaded: boolean;
     /** Reference to the map. */
     map: esri.Map;
-    /** Adds additional functional menu items for the 'Options' drop-down menu. */
-    menuFunctions: any[];
+    /** A dGrid property. */
+    noDataMessage: string;
     /** Attribute fields to include in the FeatureTable. */
     outFields: string[];
-    /** Read-only: A comma delimited array of ObjectIds for the features selected in the FeatureTable. */
-    selectedRowIds: number[];
-    /** Read-only: Each element in the array is an object that contains name-value pair of fields and field values associated with the selected rows. */
-    selectedRows: any[];
-    /** Displays the data type of the field right under the field label in the column header. */
-    showDataTypes: boolean;
-    /** Displays or hides the FeatureTable header. */
-    showGridHeader: boolean;
-    /** Displays or hides 'Options' drop-down menu of the FeatureTable. */
-    showGridMenu: boolean;
-    /** Enables an interaction between the map and the feature table. */
-    syncSelection: boolean;
-    /** Enables pans to selected features on the map when the table in 'sync selection' mode. */
-    zoomToSelection: boolean;
+    /** A dGrid property. */
+    selectionMode: string;
     /**
      * Creates an instance of the FeatureTable widget within the provided DOM node.
      * @param params Various options to configure this dijit.
@@ -4399,34 +4305,14 @@ declare namespace esri.dijit {
     constructor(params: esri.FeatureTableOptions, srcNodeRef: Node | string);
     /** Finalizes the creation of the widget. */
     startup(): void;
-    /** Fires when the grid column is resized. */
-    on(type: "column-resize", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when a column is hidden or shown via 'Options' drop-down menu. */
-    on(type: "column-state-change", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when grid editor field loses focus after being changed. */
-    on(type: "data-change", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when grid editor is hidden. */
-    on(type: "editor-hide", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when grid editor is shown. */
-    on(type: "editor-show", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when editing is complete. */
-    on(type: "edits-complete", listener: (event: { adds: esri.layers.FeatureEditResult[]; deletes: esri.layers.FeatureEditResult[]; updates: esri.layers.FeatureEditResult[]; target: FeatureTable }) => void): esri.Handle;
-    /** Fires when an error occurs in the grid. */
-    on(type: "error", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when grid is filtered. */
-    on(type: "filter", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when the FeatureTable is loaded. */
+    /** Fired when a row is deselected. */
+    on(type: "dgrid-deselect", listener: (event: { target: FeatureTable }) => void): esri.Handle;
+    /** Fired when the grid is refreshed. */
+    on(type: "dgrid-refresh-complete", listener: (event: { target: FeatureTable }) => void): esri.Handle;
+    /** Fired when a row is selected. */
+    on(type: "dgrid-select", listener: (event: { target: FeatureTable }) => void): esri.Handle;
+    /** Fired when the FeatureTable is loaded. */
     on(type: "load", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when the grid is refreshed. */
-    on(type: "refresh", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when a row is deselected. */
-    on(type: "row-deselect", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when a row is selected. */
-    on(type: "row-select", listener: (event: { target: FeatureTable }) => void): esri.Handle;
-    /** Fires when the statistics dialog box shows the calculated statistics on a column with numeric data. */
-    on(type: "show-statistics", listener: (event: { statistics: any; target: FeatureTable }) => void): esri.Handle;
-    /** Fires when a column is sorted. */
-    on(type: "sort", listener: (event: { target: FeatureTable }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 
@@ -5008,14 +4894,14 @@ declare namespace esri.dijit {
     showTool(toolName: string): void;
     /** Finalizes the creation of the measurement widget . */
     startup(): void;
-    /** Fires any time the mouse pointer moves while doing a distance measurement. */
-    on(type: "measure", listener: (event: { geometry: esri.geometry.Geometry; segmentLength: number; toolName: string; unitName: string; values: number; target: Measurement }) => void): esri.Handle;
+    /** Fires when a measurement is made but the measurement is not complete (single-click). */
+    on(type: "measure", listener: (event: { geometry: esri.geometry.Geometry; toolName: string; unitName: string; values: number; target: Measurement }) => void): esri.Handle;
     /** Fired when the measurement is complete. */
     on(type: "measure-end", listener: (event: { geometry: esri.geometry.Geometry; toolName: string; unitName: string; values: number[] | number; target: Measurement }) => void): esri.Handle;
     /** Fires when a measurement operation begins (single-click). */
     on(type: "measure-start", listener: (event: { toolName: string; unitName: string; target: Measurement }) => void): esri.Handle;
     /** Fires when the primary tool is changed. */
-    on(type: "tool-change", listener: (event: { previousToolName: string; toolName: string; unitName: string; target: Measurement }) => void): esri.Handle;
+    on(type: "tool-change", listener: (event: { toolName: string; unitName: string; target: Measurement }) => void): esri.Handle;
     /** Fires when the units currently being used by the Measurement widget changes. */
     on(type: "unit-change", listener: (event: { toolName: string; unitName: string; target: Measurement }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
@@ -5060,11 +4946,6 @@ declare namespace esri.dijit {
      * @param params Constructor options.
      */
     constructor(params: esri.ObliqueViewerOptions);
-    /**
-     * Queries and displays the best image in a specific direction.
-     * @param geometry The specified input geometry needed for querying for the best image in a given azimuth direction.
-     */
-    locate(geometry: Geometry): void;
     /**
      * Projects the input geometry to the specified spatial reference.
      * @param geometry The geometry to project.
@@ -5162,7 +5043,7 @@ declare namespace esri.dijit {
      * @param params Parameters that define the functionality of the Overviewesri.Map widget.
      * @param srcNodeRef HTML element where the widget should be rendered.
      */
-    constructor(params: esri.OverviewMapOptions, srcNodeRef?: Node | string);
+    constructor(params: esri.OverviewMapOptions, srcNodeRef: Node | string);
     /** Releases  the resources used by the dijit. */
     destroy(): void;
     /** Hide the overview map. */
@@ -5771,24 +5652,16 @@ declare namespace esri.dijit {
     singleThumbAsTimeInstant(createTimeInstants: boolean): void;
     /** Finalizes the creation of the widget. */
     startup(): void;
-    /** Fires when the next button is clicked or TimeSlider.next() method is invoked. */
-    on(type: "next", listener: (event: { timeExtent: Timeesri.geometry.Extent; target: esri.dijit.TimeSlider }) => void): esri.Handle;
-    /** Fires when the pause button is clicked or TImeSlider.pause() method is invoked. */
-    on(type: "pause", listener: (event: { timeExtent: Timeesri.geometry.Extent; target: esri.dijit.TimeSlider }) => void): esri.Handle;
-    /** Fires once when the play button is clicked or Timeslider.play() method is invoked. */
-    on(type: "play", listener: (event: { timeExtent: Timeesri.geometry.Extent; target: esri.dijit.TimeSlider }) => void): esri.Handle;
-    /** Fires when the previous button is clicked or TimeSlider.previous() is invoked. */
-    on(type: "previous", listener: (event: { timeExtent: Timeesri.geometry.Extent; target: esri.dijit.TimeSlider }) => void): esri.Handle;
     /** Fires when the timeesri.geometry.Extent of the esri.dijit.TimeSlider is changed. */
     on(type: "time-extent-change", listener: (event: { timeExtent: Timeesri.geometry.Extent; target: esri.dijit.TimeSlider }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
   export = esri.dijit.TimeSlider;
 
-  /** A widget that sets the displayed visible scale values. */
+  /** A widget that helps set the visible scale range for a layer. */
   export class VisibleScaleRangeSlider {
     /** Setting the layer will update the suggested scale range, minScale and maxScale. */
-    layer: esri.layers.Layer;
+    layer: esri.layers.Featureesri.layers.Layer;
     /** Setting this property will update the slider's minimum/maximum values and current scale indicator. */
     map: esri.Map;
     /** Read-only: The maxScale bound in the slider range */
@@ -5808,7 +5681,7 @@ declare namespace esri.dijit {
     /** Finalizes the creation of the widget. */
     startup(): void;
     /** Dispatched whenever minScale or maxScale changes. */
-    on(type: "scale-range-change", listener: (event: { maxScale: number; minScale: number; target: VisibleScaleRangeSlider }) => void): esri.Handle;
+    on(type: "scale-range-change", listener: (event: { target: VisibleScaleRangeSlider }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
 }
@@ -5963,76 +5836,6 @@ declare namespace esri.dijit.analysis {
     constructor(params: any, srcNodeRef: Node | string);
     /** Finalizes the creation of the widget. */
     startup(): void;
-  }
-
-  /** Choose Best Facilities allows you to choose the best locations for facilities. */
-  export class ChooseBestFacilities extends esri.dijit.analysis.AnalysisBase {
-    /** The URL to the analysis service, for example "http://analysis.arcgis.com/arcgis/rest/services/tasks/GPServer". */
-    analysisGpServer: string;
-    /** The number of facilities to choose when allocating demand locations. */
-    candidateCount: number;
-    /** This specifies how much demand every facility in the candidateFacilitiesesri.layers.Layer is capable of supplying. */
-    candidateFacilitiesCapacity: string;
-    /** String value indicating the field name on the candidateFacilitiesesri.layers.Layer  representing how much demand each facility in the candidatesFacilitiesesri.layers.Layer is capable of supplying. */
-    candidateFacilitiesCapacityField: string;
-    /** A point layer specifying one or more locations that act as facilities by providing some kind of service. */
-    candidateFacilitiesLayer: esri.layers.Featureesri.layers.Layer;
-    /** The amount of demand available at every demand locations. */
-    demand: number;
-    /** String value indicating the field name on the demandLocationesri.layers.Layer  representing the amount of demand available at each demand location. */
-    demandField: string;
-    /** A point layer specifying the locations that have demand for facilities. */
-    demandLocationLayer: esri.layers.Featureesri.layers.Layer;
-    /** Array of point layers to be used for choosing the demandLocationLayer. */
-    demandLocationLayers: esri.layers.Featureesri.layers.Layer[];
-    /** When true, Travel Modes (Driving Time) is enabled for the inputesri.layers.Layer with the point geometries (esriGeometryPoint). */
-    enableTravelModes: boolean;
-    /** Array of point layers used for setting the required facilities layer and candidate facilities layer. */
-    featureLayers: esri.layers.Featureesri.layers.Layer[];
-    /** Sets the selected folder of the select folder dropdown. */
-    folderId: string;
-    /** Sets the selected folder of the select folder dropdown. */
-    folderName: string;
-    /** Reference to the map. */
-    map: esri.Map;
-    /** The maximum travel time or distance allowed between a demand location and its allocated facility. */
-    maxTravelRange: number;
-    /** String value indicating the field name on the demandLocationesri.layers.Layer specifying the maximum travel time or distance allowed between a demand location and its allocated facility. */
-    maxTravelRangeField: string;
-    /** The name of the output layer to be displayed in the result layer  nameinputbox. */
-    outputLayerName: string;
-    /** The percentage of the total demand that you want the chosen and required facilities to capture. */
-    percentDemandCoverage: number;
-    /** The URL to the ArcGIS organization or Portal site where the GP server is hosted. */
-    portalUrl: string;
-    /** Specify how much demand every facility in the requiredFacilitiesesri.layers.Layer is capable of supplying. */
-    requiredFacilitiesCapacity: number;
-    /** A field on the requiredFacilitiesesri.layers.Layer representing how much demand each facility in this layer is capable of supplying. */
-    requiredFacilitiesCapacityField: string;
-    /** A point layer specifying one or more locations that act as facilities by providing some kind of service. */
-    requiredFacilitiesLayer: esri.layers.Featureesri.layers.Layer;
-    /** Indicates whether to return the result of analysis as a client-side feature collection. */
-    returnFeatureCollection: boolean;
-    /** Indicates whether the "choose extent checkbox" is displayed. */
-    showChooseExtent: boolean;
-    /** Indicates whether to show the credit options. */
-    showCredits: boolean;
-    /** Indicates whether the help links are displayed. */
-    showHelp: boolean;
-    /** Indicates whether to add an option to the UI that allows users to choose ready-to-use analysis layers from the Living Atlas Analysis Layers. */
-    showReadyToUseLayers: boolean;
-    /** Indicates whether to display a dropdown menu listing valid input analysis layers. */
-    showSelectAnalysisLayer: boolean;
-    /** Indicates whether the select folder dropdown will be displayed. */
-    showSelectFolder: boolean;
-    /** The default widget title with a custom title. */
-    title: string;
-    /**
-     * Creates a new ChooseBestFacilities dijit using the given DOM node.
-     * @param params Various options to configure this dijit.
-     * @param srcNodeRef Reference or id of a HTML element that this dijit is rendered into.
-     */
-    constructor(params: esri.ChooseBestFacilitiesOptions, srcNodeRef: Node | string);
   }
 
   /** Measure the travel time or distance between pairs of points. */
@@ -6994,8 +6797,6 @@ declare namespace esri.dijit.geoenrichment {
 
   /** The DataBrowser widget allows users to search or browse for geoenrichment variables. */
   export class DataBrowser {
-    /** An array of the variables currently loaded in the Data Browser. */
-    variables: any[];
     /**
      * Creates a new DataBrowser dijit using the given DOM node.
      * @param options Optional parameters used to create the layer.
@@ -9987,7 +9788,7 @@ declare namespace esri.layers {
 
   /** The Rasteresri.layers.Layer is used to display image services. */
   class Rasteresri.layers.Layer extends esri.layers.Layer {
-    /** A function that takes a pixelData object as input and processes it. */
+    /** A function that takes a pixelData object as input, processes it, and returns it. */
     pixelFilter: Function;
     /**
      * Creates a new Rasteresri.layers.Layer object.
@@ -11024,11 +10825,6 @@ declare namespace esri.plugins {
      */
     getSampleFeatures(options?: any): any;
     /**
-     * Returns a promise that resolves to an object containing spatial statistics for an array of input features.
-     * @param params See the Object Specifications table below for the structure of the params object.
-     */
-    getSpatialStatistics(params: any): any;
-    /**
      * Find optimal scale range for viewing this layer.
      * @param options See the Object Specifications table below for the structure of the options object.
      */
@@ -11351,27 +11147,23 @@ declare namespace esri.renderers {
     /**
      * Gets the color for the Graphic.
      * @param graphic esri.Graphic to get color from.
-     * @param options This optional parameter supports colorInfo.
      */
-    getColor(graphic: esri.Graphic, options?: any): esri.Color;
+    getColor(graphic: Graphic): esri.Color;
     /**
      * Returns the opacity value for the specified graphic.
      * @param graphic Returns the opacity value appropriate for the given graphic.
-     * @param options This optional parameter supports opacityInfo.
      */
-    getOpacity(graphic: esri.Graphic, options?: any): number;
+    getOpacity(graphic: Graphic): number;
     /**
      * Returns the angle of rotation (in degrees) for the graphic calculated using rotationInfo.
      * @param graphic An input graphic for which you want to get the angle of rotation.
-     * @param options This optional parameter supports rotationInfo.
      */
-    getRotationAngle(graphic: esri.Graphic, options?: any): number;
+    getRotationAngle(graphic: Graphic): number;
     /**
      * Return the symbol size (in pixels) for the graphic, calculated using sizeInfo.
      * @param graphic The graphic for which you want to calculate the symbol size.
-     * @param options This optional parameter supports sizeInfo.
      */
-    getSize(graphic: esri.Graphic, options?: any): number;
+    getSize(graphic: Graphic): number;
     /**
      * Gets the symbol for the Graphic.
      * @param graphic esri.Graphic to symbolize.
@@ -11699,11 +11491,6 @@ declare namespace esri.renderers {
      * @param params See the object specifications table below for the structure of the params object.
      */
     createTypeRenderer(params: any): any;
-    /**
-     * Searches the fields of an input layer or array of field objects for field names commonly used in rendering based on usage (e.g.
-     * @param params See the object specifications table below for details about the params object.
-     */
-    getSuggestedField(params: any): any;
   };
 }
 declare namespace esri.symbols {
@@ -13824,7 +13611,7 @@ declare namespace esri.tasks {
   }
   export = esri.tasks.RouteResult;
 
-  /** The ArcGIS JavaScript API's esri.tasks.RouteTask allows you to find routes between two or more locations and optionally get driving directions. */
+  /** The ArcGIS JavaScript API's routeTask allows you to find routes between two or more locations and optionally get driving directions. */
   class esri.tasks.RouteTask {
     /** URL to the ArcGIS Server REST resource that represents a network analysis service. */
     url: string;
@@ -13964,7 +13751,7 @@ declare namespace esri.tasks {
   }
   /** The esri.tasks.StatisticDefinition class defines the type of statistics, the field used to calculate the statistics and the resulting output field name. */
   class esri.tasks.StatisticDefinition {
-    /** The field name or standard SQL expression on which statistics will be calculated. */
+    /** Define the field on which statistics will be calculated. */
     onStatisticField: string;
     /** Specify the output field name. */
     outStatisticFieldName: string;
@@ -14020,6 +13807,8 @@ declare namespace esri.tasks {
 
   /** Represents a geocode service resource exposed by the ArcGIS Server REST API. */
   class esri.tasks.Locator {
+    /** Limit the results to one or more categories. */
+    categories: string[];
     /** The country to limit results to for example "US" for United States or "SE" for Sweden. */
     countryCode: string;
     /** The spatial reference of the output geometries. */
@@ -15138,9 +14927,9 @@ declare namespace esri.toolbars {
      * @param set When set to false, the geometry is modified to be topologically correct.
      */
     setRespectDrawingVertexOrder(set: boolean): void;
-    /** Fired when the user has completed drawing. */
+    /** Fired when the user has ended drawing. */
     on(type: "draw-complete", listener: (event: { geographicGeometry: esri.geometry.Geometry; geometry: esri.geometry.Geometry; target: Draw }) => void): esri.Handle;
-    /** This event is deprecated. */
+    /** Fires when drawing is complete. */
     on(type: "draw-end", listener: (event: { geometry: esri.geometry.Geometry; target: Draw }) => void): esri.Handle;
     on(type: string, listener: (event: any) => void): esri.Handle;
   }
