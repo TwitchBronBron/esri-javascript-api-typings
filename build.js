@@ -3,10 +3,15 @@ var fetch = require('node-fetch');
 var fs = require('fs');
 var fsPath = require('fs-path');
 var tsCompile = require('./compile');
-
 var versionArg = null;
-//var versionArg = '3.20';
+var versionArg = '3.20';
 var verbose = false;
+
+console.sleep = function (message) {
+    var waitTill = new Date(new Date().getTime() + 0);
+    while (waitTill > new Date()) { }
+    console.log(message);
+}
 
 console.debug = function () {
     if (verbose) {
@@ -216,21 +221,21 @@ function processVersion(version) {
         var esriRegex = /esri\./g;
         //replace any instances of the current namespace in the references for this namespace block.
         //This fixes things like: namespace esri { export class esri.Map { }  }
-        for (var i = 0; i < lines.length; i++) {
-            var line = lines[i];
+        for (var outerLineNumber = 0; outerLineNumber < lines.length; outerLineNumber++) {
+            var line = lines[outerLineNumber];
             var replacedLine = line.replace(regexp, '');
             if (line.length !== replacedLine.length) {
                 console.debug('replaced "' + line + '" with "' + replacedLine + '"');
-                lines[i] = replacedLine;
+                lines[outerLineNumber] = replacedLine;
             }
             //if the namespace starts with esri, remove any esri.[Whatever] items that are left. 
             //This prevents removing the esri. in front of non esri namespaces
             if (namespace.indexOf('esri') === 0) {
-                var line = lines[i];
+                var line = lines[outerLineNumber];
                 var replacedLine = line.replace(esriRegex, '');
                 if (line.length !== replacedLine.length) {
                     console.debug('replaced "' + line + '" with "' + replacedLine + '"');
-                    lines[i] = replacedLine;
+                    lines[outerLineNumber] = replacedLine;
                 }
             }
         }
@@ -254,10 +259,106 @@ function processVersion(version) {
     console.log('Undo any double export statements');
     contents = contents.replace(/export\s+export/g, 'export');
 
+    console.log('Renaming module to esriTypes to prevent naming conflicts and discourage direct usage');
+    contents = contents.replace(/declare\s+namespace\s+esri/g, 'declare namespace esriTypes');
 
     fsPath.writeFileSync('tmp/processing/9.d.ts', contents);
 
+    console.log('Creating class constructor interfaces');
+    //find every class instance and create a constructor interface for the class
+    var lines = contents.split('\n');
+    for (var outerLineNumber = 0; outerLineNumber < lines.length; outerLineNumber++) {
+        var line = lines[outerLineNumber];
+        console.log('Outer: ' + outerLineNumber + ': ' + line);
+        //if this line looks like a class definition
+        if (line.indexOf('export class') > -1) {
+            console.log('Line is a class');
+            var classNameRegex = /export\s+class\s+(\w+)/g;
+            var match = classNameRegex.exec(line);
+            if (!match) {
+                throw new Error('Unable to find class name from line');
+            }
+            var className = match[1];
+            var constructorName = className + 'Constructor';
+            var staticLines = [];
+            var bracketCount = 1;
+            var endingLineNumber = null;
+            //walk to the end of the class
+            for (var classLineNumber = outerLineNumber + 1; classLineNumber < lines.length; classLineNumber++) {
+                var classLine = lines[classLineNumber];
+                console.log('Inner: ' + outerLineNumber + ': ' + classLine);
+                bracketCount += (classLine.match(/{/g) || []).length;
+                bracketCount -= (classLine.match(/}/g) || []).length;
+                if (bracketCount === 0) {
+                    //we are at the end of the class
+                    endingLineNumber = classLineNumber;
+                    console.log('Ending line number: ' + endingLineNumber);
+                    break;
+                } else {
+                    if (classLine.indexOf(' static ') > -1) {
+                        console.log('Found static member ' + classLine);
+                        var startingJsdocLineNumber = null;
+                        console.log('Looking for jsdoc comments for static member');
+                        //walk backwards to see if we have a jsdoc comment
+                        for (var jsdocLineNumber = classLineNumber - 1; jsdocLineNumber > -1; jsdocLineNumber--) {
+                            var jsdocLine = lines[jsdocLineNumber]
+                            console.log('jsdoc loop: ' + jsdocLineNumber + ': ' + jsdocLine)
+                            //if this is the first line and it doesn't have a jsdoc ending comment chunk, assume there is no comment
+                            if (jsdocLineNumber === classLineNumber - 1 && jsdocLine.indexOf('*/') === -1) {
+                                console.log('Item has no jsdoc comment');
+                                break;
+                            }
+                            if (jsdocLine.indexOf('/**') > -1) {
+                                console.log('Found jsdoc comment for item');
+                                startingJsdocLineNumber = jsdocLineNumber;
+                                break;
+                            }
+                        }
+                        if (startingJsdocLineNumber) {
+                            console.log('Removing jsdoc comments for static item');
+                            var commentLength = classLineNumber - startingJsdocLineNumber;
+                            console.log('Comment is ' + commentLength + ' lines long');
+                            var jsdocLines = lines.splice(startingJsdocLineNumber, commentLength);
+                            console.log('Removed these lines for the jsdoc comment: ' + JSON.stringify(jsdocLines));
+                            Array.prototype.push.apply(staticLines, jsdocLines);
+                            classLineNumber -= commentLength;
+                            endingLineNumber -= commentLength;
+                        }
+                        staticLines.push(classLine);
+                        //remove this line from the file
+                        lines.splice(classLineNumber, 1);
+                        classLineNumber--;
+                        endingLineNumber--;
+                    } else {
+                        //console.log('Did not find a static member for this line');
+                    }
+                }
+            }
+            console.log('Creating constructor interface "' + constructorName + '"');
+            var insertLines = [];
+            insertLines.push('  export interface ' + constructorName + ' {');
+            for (var staticLineIdx = 0; staticLineIdx < staticLines.length; staticLineIdx++) {
+                var staticLine = staticLines[staticLineIdx];
+                //if this isn't a comment block, and it contains the static keyword
+                if (staticLine.indexOf('/**') === -1) {
+                    staticLine = staticLine.replace(/\s+static\s+/g, '  ');
+                }
+                insertLines.push(staticLine);
+            }
+            insertLines.push('  }');
+            console.log('Insert Lines: ' + insertLines.join('\n'));
+            console.log('Before line splice: ' + lines.length);
 
+            Array.prototype.splice.apply(lines, [endingLineNumber + 1, 0].concat(insertLines));
+            console.log('After line splice: ' + lines.length);
+
+            //skip the outer loop to the end of this new interface 
+            outerLineNumber = endingLineNumber + insertLines.length;
+            console.log('Next loop line: ' + lines[outerLineNumber + 1]);
+
+        }
+    }
+    contents = lines.join('\n');
     console.log('Saving result');
     fsPath.writeFileSync(getDistFilePath(version), contents);
 }
@@ -269,7 +370,7 @@ function processVersion(version) {
 function validateVersion(version) {
     var tsFileContents =
         '///<reference path="../../../dist/' + version + '/index.d.ts" />\n' +
-        'var map:esri.Map;';
+        'var map: esriTypes.Map;';
 
     var folder = './tmp/test/' + version + '/';;
     //write a sample typescript file
