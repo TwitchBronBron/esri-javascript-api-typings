@@ -5,7 +5,7 @@ The ESRI JavaScript api type definitions that are provided by ESRI assume that y
 
 ### npm
 ```bash
-npm install --save-dev git+https://github.com/TwitchBronBron/esri-javascript-api-typings#d3a8cc76e534db205aacf87ec932e42daecf51
+npm install --save-dev esri-javascript-api-typings
 92
 ```
 
