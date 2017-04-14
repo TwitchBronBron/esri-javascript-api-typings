@@ -4,7 +4,7 @@ var fs = require('fs');
 var fsPath = require('fs-path');
 var tsCompile = require('./compile');
 var versionArg = null;
-var versionArg = '3.20';
+//var versionArg = '3.20';
 var verbose = false;
 
 console.sleep = function (message) {
@@ -295,10 +295,10 @@ function processVersion(version) {
                     console.log('Ending line number: ' + endingLineNumber);
                     break;
                 } else {
-                    if (classLine.indexOf(' static ') > -1) {
-                        console.log('Found static member ' + classLine);
+                    if (classLine.indexOf(' static ') > -1 || classLine.indexOf('constructor(') > -1) {
+                        console.log('Found static member or constructor: ' + classLine);
                         var startingJsdocLineNumber = null;
-                        console.log('Looking for jsdoc comments for static member');
+                        console.log('Looking for jsdoc comments');
                         //walk backwards to see if we have a jsdoc comment
                         for (var jsdocLineNumber = classLineNumber - 1; jsdocLineNumber > -1; jsdocLineNumber--) {
                             var jsdocLine = lines[jsdocLineNumber]
@@ -315,7 +315,7 @@ function processVersion(version) {
                             }
                         }
                         if (startingJsdocLineNumber) {
-                            console.log('Removing jsdoc comments for static item');
+                            console.log('Removing jsdoc comments');
                             var commentLength = classLineNumber - startingJsdocLineNumber;
                             console.log('Comment is ' + commentLength + ' lines long');
                             var jsdocLines = lines.splice(startingJsdocLineNumber, commentLength);
@@ -343,7 +343,11 @@ function processVersion(version) {
                 if (staticLine.indexOf('/**') === -1) {
                     staticLine = staticLine.replace(/\s+static\s+/g, '  ');
                 }
-                insertLines.push(staticLine);
+                if (staticLine.indexOf('constructor(') > -1) {
+                    staticLine = staticLine.replace('constructor(', 'new(');
+                    staticLine = staticLine.replace(';', ': ' + className + ';');
+                }
+                insertLines.push('\t' + staticLine);
             }
             insertLines.push('  }');
             console.log('Insert Lines: ' + insertLines.join('\n'));
