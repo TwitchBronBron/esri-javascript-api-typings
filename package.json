@@ -1,8 +1,8 @@
 {
   "name": "esri-javascript-api-typings",
   "version": "1.0.0",
-  "description": "",
-  "main": "gulpfile.js",
+  "description": "TypeScript definitions for the ESRI javascript API for projects that don't use a module system in TypeScript.",
+  "main": "build.js",
   "scripts": {
     "build": "node build.js",
     "test": "echo \"Error: no test specified\" && exit 1"
