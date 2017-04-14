@@ -269,10 +269,10 @@ function processVersion(version) {
     var lines = contents.split('\n');
     for (var outerLineNumber = 0; outerLineNumber < lines.length; outerLineNumber++) {
         var line = lines[outerLineNumber];
-        console.log('Outer: ' + outerLineNumber + ': ' + line);
+        console.debug('Outer: ' + outerLineNumber + ': ' + line);
         //if this line looks like a class definition
         if (line.indexOf('export class') > -1) {
-            console.log('Line is a class');
+            console.debug('Line is a class');
             var classNameRegex = /export\s+class\s+(\w+)/g;
             var match = classNameRegex.exec(line);
             if (!match) {
@@ -286,40 +286,40 @@ function processVersion(version) {
             //walk to the end of the class
             for (var classLineNumber = outerLineNumber + 1; classLineNumber < lines.length; classLineNumber++) {
                 var classLine = lines[classLineNumber];
-                console.log('Inner: ' + outerLineNumber + ': ' + classLine);
+                console.debug('Inner: ' + outerLineNumber + ': ' + classLine);
                 bracketCount += (classLine.match(/{/g) || []).length;
                 bracketCount -= (classLine.match(/}/g) || []).length;
                 if (bracketCount === 0) {
                     //we are at the end of the class
                     endingLineNumber = classLineNumber;
-                    console.log('Ending line number: ' + endingLineNumber);
+                    console.debug('Ending line number: ' + endingLineNumber);
                     break;
                 } else {
                     if (classLine.indexOf(' static ') > -1 || classLine.indexOf('constructor(') > -1) {
-                        console.log('Found static member or constructor: ' + classLine);
+                        console.debug('Found static member or constructor: ' + classLine);
                         var startingJsdocLineNumber = null;
-                        console.log('Looking for jsdoc comments');
+                        console.debug('Looking for jsdoc comments');
                         //walk backwards to see if we have a jsdoc comment
                         for (var jsdocLineNumber = classLineNumber - 1; jsdocLineNumber > -1; jsdocLineNumber--) {
                             var jsdocLine = lines[jsdocLineNumber]
-                            console.log('jsdoc loop: ' + jsdocLineNumber + ': ' + jsdocLine)
+                            console.debug('jsdoc loop: ' + jsdocLineNumber + ': ' + jsdocLine)
                             //if this is the first line and it doesn't have a jsdoc ending comment chunk, assume there is no comment
                             if (jsdocLineNumber === classLineNumber - 1 && jsdocLine.indexOf('*/') === -1) {
-                                console.log('Item has no jsdoc comment');
+                                console.debug('Item has no jsdoc comment');
                                 break;
                             }
                             if (jsdocLine.indexOf('/**') > -1) {
-                                console.log('Found jsdoc comment for item');
+                                console.debug('Found jsdoc comment for item');
                                 startingJsdocLineNumber = jsdocLineNumber;
                                 break;
                             }
                         }
                         if (startingJsdocLineNumber) {
-                            console.log('Removing jsdoc comments');
+                            console.debug('Removing jsdoc comments');
                             var commentLength = classLineNumber - startingJsdocLineNumber;
-                            console.log('Comment is ' + commentLength + ' lines long');
+                            console.debug('Comment is ' + commentLength + ' lines long');
                             var jsdocLines = lines.splice(startingJsdocLineNumber, commentLength);
-                            console.log('Removed these lines for the jsdoc comment: ' + JSON.stringify(jsdocLines));
+                            console.debug('Removed these lines for the jsdoc comment: ' + JSON.stringify(jsdocLines));
                             Array.prototype.push.apply(staticLines, jsdocLines);
                             classLineNumber -= commentLength;
                             endingLineNumber -= commentLength;
@@ -330,11 +330,12 @@ function processVersion(version) {
                         classLineNumber--;
                         endingLineNumber--;
                     } else {
-                        //console.log('Did not find a static member for this line');
+                        //console.debug('Did not find a static member for this line');
                     }
                 }
             }
-            console.log('Creating constructor interface "' + constructorName + '"');
+            console.debug('Creating constructor interface "' + constructorName + '"');
+            var foundConstructor = false;
             var insertLines = [];
             insertLines.push('  export interface ' + constructorName + ' {');
             for (var staticLineIdx = 0; staticLineIdx < staticLines.length; staticLineIdx++) {
@@ -346,19 +347,24 @@ function processVersion(version) {
                 if (staticLine.indexOf('constructor(') > -1) {
                     staticLine = staticLine.replace('constructor(', 'new(');
                     staticLine = staticLine.replace(';', ': ' + className + ';');
+                    foundConstructor = true;
                 }
                 insertLines.push('\t' + staticLine);
             }
+            if (foundConstructor === false) {
+                console.debug('No constructor was found. Creating empty constructor');
+                insertLines.push('      new(): ' + className);
+            }
             insertLines.push('  }');
-            console.log('Insert Lines: ' + insertLines.join('\n'));
-            console.log('Before line splice: ' + lines.length);
+            console.debug('Insert Lines: ' + insertLines.join('\n'));
+            console.debug('Before line splice: ' + lines.length);
 
             Array.prototype.splice.apply(lines, [endingLineNumber + 1, 0].concat(insertLines));
-            console.log('After line splice: ' + lines.length);
+            console.debug('After line splice: ' + lines.length);
 
             //skip the outer loop to the end of this new interface 
             outerLineNumber = endingLineNumber + insertLines.length;
-            console.log('Next loop line: ' + lines[outerLineNumber + 1]);
+            console.debug('Next loop line: ' + lines[outerLineNumber + 1]);
 
         }
     }

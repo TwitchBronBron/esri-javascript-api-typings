@@ -1633,6 +1633,7 @@ declare namespace esriTypes {
     on(type: string, listener: (event: any) => void): Handle;
   }
   export interface CredentialConstructor {
+      new(): Credential
   }
 
   /** This singleton class is automatically instantiated into id when the module containing this class is imported into the application. */
@@ -1658,6 +1659,7 @@ declare namespace esriTypes {
     on(type: string, listener: (event: any) => void): Handle;
   }
   export interface IdentityManagerConstructor {
+      new(): IdentityManager
   }
 
   /** This class provides the framework and helper methods required to implement a solution for managing user credentials. */
@@ -1756,6 +1758,7 @@ declare namespace esriTypes {
     on(type: string, listener: (event: any) => void): Handle;
   }
   export interface IdentityManagerBaseConstructor {
+      new(): IdentityManagerBase
   }
   /** An InfoTemplate contains a title and content template string used to transform Graphic.attributes into an HTML representation. */
   export class InfoTemplate {
@@ -1874,6 +1877,7 @@ declare namespace esriTypes {
     on(type: string, listener: (event: any) => void): Handle;
   }
   export interface InfoWindowBaseConstructor {
+      new(): InfoWindowBase
   }
 
   /** The OperationBase class defines operations that can be added to the UndoManager. */
@@ -1910,6 +1914,7 @@ declare namespace esriTypes {
     toJson(): any;
   }
   export interface ServerInfoConstructor {
+      new(): ServerInfo
   }
 
   /** The SnappingManager is used to add snapping capability to the Editor, Measurement Widget,  Draw toolbar and Edit toolbar. */
@@ -2628,6 +2633,7 @@ declare namespace esriTypes {
 	  UNKNOWN: any;
 	    /** Units are yards. */
 	  YARDS: any;
+      new(): Units
   }
   /** Utility methods for working with URLs. */
   export var urlUtils: {
@@ -2838,6 +2844,7 @@ declare namespace esriTypes.arcgis {
     owner: string;
   }
   export interface PortalCommentConstructor {
+      new(): PortalComment
   }
   /** The PortalFolder class provides information about folders used to organize content in a portal. */
   export class PortalFolder {
@@ -2855,6 +2862,7 @@ declare namespace esriTypes.arcgis {
     getItems(): any;
   }
   export interface PortalFolderConstructor {
+      new(): PortalFolder
   }
   /** The group resource represents a group within the Portal. */
   export class PortalGroup {
@@ -2895,6 +2903,7 @@ declare namespace esriTypes.arcgis {
     queryItems(queryParams?: PortalQueryParams): any;
   }
   export interface PortalGroupConstructor {
+      new(): PortalGroup
   }
   /** List the users, owner and administrator of a group. */
   export class PortalGroupMembers {
@@ -2906,6 +2915,7 @@ declare namespace esriTypes.arcgis {
     users: string[];
   }
   export interface PortalGroupMembersConstructor {
+      new(): PortalGroupMembers
   }
   /** An item (a unit of content) in the Portal. */
   export class PortalItem {
@@ -2996,6 +3006,7 @@ declare namespace esriTypes.arcgis {
     updateComment(comment: PortalComment): any;
   }
   export interface PortalItemConstructor {
+      new(): PortalItem
   }
   /** Define parameters to use when querying. */
   export class PortalQueryParams {
@@ -3009,6 +3020,7 @@ declare namespace esriTypes.arcgis {
     start: string;
   }
   export interface PortalQueryParamsConstructor {
+      new(): PortalQueryParams
   }
   /** Details about the result of a query. */
   export class PortalQueryResult {
@@ -3022,6 +3034,7 @@ declare namespace esriTypes.arcgis {
     total: number;
   }
   export interface PortalQueryResultConstructor {
+      new(): PortalQueryResult
   }
   /** Details about the rating associated with a Portal item. */
   export class PortalRating {
@@ -3031,6 +3044,7 @@ declare namespace esriTypes.arcgis {
     rating: number;
   }
   export interface PortalRatingConstructor {
+      new(): PortalRating
   }
   /** Represents a registered user of the Portal. */
   export class PortalUser {
@@ -3088,6 +3102,7 @@ declare namespace esriTypes.arcgis {
     getTags(): any;
   }
   export interface PortalUserConstructor {
+      new(): PortalUser
   }
 
   /** Utility methods to work with content from ArcGIS.com. */
@@ -3946,6 +3961,7 @@ declare namespace esriTypes.dijit {
     on(type: string, listener: (event: any) => void): Handle;
   }
   export interface InfoWindowLiteConstructor {
+      new(): InfoWindowLite
   }
 
   /** LayerSwipe provides a simple tool to show a portion of a layer or layers on top of a map. */
@@ -4691,6 +4707,7 @@ declare namespace esriTypes.dijit.analysis {
     on(type: string, listener: (event: any) => void): Handle;
   }
   export interface AnalysisBaseConstructor {
+      new(): AnalysisBase
   }
 
   /** The CreateBuffers dijit creates polygons that cover a given distance from an input point, line, or polygon feature layer. */
@@ -5677,6 +5694,7 @@ declare namespace esriTypes.geometry {
     toJson(): any;
   }
   export interface GeometryConstructor {
+      new(): Geometry
   }
 
   /** An ordered collection of points. */
@@ -6654,6 +6672,7 @@ declare namespace esriTypes.layers {
     codedValues: any[];
   }
   export interface CodedValueDomainConstructor {
+      new(): CodedValueDomain
   }
   /** A dimensional definition defines a filter based on one variable and one dimension. */
   export class DimensionalDefinition {
@@ -6685,6 +6704,7 @@ declare namespace esriTypes.layers {
     toJson(): any;
   }
   export interface DomainConstructor {
+      new(): Domain
   }
   /** Information about each layer in a map service. */
   export class DynamicLayerInfo {
@@ -6740,6 +6760,7 @@ declare namespace esriTypes.layers {
     on(type: string, listener: (event: any) => void): Handle;
   }
   export interface DynamicMapServiceLayerConstructor {
+      new(): DynamicMapServiceLayer
   }
   /** The results of a feature edit such as add, update or delete. */
   export class FeatureEditResult {
@@ -6753,6 +6774,7 @@ declare namespace esriTypes.layers {
     success: boolean;
   }
   export interface FeatureEditResultConstructor {
+      new(): FeatureEditResult
   }
 
   /** The feature layer inherits from the graphics layer and can be used to display features from a single layer in either a Map Service or Feature Service. */
@@ -7172,6 +7194,7 @@ declare namespace esriTypes.layers {
 	  TOOL_RECTANGLE: any;
 	    /** The default drawing tool specified for this template is the triangle. */
 	  TOOL_TRIANGLE: any;
+      new(): FeatureTemplate
   }
 
   /** A type defined by a feature layer. */
@@ -7188,6 +7211,7 @@ declare namespace esriTypes.layers {
     toJson(): any;
   }
   export interface FeatureTypeConstructor {
+      new(): FeatureType
   }
 
   /** Information about each field in a layer. */
@@ -7208,6 +7232,7 @@ declare namespace esriTypes.layers {
     type: string;
   }
   export interface FieldConstructor {
+      new(): Field
   }
 
   /** The GeoRSSLayer class is used to create a layer based on GeoRSS. */
@@ -7406,6 +7431,7 @@ declare namespace esriTypes.layers {
   export class InheritedDomain extends Domain {
   }
   export interface InheritedDomainConstructor {
+      new(): InheritedDomain
   }
   /** The JoinDataSource class defines and provides information about the result of a join operation. */
   export class JoinDataSource {
@@ -7449,6 +7475,7 @@ declare namespace esriTypes.layers {
     visibility: number;
   }
   export interface KMLFolderConstructor {
+      new(): KMLFolder
   }
 
   /** The KMLGroundOverlay class provides details about a KML ground overlay. */
@@ -7475,6 +7502,7 @@ declare namespace esriTypes.layers {
     width: number;
   }
   export interface KMLGroundOverlayConstructor {
+      new(): KMLGroundOverlay
   }
 
   /** The KMLLayer class is used to create a layer based on a KML file (.kml,.kmz). */
@@ -7523,6 +7551,7 @@ declare namespace esriTypes.layers {
     scale: number;
   }
   export interface LODConstructor {
+      new(): LOD
   }
 
   /** LabelClass defines the styles of labels for ArcGISDynamicMapServiceLayer. */
@@ -7646,6 +7675,7 @@ declare namespace esriTypes.layers {
     subLayerIds: number[];
   }
   export interface LayerInfoConstructor {
+      new(): LayerInfo
   }
   /** The LayerMapSource class defines and provides information about an existing map service layer. */
   export class LayerMapSource {
@@ -7675,6 +7705,7 @@ declare namespace esriTypes.layers {
     useTime: boolean;
   }
   export interface LayerTimeOptionsConstructor {
+      new(): LayerTimeOptions
   }
 
   /** Represents the data object for the dynamically generated map. */
@@ -7830,6 +7861,7 @@ declare namespace esriTypes.layers {
     minValue: number;
   }
   export interface RangeDomainConstructor {
+      new(): RangeDomain
   }
   /** The RasterDataSource class defines and provides information about a file-based raster that resides in a registered raster workspace. */
   export class RasterDataSource {
@@ -8043,6 +8075,7 @@ declare namespace esriTypes.layers {
 	  UNIT_WEEKS: any;
 	    /** Indicates a value measured in years. */
 	  UNIT_YEARS: any;
+      new(): TimeInfo
   }
   /** TimeReference contains information about how the time was measured. */
   export class TimeReference {
@@ -8052,6 +8085,7 @@ declare namespace esriTypes.layers {
     timeZone: string;
   }
   export interface TimeReferenceConstructor {
+      new(): TimeReference
   }
 
   /** A layer for OGC Web Map Services (WMS). */
@@ -8666,6 +8700,7 @@ declare namespace esriTypes.renderers {
     toJson(): any;
   }
   export interface RendererConstructor {
+      new(): Renderer
   }
 
   /** ScaleDependentRenderer provides the capability to apply multiple scale-dependent renderers to a layer. */
@@ -8740,6 +8775,7 @@ declare namespace esriTypes.renderers {
     getAgedSymbol(symbol: symbols.Symbol, graphic: Graphic): symbols.Symbol;
   }
   export interface SymbolAgerConstructor {
+      new(): SymbolAger
   }
 
   /** Temporal renderers provide time-based rendering of features in a feature layer. */
@@ -8981,6 +9017,7 @@ declare namespace esriTypes.symbols {
     setOutline(outline: SimpleLineSymbol): FillSymbol;
   }
   export interface FillSymbolConstructor {
+      new(): FillSymbol
   }
   /** Font used for text symbols added to the graphics layer. */
   export class Font {
@@ -9089,6 +9126,7 @@ declare namespace esriTypes.symbols {
     setWidth(width: number): LineSymbol;
   }
   export interface LineSymbolConstructor {
+      new(): LineSymbol
   }
 
   /** Marker symbols are used to draw points and multipoints on the graphics layer. */
@@ -9121,6 +9159,7 @@ declare namespace esriTypes.symbols {
     toJson(): any;
   }
   export interface MarkerSymbolConstructor {
+      new(): MarkerSymbol
   }
 
   /** Fill symbols are used to draw polygon features on the graphics layer. */
@@ -9404,6 +9443,7 @@ declare namespace esriTypes.symbols {
     toJson(): any;
   }
   export interface SymbolConstructor {
+      new(): Symbol
   }
 
   /** Text symbols are used to add text on the graphics layer. */
@@ -9544,6 +9584,7 @@ declare namespace esriTypes.tasks {
     score: number;
   }
   export interface AddressCandidateConstructor {
+      new(): AddressCandidate
   }
 
   /** Create an algorithmic color ramp to define the range of colors used in the renderer generated by the GenerateRendererTask. */
@@ -9636,6 +9677,7 @@ declare namespace esriTypes.tasks {
     type: string;
   }
   export interface ClassificationDefinitionConstructor {
+      new(): ClassificationDefinition
   }
 
   /** Input parameters for the ClosestFacilityTask. */
@@ -9732,6 +9774,7 @@ declare namespace esriTypes.tasks {
     routes: Graphic[];
   }
   export interface ClosestFacilitySolveResultConstructor {
+      new(): ClosestFacilitySolveResult
   }
 
   /** Helps you find closest facilities around any location (incident) on a network.When finding closest facilities, you can specify how many to find and whether the direction of travel is toward or away from them. */
@@ -9829,6 +9872,7 @@ declare namespace esriTypes.tasks {
     totalTime: number;
   }
   export interface DirectionsFeatureSetConstructor {
+      new(): DirectionsFeatureSet
   }
 
   /** Input parameters for the distance  method on the GeometryService. */
@@ -9912,6 +9956,7 @@ declare namespace esriTypes.tasks {
     layerName: string;
   }
   export interface FindResultConstructor {
+      new(): FindResult
   }
 
   /** Search a map service exposed by the ArcGIS Server REST API based on a string value. */
@@ -9963,6 +10008,7 @@ declare namespace esriTypes.tasks {
 	  TYPE_PROCESS_STOP: any;
 	    /** esriGPMessageTypeWarning */
 	  TYPE_WARNING: any;
+      new(): GPMessage
   }
 
   /** Sets the geometries, maximum deviation and units for the generalize operation. */
@@ -10415,6 +10461,7 @@ declare namespace esriTypes.tasks {
     layerName: string;
   }
   export interface IdentifyResultConstructor {
+      new(): IdentifyResult
   }
 
   /** Performs an identify operation on the layers of a map service resource exposed by the ArcGIS Server REST API. */
@@ -10491,6 +10538,7 @@ declare namespace esriTypes.tasks {
     value: string;
   }
   export interface ImageServiceIdentifyResultConstructor {
+      new(): ImageServiceIdentifyResult
   }
 
   /** Performs an identify operation on an image service resource . */
@@ -10546,6 +10594,7 @@ declare namespace esriTypes.tasks {
 	  STATUS_TIMED_OUT: any;
 	    /** The job is waiting for available job processor. */
 	  STATUS_WAITING: any;
+      new(): JobInfo
   }
   /** Define layer properties for the legend layers associated with a PrintTemplate. */
   export class LegendLayer {
@@ -10621,6 +10670,7 @@ declare namespace esriTypes.tasks {
 	  TYPE_PROCESS_STOP: any;
 	    /** TBA */
 	  TYPE_WARNING: any;
+      new(): NAMessage
   }
 
   export var NATypes: {
@@ -10655,6 +10705,7 @@ declare namespace esriTypes.tasks {
     value: any;
   }
   export interface ParameterValueConstructor {
+      new(): ParameterValue
   }
 
   /** Input parameters for the PrintTask. */
@@ -10963,6 +11014,7 @@ declare namespace esriTypes.tasks {
     stops: Graphic[];
   }
   export interface RouteResultConstructor {
+      new(): RouteResult
   }
 
   /** Solves a route on a route layer resource in a Network Analyst service exposed by the ArcGIS Server REST API. */
@@ -11080,6 +11132,7 @@ declare namespace esriTypes.tasks {
     serviceAreaPolylines: Graphic[];
   }
   export interface ServiceAreaSolveResultConstructor {
+      new(): ServiceAreaSolveResult
   }
 
   /** Helps you find service areas around any location on a network. */
@@ -11288,6 +11341,7 @@ declare namespace esriTypes.tasks.geoenrichment {
     attributes: any;
   }
   export interface AddressStudyAreaConstructor {
+      new(): AddressStudyArea
   }
 
   /** The study area is created with a drive time or drive distance buffer. */
@@ -11362,6 +11416,7 @@ declare namespace esriTypes.tasks.geoenrichment {
 	  UNKNOWN: any;
 	    /** Yards (esriYards). */
 	  YARDS: any;
+      new(): DriveUnits
   }
   /** GeographicLevel works with IntersectingGeographies to define a study area of InfoGraphic with a feature from a standard geography layer. */
   export class GeographyLevel {
@@ -11396,6 +11451,7 @@ declare namespace esriTypes.tasks.geoenrichment {
     levels: GeographyLevel[];
   }
   export interface IntersectingGeographiesConstructor {
+      new(): IntersectingGeographies
   }
 
   /** The study area is created with a simple ring buffer with a radius. */
@@ -11423,6 +11479,7 @@ declare namespace esriTypes.tasks.geoenrichment {
     ids: string[];
   }
   export interface StandardGeographyStudyAreaConstructor {
+      new(): StandardGeographyStudyArea
   }
 
   /** The study area that is used for enrichment or for display in an Infographic widget. */
@@ -11439,6 +11496,7 @@ declare namespace esriTypes.tasks.geoenrichment {
     toJson(): any;
   }
   export interface StudyAreaConstructor {
+      new(): StudyArea
   }
 }
 declare namespace esriTypes.toolbars {
@@ -11679,6 +11737,7 @@ declare namespace esriTypes.virtualearth {
     postalTown: string;
   }
   export interface VEAddressConstructor {
+      new(): VEAddress
   }
 
   /** Represents a Bing Maps address and its location. */
@@ -11701,6 +11760,7 @@ declare namespace esriTypes.virtualearth {
     matchCodes: string;
   }
   export interface VEGeocodeResultConstructor {
+      new(): VEGeocodeResult
   }
 
   /** Bing Maps geocoder. */
