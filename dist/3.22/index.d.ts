@@ -1,8 +1,8 @@
-// Type definitions for ArcGIS API for JavaScript v3.18
-// Project: http://js.arcgis.com
-// Definitions by: Esri <http://www.esri.com>
+// Type definitions for ArcGIS API for JavaScript 3.22
+// Project: https://developers.arcgis.com/javascript/3/
+// Definitions by: Esri <https://github.com/Esri>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
-// Converted from https://raw.githubusercontent.com/Esri/jsapi-resources/64abeb4df452a0ac712487f6133211b9a7bfe083/3.x/typescript/arcgis-js-api.d.ts
+// Converted from https://raw.githubusercontent.com/Esri/jsapi-resources/d56e98ea180845aa7f2d8e3054dbf5dc447b859d/3.x/typescript/arcgis-js-api.d.ts
 // Converted by https://github.com/TwitchBronBron/esri-javascript-api-typings
 declare namespace esriTypes {
 
@@ -172,6 +172,8 @@ declare namespace esriTypes {
     isReference?: boolean;
     /** Initial opacity or transparency of the basemap layer. */
     opacity?: number;
+    /** A url to a JSON file containing the stylesheet information to render the VectorTileLayer. */
+    styleUrl?: string;
     /** Specify subDomains where tiles are served to speed up tile retrieval (using subDomains gets around the browser limit of the max number of concurrent requests to a domain). */
     subDomains?: string[];
     /** The URL template used to retrieve the tiles. */
@@ -180,7 +182,7 @@ declare namespace esriTypes {
     tileInfo?: layers.TileInfo;
     /** Define additional tile server domains for the layer. */
     tileServer?: string[];
-    /** The type of layer, valid values are "BingMapsAerial", "BingMapsHybrid", "BingMapsRoad", "OpenStreetMap", or "WebTiledLayer". */
+    /** The type of layer. */
     type?: string;
     /** URL to the ArcGIS Server REST resource that represents a map or image service. */
     url?: string;
@@ -221,6 +223,12 @@ declare namespace esriTypes {
     /** The symbol in which the BlendRenderer is applied. */
     symbol: symbols.Symbol;
   }
+  export interface BookmarkItemOptions {
+    /** The extent for the specified bookmark item. */
+    extent?: geometry.Extent;
+    /** The name for the bookmark item. */
+    name?: string;
+  }
   export interface BookmarksOptions {
     /** An array of dijit.BookmarkItem objects or a json object with the dijit.BookmarkItem format to initially display in the bookmark widget. */
     bookmarks?: dijit.BookmarkItem[];
@@ -234,14 +242,24 @@ declare namespace esriTypes {
     columnDelimiter?: string;
     /** Copyright information for the layer. */
     copyright?: string;
+    /** Enables feature reduction (for example clustering) on point layers. */
+    featureReduction?: any;
     /** The fields property contains objects with "name", "alias" and "type" String properties. */
     fields?: any[];
     /** The latitude field name. */
     latitudeFieldName?: string;
     /** The longitude field name. */
     longitudeFieldName?: string;
+    /** Opacity or transparency of layer. */
+    opacity?: number;
     /** An array of strings which correspond to fields to include in the CSVLayer. */
     outFields?: string[];
+    /** Refresh interval of the layer in minutes. */
+    refreshInterval?: number;
+    /** Time information for the layer, such as start time field, end time field, track id field, layers time extent and the draw time interval. */
+    timeInfo?: layers.TimeInfo;
+    /** Visibility of the layer. */
+    visible?: boolean;
   }
   export interface ChooseBestFacilitiesOptions {
     /** The URL to the analysis service, for example "http://analysis.arcgis.com/arcgis/rest/services/tasks/GPServer". */
@@ -421,17 +439,17 @@ declare namespace esriTypes {
     /** The selected color. */
     color: Color;
     /** The row size of the palette. */
-    colorsPerRow: number;
+    colorsPerRow?: number;
     /** The set of available color options. */
-    palette: Color[];
+    palette?: Color[];
     /** Array of recent colors to show in the recent colors row. */
-    recentColors: Color[];
+    recentColors?: Color[];
     /** Toggles color selection being required. */
-    required: boolean;
+    required?: boolean;
     /** Toggles the recent color row. */
-    showRecentColors: boolean;
+    showRecentColors?: boolean;
     /** Toggles the transparency slider. */
-    showTransparencySlider: boolean;
+    showTransparencySlider?: boolean;
   }
   export interface ConnectOriginsToDestinationsOptions {
     /** The URL to the GPServer used to execute an analysis job. */
@@ -550,13 +568,13 @@ declare namespace esriTypes {
     locationProvider: tasks.locationproviders.LocationProviderBase;
   }
   export interface DataBrowserOptions {
-    /** Whether or not to display the hierarchy dropdown for countries with multiple hierarchies (e.g. */
+    /** Whether or not to display the hierarchy dropdown for countries with multiple hierarchies (for example USA has both Census and Landscape, Germany has both Census and Nexiga). */
     allowHierarchies?: boolean;
     /** Show/hide country drop down. */
     countryBox?: boolean;
     /** Two-digit country code selected in the country drop down. */
     countryID?: string;
-    /** The hierarchy to load for a country (e.g. */
+    /** The hierarchy to load for a country (for example 'Census' or 'Landscape' for USA). */
     hierarchyID?: string;
     /** Text string to display on the back button on the second and third pages of the Data Browser. */
     pageBackButton?: string;
@@ -582,8 +600,8 @@ declare namespace esriTypes {
     canModifyStops?: boolean;
     /** Center the map at the start of the selected route segment. */
     centerAtSegmentStart?: boolean;
-    /** The returned directions object from the routing solve result. */
-    directions?: any;
+    /** The locale used for the directions. */
+    directionsLanguage?: string;
     /** Length units. */
     directionsLengthUnits?: string;
     /** Enable the dragging of stop locations on the map. */
@@ -616,8 +634,6 @@ declare namespace esriTypes {
     printTemplate?: string;
     /** When true, the route will return to start point. */
     returnToStart?: boolean;
-    /** Specify the input parameters for the route task. */
-    routeParams?: tasks.RouteParameters;
     /** Define the symbol used to draw the route on the map. */
     routeSymbol?: symbols.SimpleLineSymbol;
     /** Specify the service that will be used to calculate directions. */
@@ -630,6 +646,8 @@ declare namespace esriTypes {
     segmentSymbol?: symbols.SimpleLineSymbol;
     /** Defines whether the Directions widget will show the map-click-active toggle button. */
     showActivateButton?: boolean;
+    /** Indicates whether to expose barriers when using the widget. */
+    showBarriersButton?: boolean;
     /** If true, the Clear button is shown. */
     showClearButton?: boolean;
     /** If true, the toggle button group allowing user to choose between Miles and Kilometers is shown. */
@@ -826,6 +844,8 @@ declare namespace esriTypes {
     showSelectFolder?: boolean;
   }
   export interface FeatureLayerOptions {
+    /** Indicates whether attribute features containing m-values can be edited. */
+    allowUpdateWithoutMValues?: boolean;
     /** Enable or disable the auto generalization of features from a non-editable layer in on-demand mode. */
     autoGeneralize?: boolean;
     /** Class attribute to set for the layer's node. */
@@ -836,6 +856,8 @@ declare namespace esriTypes {
     displayOnPan?: boolean;
     /** Set a callback function that will be invoked by  FeatureLayer.getEditSummary. */
     editSummaryCallback?: Function;
+    /** Enables feature reduction (for example clustering) on point layers. */
+    featureReduction?: any;
     /** Specify the geodatabase version to display. */
     gdbVersion?: string;
     /** Unique ID to assign to the layer. */
@@ -1034,6 +1056,8 @@ declare namespace esriTypes {
   export interface GeoRSSLayerOptions {
     /** The template used to display popup window for identify operation. */
     infoTemplate?: InfoTemplate;
+    /** Opacity or transparency of layer. */
+    opacity?: number;
     /** The output spatial reference for the GeoRSSLayer. */
     outSpatialReference?: SpatialReference;
     /** The default symbol use to display point features. */
@@ -1042,6 +1066,8 @@ declare namespace esriTypes {
     polygonSymbol?: symbols.Symbol;
     /** The default symbol used to display polyline features. */
     polylineSymbol?: symbols.Symbol;
+    /** Refresh interval of the layer in minutes. */
+    refreshInterval?: number;
   }
   export interface GeocoderOptions {
     /** By default, the Geocoder widget uses the Esri World tasks.Locator to find search locations. */
@@ -1108,7 +1134,7 @@ declare namespace esriTypes {
     remove(): void;
   }
   export interface HeatmapRendererOptions {
-    /** The radius (in pixels) of the circle over which the majority of each points value is spread out over. */
+    /** The radius (in pixels) of the circle over which the majority of each point's value is spread out. */
     blurRadius?: number;
     /** An array of CSS color strings (#RGB, #RRGGBB, rgb(r,g,b), rgba(r,g,b,a)). */
     colors: string[];
@@ -1344,6 +1370,22 @@ declare namespace esriTypes {
     force3DTransforms?: boolean;
     /** By default the map creates and uses an out-of-the-box esri/dijit/Popup. */
     infoWindow?: InfoWindowBase;
+    /** Indicates whether to enable double-click on a map to recenter and zoom in a level by using SHIFT + Click. */
+    isClickRecenter?: boolean;
+    /** Indicates whether double-clicking on map zooms in on extent. */
+    isDoubleClickZoom?: boolean;
+    /** Indicates whether to enable navigation of the map using a keyboard's arrow keys. */
+    isKeyboardNavigation?: boolean;
+    /** Indicates whether all map navigation is enabled. */
+    isMapNavigation?: boolean;
+    /** Indicates whether panning is enabled within the map. */
+    isPan?: boolean;
+    /** Indicates whether pinch zoom navigation is enabled on touch-enabled devices. */
+    isPinchZoom?: boolean;
+    /** Indicates whether to enable a mouse drag to zoom into to a specific region on the map. */
+    isRubberBandZoom?: boolean;
+    /** (Added at version 3.21). */
+    isScrollWheel?: boolean;
     /** If provided, the map is initialized with the specified levels of detail. */
     lods?: layers.LOD[];
     /** Display the esri logo on the map. */
@@ -1396,6 +1438,8 @@ declare namespace esriTypes {
     defaultAreaUnit?: string;
     /** The default length unit for the measure distance tool. */
     defaultLengthUnit?: string;
+    /** Fill symbol used to symbolize the polygons representing the areas measured for the measure area tool. */
+    fillSymbol?: symbols.SimpleFillSymbol;
     /** Allows the user to immediately measure previously-created geometry on dijit creation. */
     geometry?: geometry.Point | geometry.Polyline | geometry.Polygon;
     /** Line symbol used to draw the lines for the measure line and measure distance tools. */
@@ -1488,8 +1532,6 @@ declare namespace esriTypes {
     popupWindowFeatures?: string;
     /** The ArcGIS for Portal URL. */
     portalUrl?: string;
-    /** Indicates whether to display social logins such as Google/Facebook. */
-    showSocialLogins?: boolean;
   }
   export interface ObliqueViewerOptions {
     /** Azimuth angle value for which to display oblique images. */
@@ -1638,7 +1680,7 @@ declare namespace esriTypes {
     pixels: number[][];
     /** Pixel type. */
     pixelType?: string;
-    /** Array of objects containing numeric statistical properties (e.g. */
+    /** Array of objects containing numeric statistical properties (for example minValue, maxValue, noDataValue, etc.). */
     statistics?: any[];
     /** Number of columns. */
     width: number;
@@ -1706,6 +1748,8 @@ declare namespace esriTypes {
   export interface PrintOptions {
     /** Set to true if the print service is an asynchronous geoprocessing service. */
     async?: boolean;
+    /** Additional parameters for the print service. */
+    extraParameters?: any;
     /** The map to  print. */
     map?: Map;
     /** An optional array of user-defined templates. */
@@ -1774,7 +1818,7 @@ declare namespace esriTypes {
     primaryHandle?: number;
     /** Toggle for showing the black handle bars. */
     showHandles?: boolean;
-    /** Flexible toggle for showing labels (e.g. */
+    /** Flexible toggle for showing labels (for example ["data", "handle"]). */
     showLabels?: boolean | string[];
     /** Toggle for showing the horizontal line indicators from the center of the handle. */
     showTicks?: boolean;
@@ -1832,8 +1876,6 @@ declare namespace esriTypes {
     expanded?: boolean;
     /** This the specified graphicsLayer to use for the highlightGraphic and labelGraphic instead of map.graphics. */
     graphicsLayer?: layers.Layer;
-    /** The symbol used for highlightGraphic. */
-    highlightSymbol?: symbols.Symbol;
     /** A customized infoTemplate for the selected feature. */
     infoTemplate?: InfoTemplate;
     /** The text symbol for the label graphic. */
@@ -2073,7 +2115,7 @@ declare namespace esriTypes {
   }
   export interface TemplatePickerOptions {
     /** Number of visible columns. */
-    columns?: number;
+    columns?: number | string;
     /** Defines the text to be displayed when the template picker does not have any templates to display. */
     emptyMessage?: string;
     /** Array of input feature layers. */
@@ -2085,7 +2127,7 @@ declare namespace esriTypes {
     /** Length of label description. */
     maxLabelLength?: number;
     /** Number of visible rows. */
-    rows?: number;
+    rows?: number | string;
     /** Tooltip content contains the template name and description. */
     showTooltip?: boolean;
     /** HTML style attributes for the widget. */
@@ -2455,7 +2497,7 @@ declare namespace esriTypes {
     findCredential(url: string, userId?: string): Credential;
     /**
      * Returns the OAuth configuration for the passed in Portal server URL.
-     * @param url The URL to the Portal.
+     * @param url The ArcGIS for Portal URL, for example "https://www.arcgis.com" for ArcGIS Online and "https://www.example.com/portal" for your in-house portal.
      */
     findOAuthInfo(url: string): arcgis.OAuthInfo;
     /**
@@ -2480,7 +2522,7 @@ declare namespace esriTypes {
      * Call this method (during your application initialization) with JSON previously obtained from toJson method to re-hydrate the state of identity manager.
      * @param json The JSON obtained from the toJson method.
      */
-    initialize(json: Object): any;
+    initialize(json: Object): void;
     /** Returns true if the identity manager is busy accepting user input, i.e., the user has invoked signIn and is waiting for a response. */
     isBusy(): boolean;
     /**
@@ -2503,7 +2545,7 @@ declare namespace esriTypes {
     registerServers(serverInfos: ServerInfo[]): void;
     /**
      * Registers the given OAuth2 access token with the identity manager.
-     * @param properties See the object specifications table below for the structure of the  properties  object.
+     * @param properties See the object specifications table below for the structure of the properties object.
      */
     registerToken(properties: any): void;
     /**
@@ -2839,8 +2881,15 @@ declare namespace esriTypes {
      * @param value The value of the attribute.
      */
     attr(name: string, value: string): Graphic;
+    /** Creates a deep clone of the graphic object. */
+    clone(): Graphic;
     /** Draws the graphic. */
     draw(): Graphic;
+    /**
+     * Returns the graphics summarized by the given aggregate graphic in a clustering or feature reduction visualization.
+     * @param aggregateGraphic A graphic representing the aggregation (or reduction) of several individual graphics in a layer.
+     */
+    getChildGraphics(aggregateGraphic: Graphic): Graphic[];
     /** Returns the content string based on attributes and infoTemplate values. */
     getContent(): string;
     /** Returns the dojo/gfx/shape.Shape of the Esri graphic. */
@@ -2857,10 +2906,14 @@ declare namespace esriTypes {
     getShape(): any;
     /** Returns one or more dojox/gfx/shape.Shape used to draw the graphic. */
     getShapes(): any[];
+    /** In contrast to the getLayer method, getSouceLayer does not change when a graphic is added to another layer. */
+    getSourceLayer(): layers.Layer;
     /** Returns the title string based on attributes and infoTemplate values. */
     getTitle(): string;
     /** Hides the graphic. */
     hide(): void;
+    /** Indicates if the graphic represents a cluster of features. */
+    isAggregate(): boolean;
     /**
      * Defines the attributes of the graphic.
      * @param attributes The name value pairs of fields and field values associated with the graphic.
@@ -2928,7 +2981,7 @@ declare namespace esriTypes {
      * @param callback Function or string implementing the filtering.
      * @param thisObject Optional object used to scope the call to the callback.
      */
-    filter(object: any, callback: Function, thisObject: any): any;
+    filter(object: any, callback: Function, thisObject?: any): any;
     /**
      * Returns true when the value is neither null or undefined.
      * @param value The value to test.
@@ -2960,6 +3013,8 @@ declare namespace esriTypes {
     attribution: dijit.Attribution;
     /** Value is true when the map automatically resizes if the browser window or ContentPane widget enclosing the map is resized. */
     autoResize: boolean;
+    /** The background color "behind" the map. */
+    backgroundColor: Color;
     /** An array of IDs corresponding to the layers that make up the map's current basemap. */
     basemapLayerIds: string[];
     /** The current extent of the map in map units. */
@@ -2986,12 +3041,18 @@ declare namespace esriTypes {
     isDoubleClickZoom: boolean;
     /** When true, keyboard navigation is enabled. */
     isKeyboardNavigation: boolean;
+    /** Indicates whether all map navigation is enabled. */
+    isMapNavigation: boolean;
     /** When true, map panning is enabled using the mouse. */
     isPan: boolean;
     /** When true, pan arrows are displayed around the edge of the map. */
     isPanArrows: boolean;
+    /** Indicates whether pinch zoom navigation is enabled on touch-enabled devices. */
+    isPinchZoom: boolean;
     /** When true, rubberband zoom is enabled. */
     isRubberBandZoom: boolean;
+    /** It indicates whether map navigation based on mouse scroll wheel is enabled. */
+    isScrollWheel: boolean;
     /** When true, the mouse scroll wheel zoom is enabled. */
     isScrollWheelZoom: boolean;
     /** When true, shift double click zoom is enabled. */
@@ -3060,8 +3121,11 @@ declare namespace esriTypes {
     disableMapNavigation(): void;
     /** Disallows panning a map using the mouse. */
     disablePan(): void;
+    disablePinchZoom(): void;
     /** Disallows zooming in or out on a map using a bounding box. */
     disableRubberBandZoom(): void;
+    /** Disables navigation of the map based on mouse scroll wheel. */
+    disableScrollWheel(): void;
     /** Disallows zooming in or out on a map using the mouse scroll wheel. */
     disableScrollWheelZoom(): void;
     /** Disallows shift double clicking on a map to zoom in a level and center the map. */
@@ -3078,8 +3142,12 @@ declare namespace esriTypes {
     enableMapNavigation(): void;
     /** Permits users to pan a map using the mouse. */
     enablePan(): void;
+    /** Enables the user to work with pinch zoom navigation for touch-enabled devices. */
+    enablePinchZoom(): void;
     /** Permits users to zoom in or out on a map using a bounding box. */
     enableRubberBandZoom(): void;
+    /** Enables the user to navigate the map based on mouse scroll wheel. */
+    enableScrollWheel(): void;
     /** Permits users to zoom in or out on a map using the mouse scroll wheel. */
     enableScrollWheelZoom(): void;
     /** Permits users to shift double click on a map to zoom in a level and center the map. */
@@ -3157,6 +3225,11 @@ declare namespace esriTypes {
      * @param immediate By default, the actual resize logic is delayed internally in order to throttle spurious resize events dispatched by some browsers.
      */
     resize(immediate?: boolean): void;
+    /**
+     * Change the background color of the map.
+     * @param color Color specified using either a named string (for example red), hex string (for example #FF0000), array of rgba values with "a" in the 0-1 range (for example [255,0,0,0.75]), or an instance of esri/Color.
+     */
+    setBackgroundColor(color: Color | string): void;
     /**
      * Change the map's current basemap.
      * @param basemap A valid basemap name.
@@ -3475,8 +3548,6 @@ declare namespace esriTypes.arcgis {
     popupWindowFeatures: string;
     /** The ArcGIS for Portal URL. */
     portalUrl: string;
-    /** Indicates whether to display social logins like Google/Facebook. */
-    showSocialLogins: boolean;
     /** Returns an easily serializable object representation of the OAuthInfo. */
     toJson(): any;
   }
@@ -3530,6 +3601,8 @@ declare namespace esriTypes.arcgis {
     defaultBasemap: any;
     /** The default extent for the map the portal displays in the map viewer. */
     defaultExtent: any;
+    /** The default vector basemap to use for the portal. */
+    defaultVectorBasemap: any;
     /** A description of the organization / portal. */
     description: string;
     /** The featured groups for the portal. */
@@ -3540,6 +3613,8 @@ declare namespace esriTypes.arcgis {
     featuredItemsGroupQuery: string;
     /** The query that identifies the group containing features items for the gallery. */
     galleryTemplatesGroupQuery: string;
+    /** Helper services provided by the portal. */
+    helperServices: any;
     /** The group that contains featured content to be displayed on the home page. */
     homePageFeaturedContent: string;
     /** The number of featured items that can be displayed on the home page. */
@@ -3574,7 +3649,7 @@ declare namespace esriTypes.arcgis {
     portalProperties: any;
     /** The URL to the thumbnail of the portal. */
     portalThumbnail: string;
-    /** URL to the portal. */
+    /** The REST URL for the portal, for example "https://www.arcgis.com/sharing/rest/" for ArcGIS Online and "https://www.example.com/arcgis/sharing/rest/" for your in-house portal. */
     portalUrl: string;
     /** The region for the organization. */
     region: string;
@@ -3596,7 +3671,7 @@ declare namespace esriTypes.arcgis {
     thumbnailUrl: string;
     /** Sets the units of measure for the organization's users. */
     units: string;
-    /** The portal url. */
+    /** The ArcGIS for Portal URL, for example "https://www.arcgis.com" for ArcGIS Online and "https://www.example.com/arcgis" for your in-house portal. */
     url: string;
     /** The prefix selected by the organization's administrator to be used with the customBaseURL. */
     urlKey: string;
@@ -3604,6 +3679,10 @@ declare namespace esriTypes.arcgis {
     user: PortalUser;
     /** If true, only simple where clauses that are complaint with SQL92 can be used when querying layers and tables. */
     useStandardizedQuery: boolean;
+    /** Whether an organization has opted in to use the vector tile basemaps. */
+    useVectorBasemaps: boolean;
+    /** The query that defines the vector tiles basemaps that should be displayed in the dijit.Basemap Gallery when useVectorBasemaps is true. */
+    vectorBasemapGalleryGroupQuery: string;
     /** Returns a PortalUser object that describes the user currently signed in to the portal. */
     getPortalUser(): PortalUser;
     /**
@@ -3634,7 +3713,7 @@ declare namespace esriTypes.arcgis {
   export interface PortalConstructor {
 	    /**
 	     * Creates a new Portal object.
-	     * @param url URL to the ArcGIS.com site or in-house portal.
+	     * @param url The ArcGIS for Portal URL, for example "https://www.arcgis.com" for ArcGIS Online and "https://www.example.com/arcgis" for your in-house portal.
 	     */
 	    new(url: string): Portal;
   }
@@ -3702,6 +3781,11 @@ declare namespace esriTypes.arcgis {
     url: string;
     /** Get the current members for the group. */
     getMembers(): any;
+    /**
+     * Get the URL to the thumbnail image for the portal group.
+     * @param width The desired image width.
+     */
+    getThumbnailUrl(width?: number): string;
     /**
      * Execute a query against the group to return a deferred that when resolved returns PortalQueryResult that contain a results array of PortalItem objects that match the input query.
      * @param queryParams The input query parameters.
@@ -3784,15 +3868,17 @@ declare namespace esriTypes.arcgis {
      * @param comment The PortalComment to delete.
      */
     deleteComment(comment: PortalComment): any;
-    /**
-     * Delete a rating that you created for the specified item.
-     * @param rating Rating to delete.
-     */
-    deleteRating(rating: PortalRating): any;
+    /** Delete a rating that you created for the specified item. */
+    deleteRating(): any;
     /** Get the comments associated with the item. */
     getComments(): any;
     /** Returns the rating (if any) given to the item. */
     getRating(): any;
+    /**
+     * Get the URL to the thumbnail image for the portal item.
+     * @param width The desired image width.
+     */
+    getThumbnailUrl(width?: number): string;
     /**
      * Updates an item comment.
      * @param comment A PortalComment that contains the comment updates.
@@ -3856,7 +3942,7 @@ declare namespace esriTypes.arcgis {
     tags: string[];
     /** The url to the thumbnail image for the user. */
     thumbnailUrl: string;
-    /** The url for the user content. */
+    /** The URL for the user content. */
     userContentUrl: string;
     /** The username for the user. */
     username: string;
@@ -3880,6 +3966,11 @@ declare namespace esriTypes.arcgis {
     getNotifications(): any;
     /** Access the tag objects that have been created by the portal user. */
     getTags(): any;
+    /**
+     * Get the URL to the thumbnail image for the portal user.
+     * @param width The desired image width.
+     */
+    getThumbnailUrl(width?: number): string;
   }
   export interface PortalUserConstructor {
       new(): PortalUser
@@ -3998,13 +4089,13 @@ declare namespace esriTypes.dijit {
 	    new(params: BasemapOptions): Basemap;
   }
 
-  /** The BasemapGallery dijit displays a collection basemaps from ArcGIS.com or a user-defined set of map or image services. */
+  /** The BasemapGallery dijit displays a collection of basemaps from ArcGIS.com or a user-defined set of map or image services. */
   export class BasemapGallery {
     /** List of basemaps displayed in the BasemapGallery. */
     basemaps: Basemap[];
     /** This value is true after the BasemapGallery retrieves the ArcGIS.com basemaps. */
     loaded: boolean;
-    /** Optional parameter to pass in a portal URL, including the instance name, used to access the group containing the basemap gallery items. */
+    /** Optional parameter to pass in a portal URL, including the instance name, used to access the group containing the basemap gallery items, for example www.myportal.com/myInstance or http://www.myportal.com/myInstance. */
     portalUrl: string;
     /**
      * Add a new basemap to the BasemapGallery's list of basemaps.
@@ -4061,6 +4152,8 @@ declare namespace esriTypes.dijit {
     fullExtent: geometry.Extent;
     /** The initial extent of the layer. */
     initialExtent: geometry.Extent;
+    /** A url to a JSON file containing the stylesheet information to render the VectorTileLayer. */
+    styleUrl: string;
     /** The subDomains where tiles are served to speed up tile retrieval (using subDomains gets around the browser limit of the max number of concurrent requests to a domain). */
     subDomains: string[];
     /** The tile info for the layer including lods, rows, cols, origin and spatial reference. */
@@ -4123,10 +4216,9 @@ declare namespace esriTypes.dijit {
   export interface BookmarkItemConstructor {
 	    /**
 	     * Creates a new BookmarkItem.
-	     * @param name The name for the bookmark item.
-	     * @param extent The extent for the specified bookmark item.
+	     * @param params See options list for parameters.
 	     */
-	    new(name: string, extent: geometry.Extent): BookmarkItem;
+	    new(params?: BookmarkItemOptions): BookmarkItem;
   }
 
   /** The Bookmarks widget is a ready to use tool for bookmarking the current map extent. */
@@ -4364,14 +4456,14 @@ declare namespace esriTypes.dijit {
     mergedRouteGraphic: Graphic;
     /** If specified, this specifies the portal where the produced route layers are going to be stored and accessed. */
     portalUrl: string;
-    /** Routing parameters for the widget. */
-    routeParams: tasks.RouteParameters;
     /** Routing task for the widget. */
     routeTask: tasks.RouteTask;
     /** Read-only: The Service Description object returned by the Route REST Endpoint. */
     serviceDescription: any;
     /** Indicates whether the Directions widget will display the map-click-active toggle button. */
     showActivateButton: boolean;
+    /** Indicates whether to expose barriers when using the widget. */
+    showBarriersButton: boolean;
     /** If true, the Clear button is shown. */
     showClearButton: boolean;
     /** If true, the toggle button group allowing user to choose between Miles and Kilometers is shown. */
@@ -5035,8 +5127,8 @@ declare namespace esriTypes.dijit {
 	    /** InfoWindow is anchored to the upper right of the point. */
 	  ANCHOR_UPPERRIGHT: any;
 	    /**
-	     * Create a new Info Window.
-	     * @param params Optional parameters.
+	     * Create a new InfoWindow.
+	     * @param params Specify optional parameters used to create the InfoWindow.
 	     * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
 	     */
 	    new(params: any, srcNodeRef: Node | string): InfoWindow;
@@ -5095,7 +5187,12 @@ declare namespace esriTypes.dijit {
     on(type: string, listener: (event: any) => void): Handle;
   }
   export interface InfoWindowLiteConstructor {
-      new(): InfoWindowLite
+	    /**
+	     * Create a new InfoWindowLite.
+	     * @param params Specify optional parameters used to create the InfoWindowLite.
+	     * @param srcNodeRef Reference or id of the HTML element where the widget should be rendered.
+	     */
+	    new(params: any, srcNodeRef: Node | string): InfoWindowLite;
   }
 
   /** (Currently in beta) The LayerList widget provides a list of layers that allows the toggling of layer visibility. */
@@ -5494,6 +5591,8 @@ declare namespace esriTypes.dijit {
   export class Popup extends InfoWindowBase {
     /** Controls the placement of the popup window with respect to the geographic location. */
     anchor: string;
+    /** Visualizes the extent of the points summarized by the cluster graphic when the user selects the "Browse Features" action in the cluster popup. */
+    clusterFillSymbol: symbols.FillSymbol;
     /** The number of features associated with the info window. */
     count: number;
     /** An array of  pending deferreds, null if there are not any pending deferreds. */
@@ -5540,16 +5639,28 @@ declare namespace esriTypes.dijit {
     visibleWhenEmpty: boolean;
     /** Define the number of levels to zoom in when the 'Zoom to' link is clicked. */
     zoomFactor: number;
+    /**
+     * Creates links for the specified actions at the bottom of the popup window.
+     * @param actions An array of action objects that define the behavior for actions included in the popup.
+     */
+    addActions(actions: any[]): any[];
     /** Removes all features and destroys any pending deferreds. */
     clearFeatures(): void;
     /** Destroy the popup. */
     destroy(): void;
+    /** Returns the current placement of the popup window. */
+    getCurrentAnchor(): string;
     /** Get the currently selected feature. */
     getSelectedFeature(): Graphic;
     /** Hide the info window. */
     hide(): void;
     /** Maximize the info window. */
     maximize(): void;
+    /**
+     * Removes the specified actions from the popup window.
+     * @param actionInfos An array of objects that describe actions  created with addActions().
+     */
+    removeActions(actionInfos: any[]): void;
     /** Re-calculates the popup's position with respect to the map location it is pointing to. */
     reposition(): void;
     /**
@@ -5583,8 +5694,9 @@ declare namespace esriTypes.dijit {
     /**
      * Associate an array of features or an array of deferreds that return features with the info window.
      * @param features An array of features or deferreds.
+     * @param options Additional options for setting features in the popup.
      */
-    setFeatures(features: Graphic[] | any[]): void;
+    setFeatures(features: Graphic[] | any[], options?: any): void;
     /**
      * Sets the info window title.
      * @param title The text for the title.
@@ -5747,7 +5859,7 @@ declare namespace esriTypes.dijit {
     precision: number;
     /** Toggle for showing the black handle bars. */
     showHandles: boolean;
-    /** Flexible toggle for showing labels e.g. */
+    /** Flexible toggle for showing labels, for example ["data","handle"]. */
     showLabels: boolean | string[];
     /** Toggle for showing the horizontal line indicators from the center of the handle. */
     showTicks: boolean;
@@ -6006,6 +6118,9 @@ declare namespace esriTypes.dijit {
     startup(): void;
     /** Saves the recent fill and outline colors. */
     storeColors(): void;
+    /** Fired every time an edit is committed. */
+    on(type: "style-update", listener: (event: { target: SymbolStyler }) => void): Handle;
+    on(type: string, listener: (event: any) => void): Handle;
   }
   export interface SymbolStylerConstructor {
 	    /**
@@ -6221,7 +6336,7 @@ declare namespace esriTypes.dijit.analysis {
     checkJobStatus(jobId: string): void;
     /**
      * Starts an analysis tool.
-     * @param params See the object specifications table below for the structure of the  params  object.
+     * @param params See the object specifications table below for the structure of the params object.
      */
     execute(params: string): void;
     /**
@@ -8049,10 +8164,10 @@ declare namespace esriTypes.geometry {
     clip(geometry: Geometry, envelope: Extent): Geometry;
     /**
      * Indicates if one geometry contains another geometry.
-     * @param geometry1 The geometry that is tested for the contains relationship to the other geometry.
-     * @param geometry2 The geometry that is tested for within relationship to the other geometry.
+     * @param containerGeometry The geometry that is tested for the "contains" relationship to the other geometry.
+     * @param insideGeometry The geometry that is tested for the "within" relationship to the containerGeometry.
      */
-    contains(geometry1: Geometry, geometry2: Geometry): boolean;
+    contains(containerGeometry: Geometry, insideGeometry: Geometry): boolean;
     /**
      * Calculates the convex hull of the input geometry.
      * @param geometry The input geometry.
@@ -8258,10 +8373,10 @@ declare namespace esriTypes.geometry {
     union(geometries: Geometry[]): Geometry;
     /**
      * Indicates if one geometry is within another geometry.
-     * @param geometry1 The base geometry that is tested for within relationship to the other geometry.
-     * @param geometry2 The comparison geometry that is tested for the contains relationship to the other geometry.
+     * @param innerGeometry The base geometry that is tested for within relationship to the other geometry.
+     * @param outerGeometry The comparison geometry that is tested for the contains relationship to the other geometry.
      */
-    within(geometry1: Geometry, geometry2: Geometry): boolean;
+    within(innerGeometry: Geometry, outerGeometry: Geometry): boolean;
   };
 
   /** A client-side asynchronous geometry engine. */
@@ -8282,10 +8397,10 @@ declare namespace esriTypes.geometry {
     clip(geometry: Geometry, envelope: Extent): any;
     /**
      * Indicates if one geometry contains another geometry.
-     * @param geometry1 The geometry that is tested for the contains relationship to the other geometry.
-     * @param geometry2 The geometry that is tested for within relationship to the other geometry.
+     * @param containerGeometry The geometry that is tested for the "contains" relationship to the other geometry.
+     * @param insideGeometry The geometry that is tested for the "within" relationship to the containerGeometry.
      */
-    contains(geometry1: Geometry, geometry2: Geometry): any;
+    contains(containerGeometry: Geometry, insideGeometry: Geometry): any;
     /**
      * Calculates the convex hull of the input geometry.
      * @param geometry The input geometry.
@@ -8491,10 +8606,10 @@ declare namespace esriTypes.geometry {
     union(geometries: Geometry[]): any;
     /**
      * Indicates if one geometry is within another geometry.
-     * @param geometry1 The base geometry that is tested for within relationship to the other geometry.
-     * @param geometry2 The comparison geometry that is tested for the contains relationship to the other geometry.
+     * @param innerGeometry The base geometry that is tested for within relationship to the other geometry.
+     * @param outerGeometry The comparison geometry that is tested for the contains relationship to the other geometry.
      */
-    within(geometry1: Geometry, geometry2: Geometry): any;
+    within(innerGeometry: Geometry, outerGeometry: Geometry): any;
   };
 
   /** Utility methods for working with JSON geometry objects. */
@@ -8887,7 +9002,7 @@ declare namespace esriTypes.layers {
     timeInfo: TimeInfo;
     /** By default, images are exported in MIME format, and the image is streamed to the client. */
     useMapImage: boolean;
-    /** The version of ArcGIS Server the image service is published to, e.g. */
+    /** The version of ArcGIS Server the image service is published to, such as 9.3, 9.31, 10, 10.41. */
     version: number;
     /**
      * Exports a map using values as specified by ImageServiceParameters.
@@ -8899,7 +9014,7 @@ declare namespace esriTypes.layers {
     getDefinitionExpression(): string;
     /** Get key properties of an ImageService including information such as the band names associated with the imagery. */
     getKeyProperties(): any;
-    /** Asynchronously returns the raster attribute table of an ImageService which returns categorical mapping of pixel values (e.g. */
+    /** Asynchronously returns the raster attribute table of an ImageService which returns categorical mapping of pixel values (for example a class, group, category, or membership). */
     getRasterAttributeTable(): any;
     /** Gets the currently visible rasters. */
     getVisibleRasters(): Graphic[];
@@ -9111,8 +9226,14 @@ declare namespace esriTypes.layers {
     latitudeFieldName: string;
     /** The longitude field name. */
     longitudeFieldName: string;
+    /** Opacity or transparency of layer. */
+    opacity: number;
+    /** Refresh interval of the layer in minutes. */
+    refreshInterval: number;
     /** The url to a CSV resource. */
     url: string;
+    /** Visibility of the layer. */
+    visible: boolean;
   }
   export interface CSVLayerConstructor {
 	    /**
@@ -9271,6 +9392,8 @@ declare namespace esriTypes.layers {
     advancedQueryCapabilities: any;
     /** Returns true if the geometry of the features in the layer can be edited, false otherwise. */
     allowGeometryUpdates: boolean;
+    /** Indicates whether attribute features containing m-values can be edited. */
+    allowUpdateWithoutMValues: boolean;
     /** The URL, when available, where the layer's attribution data is stored. */
     attributionDataUrl: string;
     /** Information about the capabilities enabled for this layer. */
@@ -9386,6 +9509,12 @@ declare namespace esriTypes.layers {
      * @param errback An error object is returned if an error occurs.
      */
     deleteAttachments(objectId: number, attachmentIds: number[], callback?: Function, errback?: Function): any;
+    /** Disables feature reduction (for example clustering) on the layer. */
+    disableFeatureReduction(): void;
+    /** Enables feature reduction (for example clustering) on the layer using the options set in setFeatureReduction(). */
+    enableFeatureReduction(): void;
+    /** Returns graphics representing the aggregation of several point features clustered together. */
+    getAggregateGraphics(): Graphic[];
     /** Asynchrously returns custom data for the layer when available. */
     getAttributionData(): any;
     /** Returns the current definition expression. */
@@ -9413,6 +9542,8 @@ declare namespace esriTypes.layers {
      * @param options See the object specifications table below for the structure of the  options  object.
      */
     getEditSummary(feature: Graphic, options?: any): string;
+    /** Returns the options used to reduce the number of features visualized by the layer (for example clustering). */
+    getFeatureReduction(): any;
     /**
      * Returns the Field given the specified field name.
      * @param fieldName Name of the attribute field.
@@ -9426,6 +9557,8 @@ declare namespace esriTypes.layers {
     getSelectedFeatures(): Graphic[];
     /** Gets the current selection symbol. */
     getSelectionSymbol(): symbols.Symbol;
+    /** Returns graphics from the layer that are not represented by aggregate graphics when feature reduction (such as clustering) is enabled. */
+    getSingleGraphics(): Graphic[];
     /** Get the current time definition applied to the feature layer. */
     getTimeDefinition(): TimeExtent;
     /**
@@ -9437,6 +9570,10 @@ declare namespace esriTypes.layers {
     hasXYFootprint(): boolean;
     /** Returns true if the FeatureLayer is editable. */
     isEditable(): boolean;
+    /** Indicates if feature reduction (for example clustering) is active in the view. */
+    isFeatureReductionActive(): boolean;
+    /** Indicates if feature reduction (for example clustering) is enabled. */
+    isFeatureReductionEnabled(): boolean;
     /**
      * Returns true if the layer is visible at the given scale.
      * @param scale The scale at which to check if the layer is visible.
@@ -9513,6 +9650,11 @@ declare namespace esriTypes.layers {
      * @param editable When true, the layer will be set as editable.
      */
     setEditable(editable: boolean): FeatureLayer;
+    /**
+     * Sets feature reduction options on the layer (for example clustering options).
+     * @param options Options for reducing (or aggregating) the features in the map.
+     */
+    setFeatureReduction(options: any): void;
     /**
      * Set the layer's data source to the specified geodatabase version.
      * @param versionName The name of the geodatabase version to use as the layer's data source.
@@ -9684,6 +9826,8 @@ declare namespace esriTypes.layers {
     name: string;
     /** An instance of the prototypical feature described by the template. */
     prototype: Graphic;
+    /** An object used to create a thumbnail image that represents a feature type in the FeatureTemplate. */
+    thumbnail: any;
     /** Converts object to its ArcGIS Server JSON representation. */
     toJson(): any;
   }
@@ -9763,6 +9907,10 @@ declare namespace esriTypes.layers {
     items: Graphic[];
     /** The name of the layer. */
     name: string;
+    /** Opacity or transparency of layer. */
+    opacity: number;
+    /** Refresh interval of the layer in minutes. */
+    refreshInterval: number;
     /** The publicly accessible URL to a GeoRSS file. */
     url: string;
     /** An array of feature layers for the GeoRSSLayer. */
@@ -10041,12 +10189,16 @@ declare namespace esriTypes.layers {
     getFeature(featureInfo: any): any;
     /** Get an array of map layers that were created to draw placemarks, ground and screen overlays. */
     getLayers(): Layer[];
+    /** Refreshes the features in the KML Layer. */
+    refresh(): void;
     /**
      * Set the visibility for the specified folder.
      * @param folder A KML folder.
      * @param isVisible The visibility of the folder and all kml features within the folder.
      */
     setFolderVisibility(folder: KMLFolder, isVisible: boolean): void;
+    /** Fires when one or more of the layer's network link children fail to load. */
+    on(type: "network-link-error", listener: (event: { error: Error; target: KMLLayer }) => void): Handle;
     /** Fired after the layer is refreshed. */
     on(type: "refresh", listener: (event: { target: KMLLayer }) => void): Handle;
     on(type: string, listener: (event: any) => void): Handle;
@@ -10081,7 +10233,7 @@ declare namespace esriTypes.layers {
     fieldInfos: any[];
     /** Adjusts the formatting of labels. */
     labelExpression: string;
-    /** Use this when working with FeatureLayer layer types. */
+    /** Use this property when working with FeatureLayer layer types. */
     labelExpressionInfo: any;
     /** The position of the label. */
     labelPlacement: string;
@@ -10360,11 +10512,11 @@ declare namespace esriTypes.layers {
     height: number;
     /** An array of nodata mask. */
     mask: any[];
-    /** A two dimensional array. */
+    /** A two dimensional array representing the pixels from the Image Service displayed on the client. */
     pixels: number[][];
     /** Pixel type. */
     pixelType: string;
-    /** Array of objects containing numeric statistical properties (e.g. */
+    /** Array of objects containing numeric statistical properties (for example minValue, maxValue, noDataValue, etc.). */
     statistics: any[];
     /** Number of columns. */
     width: number;
@@ -10373,7 +10525,7 @@ declare namespace esriTypes.layers {
      * @param planeData Must have two properties set: pixels and statistics.
      */
     addData(planeData: any): void;
-    /** Returns pixels and masks using a single array in bip format (e.g. */
+    /** Returns pixels and masks using a single array in bip format (for example [p_00_r, p_00_g, p_00_b, p_00_a, p_10_r, p_10_g, p_10_b, p_10_a, .....]). */
     getAsRGBA(): any[];
     /** Similar to getAsRGBA, but returns floating point data. */
     getAsRGBAFloat(): any[];
@@ -10709,6 +10861,8 @@ declare namespace esriTypes.layers {
     fullExtent: geometry.Extent;
     /** The initial extent of the layer. */
     initialExtent: geometry.Extent;
+    /** Name of the vector tile layer. */
+    name: string;
     /** The spatial reference of the layer. */
     spatialReference: SpatialReference;
     /** Contains information about the tiling scheme for the layer. */
@@ -10724,6 +10878,10 @@ declare namespace esriTypes.layers {
     setStyle(styleUrl: string | any): void;
     /** Fires when the style is changed on the layer. */
     on(type: "style-change", listener: (event: { style: any; target: VectorTileLayer }) => void): Handle;
+    /** Fires when the layer has finished updating its content. */
+    on(type: "update-end", listener: (event: { target: VectorTileLayer }) => void): Handle;
+    /** Fires when the layer begins to update its content. */
+    on(type: "update-start", listener: (event: { target: VectorTileLayer }) => void): Handle;
     on(type: string, listener: (event: any) => void): Handle;
   }
   export interface VectorTileLayerConstructor {
@@ -11379,7 +11537,7 @@ declare namespace esriTypes.opsdashboard {
      * Get the feature type from a feature coming from the data source.
      * @param feature A feature coming from the data source
      */
-    getTypeFromFeature(feature: Graphic): number;
+    getTypeFromFeature(feature: Graphic): any;
     /**
      * Returns the value corresponding to a field name from a feature coming from the data source.
      * @param feature A feature coming from the data source
@@ -11395,7 +11553,7 @@ declare namespace esriTypes.opsdashboard {
      * Select features in the data source using a collection of object ids.
      * @param objectIds The collection of object ids of the features to select.
      */
-    selectFeaturesByObjectIds(objectIds: string[]): void;
+    selectFeaturesByObjectIds(objectIds: number[]): void;
   }
   export interface DataSourceProxyConstructor {
       new(): DataSourceProxy
@@ -11998,12 +12156,18 @@ declare namespace esriTypes.renderers {
     infos: any[];
     /** Include graphics with attribute values equal to the max value of a class in that class. */
     isMaxInclusive: boolean;
+    /** An object containing a title property that describes the variable driving the visualization. */
+    legendOptions: any;
     /** When normalizationType is "field", this property contains the attribute field name used for normalization. */
     normalizationField: string;
     /** When normalizationType is "percent-of-total", this property contains the total of all data values. */
     normalizationTotal: number;
     /** Indicates how the data is normalized. */
     normalizationType: string;
+    /** An Arcade expression evaluating to a number. */
+    valueExpression: string;
+    /** The title identifying and describing the associated Arcade expression as defined in the valueExpression property. */
+    valueExpressionTitle: string;
     /**
      * Adds a class break.
      * @param minValueOrInfo The value can be provided as individual arguments or as an info object.
@@ -12092,9 +12256,9 @@ declare namespace esriTypes.renderers {
 	    new(params: DotDensityRendererOptions): DotDensityRenderer;
   }
 
-  /** The HeatmapRenderer renders point data into a raster visualization that emphasizes areas of higher density or weighted values. */
+  /** The HeatmapRenderer renders feature layer point data into a raster visualization that emphasizes areas of higher density or weighted values. */
   export class HeatmapRenderer extends Renderer {
-    /** The radius (in pixels) of the circle over which the majority of each points value is spread out over. */
+    /** The radius (in pixels) of the circle over which the majority of each point's value is spread out. */
     blurRadius: number;
     /** An array of CSS color strings (#RGB, #RRGGBB, rgb(r,g,b), rgba(r,g,b,a)). */
     colors: string[];
@@ -12149,13 +12313,13 @@ declare namespace esriTypes.renderers {
 
   /** The base class for the renderers - SimpleRenderer, ClassBreaksRenderer, UniqueValueRenderer, DotDensityRenderer, ScaleDependentRenderer, TemporalRenderer, HeatmapRenderer, and VectorFieldRenderer used with a layers.GraphicsLayer and FeatureLayer. */
   export class Renderer {
-    /** An object defining a color ramp used to render the layer. */
+    /** Deprecated. */
     colorInfo: any;
-    /** An object that describes how opacity of features is calculated. */
+    /** Deprecated. */
     opacityInfo: any;
-    /** Defines how marker symbols are rotated. */
+    /** Deprecated. */
     rotationInfo: any;
-    /** Defines the size of the symbol where feature size is proportional to data value. */
+    /** Deprecated. */
     sizeInfo: any;
     /** This property allows you to define how to render values in a layer. */
     visualVariables: any[];
@@ -12192,26 +12356,26 @@ declare namespace esriTypes.renderers {
      * Returns the visual variable of the specified type.
      * @param type The type of visual variable desired.
      */
-    getVisualVariablesForType(type: string): any;
+    getVisualVariablesForType(type: string): any[];
     /** Indicates if the renderer has defined visualVariables. */
     hasVisualVariables(): boolean;
     /**
-     * Sets the colorInfo property.
+     * Deprecated.
      * @param info An info object that defines the color.
      */
     setColorInfo(info: any): Renderer;
     /**
-     * Sets opacity info for the renderer as defined by the info parameter.
+     * Deprecated.
      * @param info The info parameter is an object with the same properties as opacityInfo.
      */
     setOpacityInfo(info: any): Renderer;
     /**
-     * Modifies rotation info for the renderer.
+     * Deprecated.
      * @param info An object with the same properties as rotationInfo.
      */
     setRotationInfo(info: any): Renderer;
     /**
-     * Set size info of the renderer to modify the symbol size based on data value.
+     * Deprecated.
      * @param info An object with the same properties as sizeInfo.
      */
     setSizeInfo(info: any): Renderer;
@@ -12248,11 +12412,8 @@ declare namespace esriTypes.renderers {
      * @param scale Returns the renderer info for the specified scale.
      */
     getRendererInfoByScale(scale: number): any;
-    /**
-     * Returns the rendererInfo for the specified zoom level.
-     * @param zoom Specify the zoom level for which you want to retrieve the renderer info.
-     */
-    getRenderInfoByZoom(zoom: number): any;
+    /** Returns the rendererInfo for the specified zoom level. */
+    getRendererInfoByZoom(): any;
     /**
      * Replaces existing rendererInfos with new ones.
      * @param infos An array of objects as defined in the rendererInfos property.
@@ -12382,6 +12543,8 @@ declare namespace esriTypes.renderers {
     attributeField2: string;
     /** If needed, specify an additional attribute field the renderer uses to match values. */
     attributeField3: string;
+    /** A symbol used for polygon features as a background if the renderer uses point symbols, for example for bivariate types & size rendering. */
+    backgroundFillSymbol: symbols.FillSymbol;
     /** Label for the default symbol used to draw unspecified values. */
     defaultLabel: string;
     /** Default symbol used when a value or break cannot be matched. */
@@ -12390,6 +12553,12 @@ declare namespace esriTypes.renderers {
     fieldDelimiter: string;
     /** Each element in the array is an object that provides information about the unique values associated with the renderer. */
     infos: any[];
+    /** An object containing a title property that describes the variable driving the visualization. */
+    legendOptions: any;
+    /** An Arcade expression evaluating to either a string or a number. */
+    valueExpression: string;
+    /** The title identifying and describing the associated Arcade expression as defined in the valueExpression property. */
+    valueExpressionTitle: string;
     /** Deprecated at v2.0, use infos instead. */
     values: string[];
     /**
@@ -12426,7 +12595,7 @@ declare namespace esriTypes.renderers {
 	    new(json: Object): UniqueValueRenderer;
   }
 
-  /** The VectorFieldRenderer function symbolizes a U-V or Magnitude-Direction data. */
+  /** The VectorFieldRenderer function creates a a U-V or Magnitude-Direction visualization for an instance of  ArcGISImageServiceVectorLayer. */
   export class VectorFieldRenderer extends Renderer {
   }
   export interface VectorFieldRendererConstructor {
@@ -12524,7 +12693,7 @@ declare namespace esriTypes.renderers {
      */
     createTypeRenderer(params: any): any;
     /**
-     * Searches the fields of an input layer or array of field objects for field names commonly used in rendering based on usage (e.g.
+     * Searches the fields of an input layer or array of field objects for field names commonly used in rendering based on usage (e.g., RANK, TOTAL, AVERAGE, NAME, etc).
      * @param params See the object specifications table below for details about the params object.
      */
     getSuggestedField(params: any): any;
@@ -13765,7 +13934,7 @@ declare namespace esriTypes.tasks {
     distance(params: DistanceParameters, callback?: Function, errback?: Function): any;
     /**
      * Converts an array of well-known strings into xy-coordinates based on the conversion type and spatial reference supplied by the user.
-     * @param params See the object specifications table below for the structure of the  params  object.
+     * @param params See the object specifications table below for the structure of the params object.
      * @param callback The function to call when the method has completed.
      * @param errback An error object is returned if an error occurs during task execution.
      */
@@ -13837,7 +14006,7 @@ declare namespace esriTypes.tasks {
     simplify(geometries: geometry.Geometry[], callback?: Function, errback?: Function): any;
     /**
      * Converts an array of xy-coordinates into well-known strings based on the conversion type and spatial reference supplied by the user.
-     * @param params See the object specifications table below for the structure of the  params  object.
+     * @param params See the object specifications table below for the structure of the params object.
      * @param callback The function to call when the method has completed.
      * @param errback An error object is returned if an error occurs during task execution.
      */
@@ -14083,8 +14252,12 @@ declare namespace esriTypes.tasks {
     mapExtent: geometry.Extent;
     /** The maximum allowable offset used for generalizing geometries returned by the identify operation. */
     maxAllowableOffset: number;
+    /** If true, field names will be returned instead of field aliases. */
+    returnFieldName: boolean;
     /** If "true", the result set includes the geometry associated with each result. */
     returnGeometry: boolean;
+    /** If true, the values in the result will not be formatted i.e. */
+    returnUnformattedValues: boolean;
     /** The spatial reference of the input and output geometries as well as of the mapExtent. */
     spatialReference: SpatialReference;
     /** Specify the time extent used by the identify task. */
@@ -14720,7 +14893,7 @@ declare namespace esriTypes.tasks {
     startTimeIsUTC: boolean;
     /** The set of stops loaded as network locations during analysis. */
     stops: any;
-    /** If true , the TimeWindowStart and TimeWindowEnd attributes of a stop are in UTC time (milliseconds). */
+    /** If true, the TimeWindowStart and TimeWindowEnd attributes of a stop are in UTC time (milliseconds). */
     timeWindowsAreUTC: boolean;
     /** Travel modes define how a pedestrian, car, truck or other medium of transportation moves through the street network. */
     travelMode: any;
@@ -14962,7 +15135,7 @@ declare namespace esriTypes.tasks {
     /** URL to the ArcGIS Server REST resource that represents a locator service. */
     url: string;
     /**
-     * Find address candidates for the input addresses.
+     * Find address candidates for multiple input addresses.
      * @param params The input addresses in the format supported by the geocoding service.
      * @param callback The function to call when the method has completed.
      * @param errback The function to call if an error occurs on the server during task execution.
@@ -14970,7 +15143,7 @@ declare namespace esriTypes.tasks {
     addressesToLocations(params: any, callback: Function, errback: Function): any;
     /**
      * Sends a request to the ArcGIS REST geocode resource to find candidates for a single address specified in the address parameter.
-     * @param params Specify the address and optionally specify the outFields and searchExtent.
+     * @param params Specify at least the address and optionally other properties.
      * @param callback The function to call when the method has completed.
      * @param errback An error object is returned if an error occurs on the Server during task execution.
      */

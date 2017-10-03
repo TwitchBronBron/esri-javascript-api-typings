@@ -32,7 +32,9 @@ var urlsByVersion = {
     '3.17': 'https://raw.githubusercontent.com/Esri/jsapi-resources/b20fdeb7469ad6ebdc371d0276ed2e6b679e32ac/3.x/typescript/arcgis-js-api.d.ts',
     '3.18': 'https://raw.githubusercontent.com/Esri/jsapi-resources/64abeb4df452a0ac712487f6133211b9a7bfe083/3.x/typescript/arcgis-js-api.d.ts',
     '3.19': 'https://raw.githubusercontent.com/Esri/jsapi-resources/809cf2e15fd10948d5b028e700cc89245d2899ff/3.x/typescript/arcgis-js-api.d.ts',
-    '3.20': 'https://raw.githubusercontent.com/Esri/jsapi-resources/704dc32810b167cb48192efac44ac73e915625f2/3.x/typescript/arcgis-js-api.d.ts'
+    '3.20': 'https://raw.githubusercontent.com/Esri/jsapi-resources/704dc32810b167cb48192efac44ac73e915625f2/3.x/typescript/arcgis-js-api.d.ts',
+    '3.21': 'https://raw.githubusercontent.com/Esri/jsapi-resources/22418dc01c2fcc5a1fd9d5f30ffe179fd6006638/3.x/typescript/arcgis-js-api.d.ts',
+    '3.22': 'https://raw.githubusercontent.com/Esri/jsapi-resources/d56e98ea180845aa7f2d8e3054dbf5dc447b859d/3.x/typescript/arcgis-js-api.d.ts'
 };
 
 function downloadFiles() {
@@ -68,6 +70,21 @@ function processVersion(version) {
     console.log('\nprocessing version ' + version);
     let inputFilePath = getTempFilePath(version);
     var contents = fs.readFileSync(inputFilePath).toString();
+    var url = urlsByVersion[version];
+
+    //get the top comment block
+    var firstCommentBlock = '';
+    var lines = contents.split('\n', 10);
+    for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        if (line.indexOf('//') === 0) {
+            firstCommentBlock += line + '\n';
+        } else {
+            break;
+        }
+    }
+    firstCommentBlock += '// Converted from ' + url + '\n';
+    firstCommentBlock += '// Converted by https://github.com/TwitchBronBron/esri-javascript-api-typings' + '\n';
 
     var importExp = new RegExp(/\s*import\s+(\w+)\s=\s+require\("((\w+\/*)+)"\);/gi);
     var result;
@@ -368,7 +385,8 @@ function processVersion(version) {
 
         }
     }
-    contents = lines.join('\n');
+    contents = firstCommentBlock + lines.join('\n');
+    
     console.log('Saving result');
     fsPath.writeFileSync(getDistFilePath(version), contents);
 }

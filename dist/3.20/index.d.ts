@@ -1,3 +1,9 @@
+// Type definitions for ArcGIS API for JavaScript 3.20
+// Project: https://developers.arcgis.com/javascript/3/
+// Definitions by: Esri <https://github.com/Esri>
+// Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
+// Converted from https://raw.githubusercontent.com/Esri/jsapi-resources/704dc32810b167cb48192efac44ac73e915625f2/3.x/typescript/arcgis-js-api.d.ts
+// Converted by https://github.com/TwitchBronBron/esri-javascript-api-typings
 declare namespace esriTypes {
 
   export interface AGSMouseEvent extends MouseEvent {
