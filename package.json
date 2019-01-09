@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/TwitchBronBron/esri-javascript-api-typings#readme",
   "devDependencies": {
-    "fs-path": "^0.0.23",
+    "fs-extra": "^7.0.1",
     "node-fetch": "^1.6.3",
     "typescript": "^2.2.2"
   }

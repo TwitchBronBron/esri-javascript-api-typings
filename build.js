@@ -1,7 +1,7 @@
 'use strict';
 var fetch = require('node-fetch');
 var fs = require('fs');
-var fsPath = require('fs-path');
+var fsExtra = require('fs-extra');
 var tsCompile = require('./compile');
 var versionArg = null;
 //var versionArg = '3.20';
@@ -34,7 +34,12 @@ var urlsByVersion = {
     '3.19': 'https://raw.githubusercontent.com/Esri/jsapi-resources/809cf2e15fd10948d5b028e700cc89245d2899ff/3.x/typescript/arcgis-js-api.d.ts',
     '3.20': 'https://raw.githubusercontent.com/Esri/jsapi-resources/704dc32810b167cb48192efac44ac73e915625f2/3.x/typescript/arcgis-js-api.d.ts',
     '3.21': 'https://raw.githubusercontent.com/Esri/jsapi-resources/22418dc01c2fcc5a1fd9d5f30ffe179fd6006638/3.x/typescript/arcgis-js-api.d.ts',
-    '3.22': 'https://raw.githubusercontent.com/Esri/jsapi-resources/d56e98ea180845aa7f2d8e3054dbf5dc447b859d/3.x/typescript/arcgis-js-api.d.ts'
+    '3.22': 'https://raw.githubusercontent.com/Esri/jsapi-resources/d56e98ea180845aa7f2d8e3054dbf5dc447b859d/3.x/typescript/arcgis-js-api.d.ts',
+    '3.23': 'https://raw.githubusercontent.com/Esri/jsapi-resources/819e5c8be36c98b35d64cf8773c4c59598b8b291/3.x/typescript/arcgis-js-api.d.ts',
+    '3.24': 'https://raw.githubusercontent.com/Esri/jsapi-resources/18ef87d92e066ea71a2481a2112435c4f4104747/3.x/typescript/arcgis-js-api.d.ts',
+    '3.25': 'https://raw.githubusercontent.com/Esri/jsapi-resources/b6a77f911079b6471db95a24b2c4d4f7fb0992d7/3.x/typescript/arcgis-js-api.d.ts',
+    '3.26': 'https://raw.githubusercontent.com/Esri/jsapi-resources/d1f2f8d3d9e7cf83fdfdd6d5f20fe87124606748/3.x/typescript/arcgis-js-api.d.ts',
+    '3.27': 'https://raw.githubusercontent.com/Esri/jsapi-resources/c15f3f7f8311999aab3615e8afd67801c15bf9ca/3.x/typescript/arcgis-js-api.d.ts'
 };
 
 function downloadFiles() {
@@ -49,7 +54,7 @@ function downloadFiles() {
                     fetch(url).then(function (res) {
                         return res.text();
                     }).then(function (text) {
-                        fsPath.writeFileSync(filePath, text);
+                        fsExtra.writeFileSync(filePath, text);
                     })
                 );
             }
@@ -100,7 +105,7 @@ function processVersion(version) {
     console.log('Removing import statements');
     contents = contents.replace(importExp, '');
 
-    fsPath.writeFileSync('tmp/processing/1.d.ts', contents);
+    fsExtra.writeFileSync('tmp/processing/1.d.ts', contents);
 
     var namespaceMappings = {};
 
@@ -129,7 +134,7 @@ function processVersion(version) {
     console.log('Finding other namespaces');
 
 
-    fsPath.writeFileSync('tmp/processing/2.d.ts', contents);
+    fsExtra.writeFileSync('tmp/processing/2.d.ts', contents);
 
 
     var regexp = /\s*declare\s+module\s+"((\w+\/*)+)"/g;
@@ -154,7 +159,7 @@ function processVersion(version) {
     }
 
 
-    fsPath.writeFileSync('tmp/processing/3.d.ts', contents);
+    fsExtra.writeFileSync('tmp/processing/3.d.ts', contents);
 
 
     var regexp = /\s*export\s*=\s*(\w+\.*)*;/g;
@@ -162,14 +167,14 @@ function processVersion(version) {
     contents = contents.replace(regexp, '');
 
 
-    fsPath.writeFileSync('tmp/processing/4.d.ts', contents);
+    fsExtra.writeFileSync('tmp/processing/4.d.ts', contents);
 
 
     console.log('Exporting all vars');
     contents = contents.replace(/(\s+)(var\s+)/g, '$1export $2');
 
 
-    fsPath.writeFileSync('tmp/processing/5.d.ts', contents);
+    fsExtra.writeFileSync('tmp/processing/5.d.ts', contents);
 
 
     console.log('Combine all like namespace pieces');
@@ -260,17 +265,17 @@ function processVersion(version) {
     }
 
 
-    fsPath.writeFileSync('tmp/processing/6.d.ts', contents);
+    fsExtra.writeFileSync('tmp/processing/6.d.ts', contents);
 
 
-    fsPath.writeFileSync('tmp/processing/7.d.ts', contents);
+    fsExtra.writeFileSync('tmp/processing/7.d.ts', contents);
 
 
     console.log('Exporting all classes');
     contents = contents.replace(/(\s*)(class\s+\w+\s*(!?{|extends))/g, "$1export $2");
 
 
-    fsPath.writeFileSync('tmp/processing/8.d.ts', contents);
+    fsExtra.writeFileSync('tmp/processing/8.d.ts', contents);
 
 
     console.log('Undo any double export statements');
@@ -279,7 +284,7 @@ function processVersion(version) {
     console.log('Renaming module to esriTypes to prevent naming conflicts and discourage direct usage');
     contents = contents.replace(/declare\s+namespace\s+esri/g, 'declare namespace esriTypes');
 
-    fsPath.writeFileSync('tmp/processing/9.d.ts', contents);
+    fsExtra.writeFileSync('tmp/processing/9.d.ts', contents);
 
     console.log('Creating class constructor interfaces');
     //find every class instance and create a constructor interface for the class
@@ -386,9 +391,9 @@ function processVersion(version) {
         }
     }
     contents = firstCommentBlock + lines.join('\n');
-    
+
     console.log('Saving result');
-    fsPath.writeFileSync(getDistFilePath(version), contents);
+    fsExtra.writeFileSync(getDistFilePath(version), contents);
 }
 
 /**
@@ -402,14 +407,14 @@ function validateVersion(version) {
 
     var folder = './tmp/test/' + version + '/';;
     //write a sample typescript file
-    fsPath.writeFileSync(folder + 'test.ts', tsFileContents);
+    fsExtra.writeFileSync(folder + 'test.ts', tsFileContents);
 
     //create a tsconfig file
     var config = JSON.parse(fs.readFileSync('tsconfig.json').toString());
     config.files = [
         'test.ts'
     ];
-    fsPath.writeFileSync(folder + 'tsconfig.json', JSON.stringify(config));
+    fsExtra.writeFileSync(folder + 'tsconfig.json', JSON.stringify(config));
     var errors = tsCompile(folder + 'tsconfig.json');
     if (errors.length > 0) {
         console.log('Version ' + version + ' has errors: ');
