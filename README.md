@@ -1,5 +1,8 @@
 # esri-javascript-api-typings
-The ESRI JavaScript api type definitions that are provided by ESRI assume that you will be writing your project using AMD syntax. For some people who do not intend to write their whole project in AMD, that leaves us unable to use Esri's type definitions. This project intends to make it so that you can still use most of the esri javascript api type definitions without needing to go all-in with AMD.
+
+Non-AMD typescript definitions for the ESRI javascript API. 
+
+The ESRI JavaScript api type definitions that are provided by ESRI assume that you will be writing your project using AMD syntax. For some people who do not intend to write their whole project in AMD, that leaves us unable to use Esri's type definitions. This project allows you to use typings for most of the ESRI javascript api without to go all-in with AMD.
 
 # Installation
 
