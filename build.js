@@ -4,6 +4,7 @@ var fs = require('fs');
 var fsExtra = require('fs-extra');
 var tsCompile = require('./compile');
 var versionArg = null;
+var path = require('path');
 //var versionArg = '3.20';
 var verbose = false;
 
@@ -39,27 +40,37 @@ var urlsByVersion = {
     '3.24': 'https://raw.githubusercontent.com/Esri/jsapi-resources/18ef87d92e066ea71a2481a2112435c4f4104747/3.x/typescript/arcgis-js-api.d.ts',
     '3.25': 'https://raw.githubusercontent.com/Esri/jsapi-resources/b6a77f911079b6471db95a24b2c4d4f7fb0992d7/3.x/typescript/arcgis-js-api.d.ts',
     '3.26': 'https://raw.githubusercontent.com/Esri/jsapi-resources/d1f2f8d3d9e7cf83fdfdd6d5f20fe87124606748/3.x/typescript/arcgis-js-api.d.ts',
-    '3.27': 'https://raw.githubusercontent.com/Esri/jsapi-resources/c15f3f7f8311999aab3615e8afd67801c15bf9ca/3.x/typescript/arcgis-js-api.d.ts'
+    '3.27': 'https://raw.githubusercontent.com/Esri/jsapi-resources/c15f3f7f8311999aab3615e8afd67801c15bf9ca/3.x/typescript/arcgis-js-api.d.ts',
+    '3.28': 'https://raw.githubusercontent.com/Esri/jsapi-resources/f1ee1606e7b6c654c78781f9a92ec8ff71d99231/3.x/typescript/arcgis-js-api.d.ts',
+    '3.29': 'https://raw.githubusercontent.com/Esri/jsapi-resources/33f44afe228d336f62dc680ddefa941a1c196c10/3.x/typescript/arcgis-js-api.d.ts',
+    '3.30': 'https://raw.githubusercontent.com/Esri/jsapi-resources/91d2ad688ebd4eeb0a9424f2935739bc481c27b8/3.x/typescript/arcgis-js-api.d.ts',
+    '3.31': 'https://raw.githubusercontent.com/Esri/jsapi-resources/78a2380dddf77baa5b8684a55e8d3328d2dffb48/3.x/typescript/arcgis-js-api.d.ts',
+    '3.32': 'https://raw.githubusercontent.com/Esri/jsapi-resources/f66d8acb734c8bb3a0e1da6bff5defb9808cc55a/3.x/typescript/arcgis-js-api.d.ts'
 };
 
+if (versionArg) {
+    var version = urlsByVersion[versionArg];
+    urlsByVersion = {};
+    urlsByVersion[versionArg] = version;
+}
+
 function downloadFiles() {
-    var promises = [];
-    for (var version in urlsByVersion) {
-        if (!versionArg || version === versionArg) {
-            let url = urlsByVersion[version];
-            let filePath = getTempFilePath(version);
-            if (!fs.existsSync(filePath)) {
-                console.log('Downloading version ' + version);
-                promises.push(
-                    fetch(url).then(function (res) {
-                        return res.text();
-                    }).then(function (text) {
-                        fsExtra.writeFileSync(filePath, text);
-                    })
-                );
-            }
+    var promises = Object.keys(urlsByVersion).map(version => {
+        var url = urlsByVersion[version];
+        var filePath = getTempFilePath(version);
+        if (!fs.existsSync(filePath)) {
+            console.log('Downloading version ' + version);
+            return fetch(url).then(function (res) {
+                return res.text();
+            }).then(function (text) {
+                fsExtra.ensureDirSync(path.dirname(filePath));
+                fsExtra.writeFileSync(filePath, text);
+            }).catch((e) => {
+                console.error('')
+                return Promise.reject(e);
+            });
         }
-    }
+    });
     return Promise.all(promises);
 }
 
@@ -73,7 +84,7 @@ function getDistFilePath(version) {
 
 function processVersion(version) {
     console.log('\nprocessing version ' + version);
-    let inputFilePath = getTempFilePath(version);
+    var inputFilePath = getTempFilePath(version);
     var contents = fs.readFileSync(inputFilePath).toString();
     var url = urlsByVersion[version];
 
@@ -96,15 +107,15 @@ function processVersion(version) {
     var nameMappings = {};
     console.log('Collecting the module names');
     while ((result = importExp.exec(contents)) !== null) {
-        let name = result[1];
-        let namespace = result[2];
+        var name = result[1];
+        var namespace = result[2];
         nameMappings[name] = namespace;
     }
 
     //remove all of the import statements
     console.log('Removing import statements');
     contents = contents.replace(importExp, '');
-
+    fsExtra.ensureDirSync('tmp/processing');
     fsExtra.writeFileSync('tmp/processing/1.d.ts', contents);
 
     var namespaceMappings = {};
@@ -393,7 +404,9 @@ function processVersion(version) {
     contents = firstCommentBlock + lines.join('\n');
 
     console.log('Saving result');
-    fsExtra.writeFileSync(getDistFilePath(version), contents);
+    var distFilePath = getDistFilePath(version);
+    fsExtra.ensureDirSync(path.dirname(distFilePath))
+    fsExtra.writeFileSync(distFilePath, contents);
 }
 
 /**
@@ -405,7 +418,8 @@ function validateVersion(version) {
         '///<reference path="../../../dist/' + version + '/index.d.ts" />\n' +
         'var map: esriTypes.Map;';
 
-    var folder = './tmp/test/' + version + '/';;
+    var folder = './tmp/test/' + version + '/';
+    fsExtra.ensureDirSync(folder);
     //write a sample typescript file
     fsExtra.writeFileSync(folder + 'test.ts', tsFileContents);
 
@@ -427,18 +441,21 @@ function validateVersion(version) {
     }
 }
 
-downloadFiles().then(function () {
-    for (var version in urlsByVersion) {
-        if (!versionArg || version === versionArg) {
-            processVersion(version);
+function main() {
+    downloadFiles().then(function () {
+        for (var version in urlsByVersion) {
+            if (!versionArg || version === versionArg) {
+                processVersion(version);
+            }
         }
-    }
-}).then(() => {
-    for (var version in urlsByVersion) {
-        if (!versionArg || version === versionArg) {
-            validateVersion(version);
+    }).then(() => {
+        for (var version in urlsByVersion) {
+            if (!versionArg || version === versionArg) {
+                validateVersion(version);
+            }
         }
-    }
-}, function (e) {
-    throw e;
-})
+    }, function (e) {
+        throw e;
+    })
+}
+main();
