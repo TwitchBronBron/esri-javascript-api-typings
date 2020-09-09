@@ -45,7 +45,8 @@ var urlsByVersion = {
     '3.29': 'https://raw.githubusercontent.com/Esri/jsapi-resources/33f44afe228d336f62dc680ddefa941a1c196c10/3.x/typescript/arcgis-js-api.d.ts',
     '3.30': 'https://raw.githubusercontent.com/Esri/jsapi-resources/91d2ad688ebd4eeb0a9424f2935739bc481c27b8/3.x/typescript/arcgis-js-api.d.ts',
     '3.31': 'https://raw.githubusercontent.com/Esri/jsapi-resources/78a2380dddf77baa5b8684a55e8d3328d2dffb48/3.x/typescript/arcgis-js-api.d.ts',
-    '3.32': 'https://raw.githubusercontent.com/Esri/jsapi-resources/f66d8acb734c8bb3a0e1da6bff5defb9808cc55a/3.x/typescript/arcgis-js-api.d.ts'
+    '3.32': 'https://raw.githubusercontent.com/Esri/jsapi-resources/f66d8acb734c8bb3a0e1da6bff5defb9808cc55a/3.x/typescript/arcgis-js-api.d.ts',
+    '3.33': 'https://raw.githubusercontent.com/Esri/jsapi-resources/5f1ab6dd88c1ccbec78bbe405b6789f86bcffc46/3.x/typescript/arcgis-js-api.d.ts'
 };
 
 if (versionArg) {
